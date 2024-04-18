@@ -24,7 +24,7 @@ public class CarController : MonoBehaviour
     [SerializeField] private ParticleSystem fourthSmoke;
 
     [Header("Performance Settings")]
-    [SerializeField] private float acceleration = 1000f;
+    [SerializeField] private float acceleration = 500f;
     [SerializeField] private float reverseAcceleration = 400f;
     [SerializeField] private float brakingForce = 800f;
     [SerializeField] private float maxTurnAngle = 30f;
