@@ -1,3 +1,4 @@
+using System.ComponentModel.Design;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -14,14 +15,26 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Vector3 resetPosition = new Vector3(0, 0.5f, 0);
     [SerializeField] private Quaternion resetRotation = Quaternion.identity;
 
+    [Header("Flip Settings")]
+    [SerializeField] private float flipForce = 500f;
+
     private float vehicleSpeedKmH;
 
     private void FixedUpdate()
     {
         UpdateNeedle();
-        if (carRigidbody.position.y < -1f)
+        CheckAndResetCarPosition();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
         {
             ResetCarPosition();
+        }
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            FlipCar();
         }
     }
 
@@ -38,11 +51,25 @@ public class GameManager : MonoBehaviour
         speedometerNeedle.transform.localRotation = Quaternion.Euler(0, 0, needleAngle);
     }
 
+    private void CheckAndResetCarPosition()
+    {
+        if (carRigidbody.position.y < -1)
+        {
+            ResetCarPosition();
+        }
+    }
+
     private void ResetCarPosition()
     {
         carRigidbody.velocity = Vector3.zero;
         carRigidbody.angularVelocity = Vector3.zero;
         carRigidbody.position = resetPosition;
         carRigidbody.rotation = resetRotation;
+    }
+
+    private void FlipCar()
+    {
+        Quaternion uprightRotation = Quaternion.LookRotation(carRigidbody.transform.forward, Vector3.up);
+        carRigidbody.MoveRotation(uprightRotation);
     }
 }
