@@ -16998,7 +16998,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899260946}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.053369723, y: -0.5154396, z: 0.03218705, w: 0.8546565}
+  m_LocalRotation: {x: 0.053369727, y: -0.5154396, z: 0.03218705, w: 0.8546565}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -22464,7 +22464,7 @@ MonoBehaviour:
   brakingForce: 800
   maxTurnAngle: 40
   handbrakeForce: 4000
-  maxSpeed: 100
+  maxSpeedKPH: 175
   maxTurnAngleAtMaxSpeed: 15
   steeringResponse: 5
   downForce: 10
@@ -22485,7 +22485,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carRigidbody: {fileID: 2040198345356866088}
-  boostForce: 1000
+  boostForce: 2000
   boostParticles: {fileID: 7893449448340138575}
 --- !u!4 &2071277054645175121
 Transform:

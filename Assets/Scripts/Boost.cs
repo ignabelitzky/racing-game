@@ -4,7 +4,7 @@ public class Boost : MonoBehaviour
 {
     public Rigidbody carRigidbody;
     [Header("Boost Settings")]
-    [SerializeField] private float boostForce = 1000f;
+    [SerializeField] private float boostForce = 2000f;
     [SerializeField] private ParticleSystem boostParticles;
 
     void Start()

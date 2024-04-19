@@ -23,10 +23,10 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private float brakingForce = 800f;
     [SerializeField] private float maxTurnAngle = 40f;
     [SerializeField] private float handbrakeForce = 4000f;
-    [SerializeField] private float maxSpeed = 100f;
-    [SerializeField] private float maxTurnAngleAtMaxSpeed = 15f;
+    [SerializeField] private float maxSpeedKPH = 175f;
+    [SerializeField] private float maxTurnAngleAtMaxSpeed = 20f;
     [SerializeField] private float steeringResponse = 5f;
-    [SerializeField] private float downForce = 10f;
+    [SerializeField] private float downForce = 150f;
 
     [Header("Gearbox Settings")]
     [SerializeField] private int numberOfGears = 5;
@@ -75,15 +75,19 @@ public class TumblerController : MonoBehaviour
     private void ApplyDrive() {
         HandleGearShifting();
 
+        // Calculate current speed in meters per second
+        float currentSpeed = carRigidbody.velocity.magnitude;
+        float maxSpeedInMetersPerSecond = maxSpeedKPH / SpeedToKph;
+
         switch (drive) {
             case driveType.FrontWheelDrive:
-                ApplyFrontWheelDrive();
+                ApplyFrontWheelDrive(currentSpeed, maxSpeedInMetersPerSecond);
                 break;
             case driveType.RearWheelDrive:
-                ApplyRearWheelDrive();
+                ApplyRearWheelDrive(currentSpeed, maxSpeedInMetersPerSecond);
                 break;
             case driveType.AllWheelDrive:
-                ApplyAllWheelDrive();
+                ApplyAllWheelDrive(currentSpeed, maxSpeedInMetersPerSecond);
                 break;
         }
 
@@ -110,29 +114,32 @@ public class TumblerController : MonoBehaviour
         }
     }
 
-    private void ApplyFrontWheelDrive() {
+    private void ApplyFrontWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond) {
+        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1 : 0;
         foreach(WheelCollider wheel in frontWheelsColliders) {
-            wheel.motorTorque = motorTorque;
+            wheel.motorTorque = motorTorque * torqueModifier;
         }
     }
 
-    private void ApplyRearWheelDrive() {
+    private void ApplyRearWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond) {
+        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1 : 0;
         foreach(WheelCollider wheel in rearWheelsColliders) {
-            wheel.motorTorque = motorTorque;
+            wheel.motorTorque = motorTorque * torqueModifier;
         }
     }
 
-    private void ApplyAllWheelDrive() {
+    private void ApplyAllWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond) {
+        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1 : 0;
         foreach(WheelCollider wheel in frontWheelsColliders) {
-            wheel.motorTorque = motorTorque;
+            wheel.motorTorque = motorTorque * torqueModifier;
         }
         foreach(WheelCollider wheel in rearWheelsColliders) {
-            wheel.motorTorque = motorTorque;
+            wheel.motorTorque = motorTorque * torqueModifier;
         }
     }
 
     private void HandleSteering() {
-        float speedFactor = Mathf.Clamp01(carRigidbody.velocity.magnitude / maxSpeed);
+        float speedFactor = Mathf.Clamp01(carRigidbody.velocity.magnitude / maxSpeedKPH);
         float dynamicMaxTurnAngle = Mathf.Lerp(maxTurnAngleAtMaxSpeed, maxTurnAngle, 1 - speedFactor);
         float targetTurnAngle = Input.GetAxis("Horizontal") * dynamicMaxTurnAngle;
         currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurnAngle, Time.deltaTime * steeringResponse);
