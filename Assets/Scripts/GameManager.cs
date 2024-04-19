@@ -7,16 +7,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject speedometerNeedle;
 
     [Header("Speedometer Settings")]
-    [SerializeField] private float needleStartAngle = 220f;
-    [SerializeField] private float needleEndAngle = 0f;
+    [SerializeField] private float needleStartAngle = 217f;
+    [SerializeField] private float needleEndAngle = -40f;
     [SerializeField] private float maxSpeed = 180f;
 
     [Header("Reset Settings")]
     [SerializeField] private Vector3 resetPosition = new Vector3(0, 0.5f, 0);
     [SerializeField] private Quaternion resetRotation = Quaternion.identity;
-
-    [Header("Flip Settings")]
-    [SerializeField] private float flipForce = 500f;
 
     private float vehicleSpeedKmH;
 

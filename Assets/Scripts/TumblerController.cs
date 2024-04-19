@@ -1,7 +1,10 @@
+using TMPro;
 using UnityEngine;
 
 public class TumblerController : MonoBehaviour
 {
+    internal enum driveType { FrontWheelDrive, RearWheelDrive, AllWheelDrive }
+
     [Header("Car Components")]
     [SerializeField] private Rigidbody carRigidbody;
 
@@ -21,9 +24,6 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private Transform rearLeftOutsideTransform;
     [SerializeField] private Transform rearLeftInsideTransform;
 
-    [Header("Fire Particles")]
-    [SerializeField] private ParticleSystem fire;
-
     [Header("Performance Settings")]
     [SerializeField] private float acceleration = 1000f;
     [SerializeField] private float reverseAcceleration = 600f;
@@ -35,25 +35,37 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private float steeringResponse = 5f;
     [SerializeField] private float downForce = 10f;
 
+    [Header("Car Modes")]
+    [SerializeField] private driveType drive = driveType.AllWheelDrive;
+
+    [Header("UI Components")]
+    [SerializeField] private TextMeshProUGUI driveModeText;
+
     private float currentAcceleration = 0f;
     private float currentBrakeForce = 0f;
     private float currentTurnAngle = 0f;
     private bool isHandbrakeActive = false;
 
-    internal enum driveType { FrontWheelDrive, RearWheelDrive, AllWheelDrive }
-    private driveType drive = driveType.AllWheelDrive;
-
+    private void Start() {
+        UpdateDriveModeUI();
+    }
     private void FixedUpdate() {
         HandleInput();
         ApplyDrive();
         HandleSteering();
         UpdateWheels();
-        HandleFireEmission();
-        addDownForce();
+        AddDownForce();
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.LeftAlt)) {
+            SwitchDriveMode();
+        }
     }
 
     private void HandleInput() {
-        currentAcceleration = Input.GetAxis("Vertical") * (Input.GetAxis("Vertical") > 0 ? acceleration : reverseAcceleration);
+        float verticalInput = Input.GetAxis("Vertical");
+        currentAcceleration = verticalInput * (verticalInput > 0 ? acceleration : reverseAcceleration);
         currentBrakeForce = Input.GetKey(KeyCode.LeftControl) ? brakingForce : 0f;
         isHandbrakeActive = Input.GetKey(KeyCode.LeftShift);
     }
@@ -135,20 +147,38 @@ public class TumblerController : MonoBehaviour
         wheelTransform.rotation = rotation;
     }
 
-    private void HandleFireEmission() {
-        bool isMoving = carRigidbody.velocity.magnitude > 0.1f;
-        EmitFire(fire, isMoving);
-    }
-
-    private void EmitFire(ParticleSystem fire, bool isMoving) {
-        if (isMoving && !fire.isPlaying) {
-            fire.Play();
-        } else if (!isMoving && fire.isPlaying) {
-            fire.Stop();
-        }
-    }
-
-    private void addDownForce() {
+    private void AddDownForce() {
         carRigidbody.AddForce(-transform.up * downForce * carRigidbody.velocity.magnitude);
+    }
+
+    private void SwitchDriveMode() {
+        switch (drive) {
+            case driveType.FrontWheelDrive:
+                drive = driveType.RearWheelDrive;
+                break;
+            case driveType.RearWheelDrive:
+                drive = driveType.AllWheelDrive;
+                break;
+            case driveType.AllWheelDrive:
+                drive = driveType.FrontWheelDrive;
+                break;
+        }
+        UpdateDriveModeUI();
+    }
+
+    private void UpdateDriveModeUI() {
+        if (driveModeText != null) {
+            switch(drive) {
+                case driveType.FrontWheelDrive:
+                    driveModeText.text = "FWD";
+                    break;
+                case driveType.RearWheelDrive:
+                    driveModeText.text = "RWD";
+                    break;
+                case driveType.AllWheelDrive:
+                    driveModeText.text = "AWD";
+                    break;
+            }
+        }
     }
 }
