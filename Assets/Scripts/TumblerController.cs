@@ -28,7 +28,7 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private float acceleration = 1000f;
     [SerializeField] private float reverseAcceleration = 600f;
     [SerializeField] private float brakingForce = 800f;
-    [SerializeField] private float maxTurnAngle = 30f;
+    [SerializeField] private float maxTurnAngle = 40f;
     [SerializeField] private float handbrakeForce = 4000f;
     [SerializeField] private float maxSpeed = 100f;
     [SerializeField] private float maxTurnAngleAtMaxSpeed = 15f;
