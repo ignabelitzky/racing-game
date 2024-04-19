@@ -5,24 +5,17 @@ public class TumblerController : MonoBehaviour
 {
     internal enum driveType { FrontWheelDrive, RearWheelDrive, AllWheelDrive }
 
+    internal const float SpeedToKph = 3.6f;
+
     [Header("Car Components")]
     [SerializeField] private Rigidbody carRigidbody;
 
     [Header("Wheel Colliders")]
-    [SerializeField] private WheelCollider frontRight;
-    [SerializeField] private WheelCollider frontLeft;
-    [SerializeField] private WheelCollider rearRightOutside;
-    [SerializeField] private WheelCollider rearRightInside;
-    [SerializeField] private WheelCollider rearLeftOutside;
-    [SerializeField] private WheelCollider rearLeftInside;
+    [SerializeField] private WheelCollider[] frontWheelsColliders;
+    [SerializeField] private WheelCollider[] rearWheelsColliders;
 
     [Header("Wheel Transforms")]
-    [SerializeField] private Transform frontRightTransform;
-    [SerializeField] private Transform frontLeftTransform;
-    [SerializeField] private Transform rearRightOutsideTransform;
-    [SerializeField] private Transform rearRightInsideTransform;
-    [SerializeField] private Transform rearLeftOutsideTransform;
-    [SerializeField] private Transform rearLeftInsideTransform;
+    [SerializeField] private Transform[] wheelsTransforms;
 
     [Header("Performance Settings")]
     [SerializeField] private float acceleration = 1000f;
@@ -35,11 +28,20 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private float steeringResponse = 5f;
     [SerializeField] private float downForce = 10f;
 
+    [Header("Gearbox Settings")]
+    [SerializeField] private int numberOfGears = 5;
+    private int currentGear = 1;
+    private float[] rpmRange = { 0f, 42000, 105000, 187000, 182000, 176000};
+    private float[] gearRatios = { 0f, 1.2f, 1.5f, 1.7f, 1.3f, 1.1f };
+    private float engineRPM = 0f;
+    private float motorTorque = 0f;
+
     [Header("Car Modes")]
     [SerializeField] private driveType drive = driveType.AllWheelDrive;
 
     [Header("UI Components")]
     [SerializeField] private TextMeshProUGUI driveModeText;
+    [SerializeField] private TextMeshProUGUI gearText;
 
     private float currentAcceleration = 0f;
     private float currentBrakeForce = 0f;
@@ -71,6 +73,8 @@ public class TumblerController : MonoBehaviour
     }
 
     private void ApplyDrive() {
+        HandleGearShifting();
+
         switch (drive) {
             case driveType.FrontWheelDrive:
                 ApplyFrontWheelDrive();
@@ -83,41 +87,48 @@ public class TumblerController : MonoBehaviour
                 break;
         }
 
-        frontRight.brakeTorque = currentBrakeForce;
-        frontLeft.brakeTorque = currentBrakeForce;
+        foreach(WheelCollider wheel in frontWheelsColliders) {
+            ApplyBraking(wheel);
+        }
 
         if(isHandbrakeActive) {
-            rearRightOutside.brakeTorque = handbrakeForce;
-            rearRightInside.brakeTorque = handbrakeForce;
-            rearLeftOutside.brakeTorque = handbrakeForce;
-            rearLeftInside.brakeTorque = handbrakeForce;
+            ApplyHandbrake();
         } else {
-            rearRightOutside.brakeTorque = currentBrakeForce;
-            rearRightInside.brakeTorque = currentBrakeForce;
-            rearLeftOutside.brakeTorque = currentBrakeForce;
-            rearLeftInside.brakeTorque = currentBrakeForce;
+            foreach(WheelCollider wheel in rearWheelsColliders) {
+                ApplyBraking(wheel);
+            }
+        }
+    }
+
+    private void ApplyBraking(WheelCollider wheel) {
+        wheel.brakeTorque = currentBrakeForce;
+    }
+
+    private void ApplyHandbrake() {
+        foreach(WheelCollider wheel in rearWheelsColliders) {
+            wheel.brakeTorque = handbrakeForce;
         }
     }
 
     private void ApplyFrontWheelDrive() {
-        frontRight.motorTorque = currentAcceleration;
-        frontLeft.motorTorque = currentAcceleration;
+        foreach(WheelCollider wheel in frontWheelsColliders) {
+            wheel.motorTorque = motorTorque;
+        }
     }
 
     private void ApplyRearWheelDrive() {
-        rearRightOutside.motorTorque = currentAcceleration;
-        rearRightInside.motorTorque = currentAcceleration;
-        rearLeftOutside.motorTorque = currentAcceleration;
-        rearLeftInside.motorTorque = currentAcceleration;
+        foreach(WheelCollider wheel in rearWheelsColliders) {
+            wheel.motorTorque = motorTorque;
+        }
     }
 
     private void ApplyAllWheelDrive() {
-        frontRight.motorTorque = currentAcceleration;
-        frontLeft.motorTorque = currentAcceleration;
-        rearRightOutside.motorTorque = currentAcceleration;
-        rearRightInside.motorTorque = currentAcceleration;
-        rearLeftOutside.motorTorque = currentAcceleration;
-        rearLeftInside.motorTorque = currentAcceleration;
+        foreach(WheelCollider wheel in frontWheelsColliders) {
+            wheel.motorTorque = motorTorque;
+        }
+        foreach(WheelCollider wheel in rearWheelsColliders) {
+            wheel.motorTorque = motorTorque;
+        }
     }
 
     private void HandleSteering() {
@@ -126,17 +137,30 @@ public class TumblerController : MonoBehaviour
         float targetTurnAngle = Input.GetAxis("Horizontal") * dynamicMaxTurnAngle;
         currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurnAngle, Time.deltaTime * steeringResponse);
 
-        frontRight.steerAngle = currentTurnAngle;
-        frontLeft.steerAngle = currentTurnAngle;
+        foreach(WheelCollider wheel in frontWheelsColliders) {
+            wheel.steerAngle = currentTurnAngle;
+        }
+    }
+
+    private void HandleGearShifting() {
+        float speed = carRigidbody.velocity.magnitude * SpeedToKph;
+        engineRPM = speed * gearRatios[currentGear] * 1000;
+        if (engineRPM > rpmRange[currentGear] && currentGear < numberOfGears) {
+            currentGear++;
+        } else if (engineRPM < rpmRange[currentGear] / 2 && currentGear > 1) {
+            currentGear--;
+        }
+        motorTorque = currentAcceleration * gearRatios[currentGear];
+        gearText.text = currentGear.ToString();
     }
 
     private void UpdateWheels() {
-        UpdateWheel(frontRight, frontRightTransform);
-        UpdateWheel(frontLeft, frontLeftTransform);
-        UpdateWheel(rearRightOutside, rearRightOutsideTransform);
-        UpdateWheel(rearRightInside, rearRightInsideTransform);
-        UpdateWheel(rearLeftOutside, rearLeftOutsideTransform);
-        UpdateWheel(rearLeftInside, rearLeftInsideTransform);
+        for (int i = 0; i < frontWheelsColliders.Length; i++) {
+            UpdateWheel(frontWheelsColliders[i], wheelsTransforms[i]);
+        }
+        for (int i = 0; i < rearWheelsColliders.Length; i++) {
+            UpdateWheel(rearWheelsColliders[i], wheelsTransforms[i + frontWheelsColliders.Length]);
+        }
     }
 
     private void UpdateWheel(WheelCollider wheel, Transform wheelTransform) {
@@ -148,7 +172,7 @@ public class TumblerController : MonoBehaviour
     }
 
     private void AddDownForce() {
-        carRigidbody.AddForce(-transform.up * downForce * carRigidbody.velocity.magnitude);
+        carRigidbody.AddForce(Vector3.down * downForce * carRigidbody.velocity.magnitude);
     }
 
     private void SwitchDriveMode() {
@@ -163,7 +187,18 @@ public class TumblerController : MonoBehaviour
                 drive = driveType.FrontWheelDrive;
                 break;
         }
+        ResetMotorTorques();
         UpdateDriveModeUI();
+    }
+
+    private void ResetMotorTorques() {
+        motorTorque = 0f;
+        foreach(WheelCollider wheel in frontWheelsColliders) {
+            wheel.motorTorque = motorTorque;
+        }
+        foreach(WheelCollider wheel in rearWheelsColliders) {
+            wheel.motorTorque = motorTorque;
+        }
     }
 
     private void UpdateDriveModeUI() {
