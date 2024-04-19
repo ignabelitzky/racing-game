@@ -33,6 +33,10 @@ public class GameManager : MonoBehaviour
         {
             FlipCar();
         }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            QuitGame();
+        }
     }
 
     private void UpdateNeedle()
@@ -68,5 +72,14 @@ public class GameManager : MonoBehaviour
     {
         Quaternion uprightRotation = Quaternion.LookRotation(carRigidbody.transform.forward, Vector3.up);
         carRigidbody.MoveRotation(uprightRotation);
+    }
+
+    private void QuitGame()
+    {
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
+            Application.Quit();
+        #endif
     }
 }
