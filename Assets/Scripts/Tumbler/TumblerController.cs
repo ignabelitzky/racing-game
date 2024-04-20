@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TumblerController : MonoBehaviour
 {
@@ -47,9 +48,10 @@ public class TumblerController : MonoBehaviour
     private float currentBrakeForce = 0f;
     private float currentTurnAngle = 0f;
     private bool isHandbrakeActive = false;
-
+    
     private void Start() {
         UpdateDriveModeUI();
+
     }
     private void FixedUpdate() {
         HandleInput();
@@ -222,5 +224,21 @@ public class TumblerController : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public float GetSpeed() {
+        return carRigidbody.velocity.magnitude * SpeedToKph;
+    }
+
+    public float GetEngineRPM() {
+        return engineRPM;
+    }
+
+    public float GetMotorTorque() {
+        return motorTorque;
+    }
+
+    public float GetMaxSpeed() {
+        return maxSpeedKPH;
     }
 }

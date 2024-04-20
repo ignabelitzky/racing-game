@@ -1,6 +1,6 @@
 using System.ComponentModel.Design;
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private Rigidbody carRigidbody;
@@ -20,19 +20,10 @@ public class GameManager : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateNeedle();
-        CheckAndResetCarPosition();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetCarPosition();
-        }
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            FlipCar();
-        }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             QuitGame();
@@ -52,28 +43,6 @@ public class GameManager : MonoBehaviour
         speedometerNeedle.transform.localRotation = Quaternion.Euler(0, 0, needleAngle);
     }
 
-    private void CheckAndResetCarPosition()
-    {
-        if (carRigidbody.position.y < -1)
-        {
-            ResetCarPosition();
-        }
-    }
-
-    private void ResetCarPosition()
-    {
-        carRigidbody.velocity = Vector3.zero;
-        carRigidbody.angularVelocity = Vector3.zero;
-        carRigidbody.position = resetPosition;
-        carRigidbody.rotation = resetRotation;
-    }
-
-    private void FlipCar()
-    {
-        Quaternion uprightRotation = Quaternion.LookRotation(carRigidbody.transform.forward, Vector3.up);
-        carRigidbody.MoveRotation(uprightRotation);
-    }
-
     private void QuitGame()
     {
         #if UNITY_EDITOR
@@ -81,5 +50,24 @@ public class GameManager : MonoBehaviour
         #else
             Application.Quit();
         #endif
+    }
+
+    public void ResetCarPosition(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            carRigidbody.velocity = Vector3.zero;
+            carRigidbody.angularVelocity = Vector3.zero;
+            carRigidbody.position = resetPosition;
+            carRigidbody.rotation = resetRotation;
+        }
+    }
+
+    public void FlipCar(InputAction.CallbackContext context)
+    {
+        if (context.started && carRigidbody.velocity.magnitude < 1) {
+            Quaternion uprightRotation = Quaternion.LookRotation(carRigidbody.transform.forward, Vector3.up);
+            carRigidbody.MoveRotation(uprightRotation);
+        }
     }
 }

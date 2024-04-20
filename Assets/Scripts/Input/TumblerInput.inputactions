@@ -1,0 +1,74 @@
+{
+    "name": "TumblerInput",
+    "maps": [
+        {
+            "name": "Tumbler",
+            "id": "ae0a52b3-1867-4b30-ab87-78ab61ab0c2a",
+            "actions": [
+                {
+                    "name": "Flip Car",
+                    "type": "Button",
+                    "id": "f64e6d68-8480-43b8-bc5d-9aa4e73bc47d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Reset Car",
+                    "type": "Button",
+                    "id": "2ad2351d-a43c-45c2-a898-68adcd219d84",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Boost",
+                    "type": "Value",
+                    "id": "ff05be07-f670-4087-916d-77a24909125a",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "ecf621e7-e41d-4a81-bb79-0f990ca451b9",
+                    "path": "<XInputController>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Flip Car",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6bfb5dd7-b55a-4a91-a44b-28083c8ed9b1",
+                    "path": "<XInputController>/leftStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Reset Car",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2226d9af-73e3-4595-8d0d-181295cf3715",
+                    "path": "<XInputController>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
