@@ -24,10 +24,6 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            QuitGame();
-        }
     }
 
     private void UpdateNeedle()
@@ -43,15 +39,6 @@ public class GameManager : MonoBehaviour
         speedometerNeedle.transform.localRotation = Quaternion.Euler(0, 0, needleAngle);
     }
 
-    private void QuitGame()
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
-    }
-
     public void ResetCarPosition(InputAction.CallbackContext context)
     {
         if (context.started)
@@ -65,9 +52,22 @@ public class GameManager : MonoBehaviour
 
     public void FlipCar(InputAction.CallbackContext context)
     {
-        if (context.started && carRigidbody.velocity.magnitude < 1) {
+        if (context.started && carRigidbody.velocity.magnitude < 1f)
+        {
             Quaternion uprightRotation = Quaternion.LookRotation(carRigidbody.transform.forward, Vector3.up);
             carRigidbody.MoveRotation(uprightRotation);
+        }
+    }
+
+    public void QuitGame(InputAction.CallbackContext context)
+    {
+        if (context.started)
+        {
+            #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+            #else
+                Application.Quit();
+            #endif
         }
     }
 }

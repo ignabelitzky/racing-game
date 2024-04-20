@@ -24,7 +24,7 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
     ""name"": ""TumblerInput"",
     ""maps"": [
         {
-            ""name"": ""Tumbler"",
+            ""name"": ""Gameplay"",
             ""id"": ""ae0a52b3-1867-4b30-ab87-78ab61ab0c2a"",
             ""actions"": [
                 {
@@ -98,6 +98,15 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""QuitGame"",
+                    ""type"": ""Button"",
+                    ""id"": ""f89af12f-9f85-4689-82d8-9950d525859a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -210,22 +219,34 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Steer"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7ee2bec3-cbfc-461f-be39-39cbdceee131"",
+                    ""path"": ""<Keyboard>/{Cancel}"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""QuitGame"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
     ],
     ""controlSchemes"": []
 }");
-        // Tumbler
-        m_Tumbler = asset.FindActionMap("Tumbler", throwIfNotFound: true);
-        m_Tumbler_FlipCar = m_Tumbler.FindAction("FlipCar", throwIfNotFound: true);
-        m_Tumbler_ResetCar = m_Tumbler.FindAction("ResetCar", throwIfNotFound: true);
-        m_Tumbler_Boost = m_Tumbler.FindAction("Boost", throwIfNotFound: true);
-        m_Tumbler_SwitchDriveMode = m_Tumbler.FindAction("SwitchDriveMode", throwIfNotFound: true);
-        m_Tumbler_Handbrake = m_Tumbler.FindAction("Handbrake", throwIfNotFound: true);
-        m_Tumbler_Brake = m_Tumbler.FindAction("Brake", throwIfNotFound: true);
-        m_Tumbler_Throttle = m_Tumbler.FindAction("Throttle", throwIfNotFound: true);
-        m_Tumbler_Steer = m_Tumbler.FindAction("Steer", throwIfNotFound: true);
+        // Gameplay
+        m_Gameplay = asset.FindActionMap("Gameplay", throwIfNotFound: true);
+        m_Gameplay_FlipCar = m_Gameplay.FindAction("FlipCar", throwIfNotFound: true);
+        m_Gameplay_ResetCar = m_Gameplay.FindAction("ResetCar", throwIfNotFound: true);
+        m_Gameplay_Boost = m_Gameplay.FindAction("Boost", throwIfNotFound: true);
+        m_Gameplay_SwitchDriveMode = m_Gameplay.FindAction("SwitchDriveMode", throwIfNotFound: true);
+        m_Gameplay_Handbrake = m_Gameplay.FindAction("Handbrake", throwIfNotFound: true);
+        m_Gameplay_Brake = m_Gameplay.FindAction("Brake", throwIfNotFound: true);
+        m_Gameplay_Throttle = m_Gameplay.FindAction("Throttle", throwIfNotFound: true);
+        m_Gameplay_Steer = m_Gameplay.FindAction("Steer", throwIfNotFound: true);
+        m_Gameplay_QuitGame = m_Gameplay.FindAction("QuitGame", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -284,38 +305,40 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
         return asset.FindBinding(bindingMask, out action);
     }
 
-    // Tumbler
-    private readonly InputActionMap m_Tumbler;
-    private List<ITumblerActions> m_TumblerActionsCallbackInterfaces = new List<ITumblerActions>();
-    private readonly InputAction m_Tumbler_FlipCar;
-    private readonly InputAction m_Tumbler_ResetCar;
-    private readonly InputAction m_Tumbler_Boost;
-    private readonly InputAction m_Tumbler_SwitchDriveMode;
-    private readonly InputAction m_Tumbler_Handbrake;
-    private readonly InputAction m_Tumbler_Brake;
-    private readonly InputAction m_Tumbler_Throttle;
-    private readonly InputAction m_Tumbler_Steer;
-    public struct TumblerActions
+    // Gameplay
+    private readonly InputActionMap m_Gameplay;
+    private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
+    private readonly InputAction m_Gameplay_FlipCar;
+    private readonly InputAction m_Gameplay_ResetCar;
+    private readonly InputAction m_Gameplay_Boost;
+    private readonly InputAction m_Gameplay_SwitchDriveMode;
+    private readonly InputAction m_Gameplay_Handbrake;
+    private readonly InputAction m_Gameplay_Brake;
+    private readonly InputAction m_Gameplay_Throttle;
+    private readonly InputAction m_Gameplay_Steer;
+    private readonly InputAction m_Gameplay_QuitGame;
+    public struct GameplayActions
     {
         private @TumblerInput m_Wrapper;
-        public TumblerActions(@TumblerInput wrapper) { m_Wrapper = wrapper; }
-        public InputAction @FlipCar => m_Wrapper.m_Tumbler_FlipCar;
-        public InputAction @ResetCar => m_Wrapper.m_Tumbler_ResetCar;
-        public InputAction @Boost => m_Wrapper.m_Tumbler_Boost;
-        public InputAction @SwitchDriveMode => m_Wrapper.m_Tumbler_SwitchDriveMode;
-        public InputAction @Handbrake => m_Wrapper.m_Tumbler_Handbrake;
-        public InputAction @Brake => m_Wrapper.m_Tumbler_Brake;
-        public InputAction @Throttle => m_Wrapper.m_Tumbler_Throttle;
-        public InputAction @Steer => m_Wrapper.m_Tumbler_Steer;
-        public InputActionMap Get() { return m_Wrapper.m_Tumbler; }
+        public GameplayActions(@TumblerInput wrapper) { m_Wrapper = wrapper; }
+        public InputAction @FlipCar => m_Wrapper.m_Gameplay_FlipCar;
+        public InputAction @ResetCar => m_Wrapper.m_Gameplay_ResetCar;
+        public InputAction @Boost => m_Wrapper.m_Gameplay_Boost;
+        public InputAction @SwitchDriveMode => m_Wrapper.m_Gameplay_SwitchDriveMode;
+        public InputAction @Handbrake => m_Wrapper.m_Gameplay_Handbrake;
+        public InputAction @Brake => m_Wrapper.m_Gameplay_Brake;
+        public InputAction @Throttle => m_Wrapper.m_Gameplay_Throttle;
+        public InputAction @Steer => m_Wrapper.m_Gameplay_Steer;
+        public InputAction @QuitGame => m_Wrapper.m_Gameplay_QuitGame;
+        public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
         public bool enabled => Get().enabled;
-        public static implicit operator InputActionMap(TumblerActions set) { return set.Get(); }
-        public void AddCallbacks(ITumblerActions instance)
+        public static implicit operator InputActionMap(GameplayActions set) { return set.Get(); }
+        public void AddCallbacks(IGameplayActions instance)
         {
-            if (instance == null || m_Wrapper.m_TumblerActionsCallbackInterfaces.Contains(instance)) return;
-            m_Wrapper.m_TumblerActionsCallbackInterfaces.Add(instance);
+            if (instance == null || m_Wrapper.m_GameplayActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_GameplayActionsCallbackInterfaces.Add(instance);
             @FlipCar.started += instance.OnFlipCar;
             @FlipCar.performed += instance.OnFlipCar;
             @FlipCar.canceled += instance.OnFlipCar;
@@ -340,9 +363,12 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
             @Steer.started += instance.OnSteer;
             @Steer.performed += instance.OnSteer;
             @Steer.canceled += instance.OnSteer;
+            @QuitGame.started += instance.OnQuitGame;
+            @QuitGame.performed += instance.OnQuitGame;
+            @QuitGame.canceled += instance.OnQuitGame;
         }
 
-        private void UnregisterCallbacks(ITumblerActions instance)
+        private void UnregisterCallbacks(IGameplayActions instance)
         {
             @FlipCar.started -= instance.OnFlipCar;
             @FlipCar.performed -= instance.OnFlipCar;
@@ -368,24 +394,27 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
             @Steer.started -= instance.OnSteer;
             @Steer.performed -= instance.OnSteer;
             @Steer.canceled -= instance.OnSteer;
+            @QuitGame.started -= instance.OnQuitGame;
+            @QuitGame.performed -= instance.OnQuitGame;
+            @QuitGame.canceled -= instance.OnQuitGame;
         }
 
-        public void RemoveCallbacks(ITumblerActions instance)
+        public void RemoveCallbacks(IGameplayActions instance)
         {
-            if (m_Wrapper.m_TumblerActionsCallbackInterfaces.Remove(instance))
+            if (m_Wrapper.m_GameplayActionsCallbackInterfaces.Remove(instance))
                 UnregisterCallbacks(instance);
         }
 
-        public void SetCallbacks(ITumblerActions instance)
+        public void SetCallbacks(IGameplayActions instance)
         {
-            foreach (var item in m_Wrapper.m_TumblerActionsCallbackInterfaces)
+            foreach (var item in m_Wrapper.m_GameplayActionsCallbackInterfaces)
                 UnregisterCallbacks(item);
-            m_Wrapper.m_TumblerActionsCallbackInterfaces.Clear();
+            m_Wrapper.m_GameplayActionsCallbackInterfaces.Clear();
             AddCallbacks(instance);
         }
     }
-    public TumblerActions @Tumbler => new TumblerActions(this);
-    public interface ITumblerActions
+    public GameplayActions @Gameplay => new GameplayActions(this);
+    public interface IGameplayActions
     {
         void OnFlipCar(InputAction.CallbackContext context);
         void OnResetCar(InputAction.CallbackContext context);
@@ -395,5 +424,6 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
         void OnBrake(InputAction.CallbackContext context);
         void OnThrottle(InputAction.CallbackContext context);
         void OnSteer(InputAction.CallbackContext context);
+        void OnQuitGame(InputAction.CallbackContext context);
     }
 }

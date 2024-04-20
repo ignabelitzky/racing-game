@@ -80,7 +80,8 @@ public class TumblerController : MonoBehaviour
         UpdateDriveModeUI();
 
     }
-    private void FixedUpdate() {
+    private void FixedUpdate()
+    {
         ApplyDrive();
         HandleSteering();
         UpdateWheels();
@@ -89,14 +90,15 @@ public class TumblerController : MonoBehaviour
 
     private void Update()
     {
-        float throttleInput = tumblerInput.Tumbler.Throttle.ReadValue<float>();
+        float throttleInput = tumblerInput.Gameplay.Throttle.ReadValue<float>();
         currentAcceleration = throttleInput * (throttleInput > 0 ? acceleration : reverseAcceleration);
-        isHandbrakeActive = tumblerInput.Tumbler.Handbrake.ReadValue<float>() > 0f;
-        currentBrakeForce = tumblerInput.Tumbler.Brake.ReadValue<float>() > 0f ? brakingForce : 0f;
-        steerInput = tumblerInput.Tumbler.Steer.ReadValue<Vector2>().x;
+        isHandbrakeActive = tumblerInput.Gameplay.Handbrake.ReadValue<float>() > 0f;
+        currentBrakeForce = tumblerInput.Gameplay.Brake.ReadValue<float>() > 0f ? brakingForce : 0f;
+        steerInput = tumblerInput.Gameplay.Steer.ReadValue<Vector2>().x;
     }
 
-    private void ApplyDrive() {
+    private void ApplyDrive()
+    {
         HandleGearShifting();
 
         // Calculate current speed in meters per second
@@ -115,49 +117,63 @@ public class TumblerController : MonoBehaviour
                 break;
         }
 
-        foreach(WheelCollider wheel in frontWheelsColliders) {
+        foreach(WheelCollider wheel in frontWheelsColliders)
+        {
             ApplyBraking(wheel);
         }
 
         if(isHandbrakeActive) {
             ApplyHandbrake();
-        } else {
-            foreach(WheelCollider wheel in rearWheelsColliders) {
+        }
+        else
+        {
+            foreach(WheelCollider wheel in rearWheelsColliders)
+            {
                 ApplyBraking(wheel);
             }
         }
     }
 
-    private void ApplyBraking(WheelCollider wheel) {
+    private void ApplyBraking(WheelCollider wheel)
+    {
         wheel.brakeTorque = currentBrakeForce;
     }
 
-    private void ApplyHandbrake() {
-        foreach(WheelCollider wheel in rearWheelsColliders) {
+    private void ApplyHandbrake()
+    {
+        foreach(WheelCollider wheel in rearWheelsColliders)
+        {
             wheel.brakeTorque = handbrakeForce;
         }
     }
 
-    private void ApplyFrontWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond) {
-        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1 : 0;
-        foreach(WheelCollider wheel in frontWheelsColliders) {
+    private void ApplyFrontWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond)
+    {
+        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1f : 0f;
+        foreach(WheelCollider wheel in frontWheelsColliders)
+        {
             wheel.motorTorque = motorTorque * torqueModifier;
         }
     }
 
-    private void ApplyRearWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond) {
-        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1 : 0;
-        foreach(WheelCollider wheel in rearWheelsColliders) {
+    private void ApplyRearWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond)
+    {
+        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1f : 0f;
+        foreach(WheelCollider wheel in rearWheelsColliders)
+        {
             wheel.motorTorque = motorTorque * torqueModifier;
         }
     }
 
-    private void ApplyAllWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond) {
-        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1 : 0;
-        foreach(WheelCollider wheel in frontWheelsColliders) {
+    private void ApplyAllWheelDrive(float currentSpeed, float maxSpeedInMetersPerSecond)
+    {
+        float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1f : 0f;
+        foreach(WheelCollider wheel in frontWheelsColliders)
+        {
             wheel.motorTorque = motorTorque * torqueModifier;
         }
-        foreach(WheelCollider wheel in rearWheelsColliders) {
+        foreach(WheelCollider wheel in rearWheelsColliders)
+        {
             wheel.motorTorque = motorTorque * torqueModifier;
         }
     }
@@ -169,14 +185,9 @@ public class TumblerController : MonoBehaviour
 
         // Interpolate between maxTurnAngle at standstill and maxTurnAngleAtMaxSpeed at full speed
         float dynamicMaxTurnAngle = Mathf.Lerp(maxTurnAngle, maxTurnAngleAtMaxSpeed, speedFactor);
-
-
-        // Map steerInput from -40 to 40 to -1 to 1
-        // steerInput = Mathf.InverseLerp(-40f, 40f, steerInput) * 2f - 1f;
         
         // Calculate the target steering angle based on the current steer input (-1 to 1)
         float targetTurnAngle = steerInput * dynamicMaxTurnAngle;
-        Debug.Log(steerInput.ToString());
 
         // Smoothly interpolate the current turn angle towards the target turn angle
         currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurnAngle, Time.deltaTime * steeringResponse);
@@ -189,28 +200,35 @@ public class TumblerController : MonoBehaviour
     }
 
 
-    private void HandleGearShifting() {
+    private void HandleGearShifting()
+    {
         float speed = carRigidbody.velocity.magnitude * SpeedToKph;
         engineRPM = speed * gearRatios[currentGear] * 1000;
-        if (engineRPM > rpmRange[currentGear] && currentGear < numberOfGears) {
+        if (engineRPM > rpmRange[currentGear] && currentGear < numberOfGears)
+        {
             currentGear++;
-        } else if (engineRPM < rpmRange[currentGear] / 2 && currentGear > 1) {
+        } else if (engineRPM < rpmRange[currentGear] / 2 && currentGear > 1)
+        {
             currentGear--;
         }
         motorTorque = currentAcceleration * gearRatios[currentGear];
         gearText.text = currentGear.ToString();
     }
 
-    private void UpdateWheels() {
-        for (int i = 0; i < frontWheelsColliders.Length; i++) {
+    private void UpdateWheels()
+    {
+        for (int i = 0; i < frontWheelsColliders.Length; i++)
+        {
             UpdateWheel(frontWheelsColliders[i], wheelsTransforms[i]);
         }
-        for (int i = 0; i < rearWheelsColliders.Length; i++) {
+        for (int i = 0; i < rearWheelsColliders.Length; i++)
+        {
             UpdateWheel(rearWheelsColliders[i], wheelsTransforms[i + frontWheelsColliders.Length]);
         }
     }
 
-    private void UpdateWheel(WheelCollider wheel, Transform wheelTransform) {
+    private void UpdateWheel(WheelCollider wheel, Transform wheelTransform)
+    {
         Vector3 position;
         Quaternion rotation;
         wheel.GetWorldPose(out position, out rotation);
@@ -218,15 +236,18 @@ public class TumblerController : MonoBehaviour
         wheelTransform.rotation = rotation;
     }
 
-    private void AddDownForce() {
+    private void AddDownForce()
+    {
         carRigidbody.AddForce(Vector3.down * downForce * carRigidbody.velocity.magnitude);
     }
 
     // This function is called by the Unity Event System when the player clicks the Drive Mode button
-    public void SwitchDriveMode(InputAction.CallbackContext context) {
+    public void SwitchDriveMode(InputAction.CallbackContext context)
+    {
         if (context.started)
         {
-            switch (drive) {
+            switch (drive)
+            {
                 case driveType.FrontWheelDrive:
                     drive = driveType.RearWheelDrive;
                     break;
@@ -242,19 +263,25 @@ public class TumblerController : MonoBehaviour
         }
     }
 
-    private void ResetMotorTorques() {
+    private void ResetMotorTorques()
+    {
         motorTorque = 0f;
-        foreach(WheelCollider wheel in frontWheelsColliders) {
+        foreach(WheelCollider wheel in frontWheelsColliders)
+        {
             wheel.motorTorque = motorTorque;
         }
-        foreach(WheelCollider wheel in rearWheelsColliders) {
+        foreach(WheelCollider wheel in rearWheelsColliders)
+        {
             wheel.motorTorque = motorTorque;
         }
     }
 
-    private void UpdateDriveModeUI() {
-        if (driveModeText != null) {
-            switch(drive) {
+    private void UpdateDriveModeUI()
+    {
+        if (driveModeText != null)
+        {
+            switch(drive)
+            {
                 case driveType.FrontWheelDrive:
                     driveModeText.text = "FWD";
                     break;
@@ -268,19 +295,23 @@ public class TumblerController : MonoBehaviour
         }
     }
 
-    public float GetSpeed() {
+    public float GetSpeed()
+    {
         return carRigidbody.velocity.magnitude * SpeedToKph;
     }
 
-    public float GetEngineRPM() {
+    public float GetEngineRPM()
+    {
         return engineRPM;
     }
 
-    public float GetMotorTorque() {
+    public float GetMotorTorque()
+    {
         return motorTorque;
     }
 
-    public float GetMaxSpeed() {
+    public float GetMaxSpeed()
+    {
         return maxSpeedKPH;
     }
 }

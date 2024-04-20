@@ -17617,9 +17617,49 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 2ad2351d-a43c-45c2-a898-68adcd219d84
     m_ActionName: GameManager/Reset Car[/XInputControllerWindows/leftStickPress]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ff05be07-f670-4087-916d-77a24909125a
+    m_ActionName: Gameplay/Boost[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: be1c406f-7af1-4409-af4d-0c3decb6b80f
+    m_ActionName: Gameplay/SwitchDriveMode[/XInputControllerWindows/rightShoulder]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e629f86f-0c8c-414f-95b7-6820f0b4e88e
+    m_ActionName: Gameplay/Handbrake[/XInputControllerWindows/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fecdbef0-bcd8-40f6-8d1c-1d9c48764006
+    m_ActionName: Gameplay/Brake[/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cc35143d-1d9c-48fb-b21c-5978ab532d6b
+    m_ActionName: Gameplay/Throttle[/XInputControllerWindows/leftTrigger,/XInputControllerWindows/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8d80f83b-ec5e-4f99-aaab-3ec5acc4589e
+    m_ActionName: Gameplay/Steer[/XInputControllerWindows/leftStick]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1824967744}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: QuitGame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: f89af12f-9f85-4689-82d8-9950d525859a
+    m_ActionName: Gameplay/QuitGame[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Tumbler
+  m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!1 &1846661938
@@ -23352,9 +23392,21 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: fecdbef0-bcd8-40f6-8d1c-1d9c48764006
     m_ActionName: Tumbler/Brake[/XInputControllerWindows/buttonEast]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cc35143d-1d9c-48fb-b21c-5978ab532d6b
+    m_ActionName: Tumbler/Throttle[/XInputControllerWindows/leftStick/down,/XInputControllerWindows/leftStick/up]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8d80f83b-ec5e-4f99-aaab-3ec5acc4589e
+    m_ActionName: Gameplay/Steer[/XInputControllerWindows/leftStick]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f89af12f-9f85-4689-82d8-9950d525859a
+    m_ActionName: Gameplay/QuitGame[/Keyboard/escape]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
-  m_DefaultActionMap: Tumbler
+  m_DefaultActionMap: Gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
 --- !u!4 &2071277054645175121

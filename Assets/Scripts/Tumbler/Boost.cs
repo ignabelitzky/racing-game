@@ -53,7 +53,7 @@ public class Boost : MonoBehaviour
 
     private void Update()
     {
-        isBoostActive = tumblerInput.Tumbler.Boost.ReadValue<float>() > 0f;
+        isBoostActive = tumblerInput.Gameplay.Boost.ReadValue<float>() > 0f;
         if(isBoostActive && !boostParticles.isPlaying)
         {
             boostParticles.Play();
