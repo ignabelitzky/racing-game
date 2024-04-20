@@ -17730,7 +17730,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1899260946}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.062323198, y: -0.0062539284, z: 0.0003905317, w: 0.9980364}
+  m_LocalRotation: {x: 0.062323198, y: -0.006253963, z: 0.00039053385, w: 0.9980364}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -23278,7 +23278,6 @@ MonoBehaviour:
   carRigidbody: {fileID: 2040198345356866088}
   boostForce: 120
   boostParticles: {fileID: 7893449448340138575}
-  isBoosting: 0
 --- !u!114 &2040198345356866091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23305,7 +23304,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Actions: {fileID: -944628639613478452, guid: c632d42134f9cb743ae638ffca3c8808, type: 3}
-  m_NotificationBehavior: 0
+  m_NotificationBehavior: 2
   m_UIInputModule: {fileID: 0}
   m_DeviceLostEvent:
     m_PersistentCalls:
@@ -23316,7 +23315,43 @@ MonoBehaviour:
   m_ControlsChangedEvent:
     m_PersistentCalls:
       m_Calls: []
-  m_ActionEvents: []
+  m_ActionEvents:
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: f64e6d68-8480-43b8-bc5d-9aa4e73bc47d
+    m_ActionName: Tumbler/FlipCar[/XInputControllerWindows/buttonNorth]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2ad2351d-a43c-45c2-a898-68adcd219d84
+    m_ActionName: Tumbler/ResetCar[/XInputControllerWindows/leftStickPress]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ff05be07-f670-4087-916d-77a24909125a
+    m_ActionName: Tumbler/Boost[/XInputControllerWindows/buttonSouth]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2040198345356866089}
+        m_TargetAssemblyTypeName: TumblerController, Assembly-CSharp
+        m_MethodName: SwitchDriveMode
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: be1c406f-7af1-4409-af4d-0c3decb6b80f
+    m_ActionName: Tumbler/DriveMode[/XInputControllerWindows/rightStickPress]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e629f86f-0c8c-414f-95b7-6820f0b4e88e
+    m_ActionName: Tumbler/Handbrake[/XInputControllerWindows/buttonWest]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fecdbef0-bcd8-40f6-8d1c-1d9c48764006
+    m_ActionName: Tumbler/Brake[/XInputControllerWindows/buttonEast]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Tumbler

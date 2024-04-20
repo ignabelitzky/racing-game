@@ -28,7 +28,7 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
             ""id"": ""ae0a52b3-1867-4b30-ab87-78ab61ab0c2a"",
             ""actions"": [
                 {
-                    ""name"": ""Flip Car"",
+                    ""name"": ""FlipCar"",
                     ""type"": ""Button"",
                     ""id"": ""f64e6d68-8480-43b8-bc5d-9aa4e73bc47d"",
                     ""expectedControlType"": ""Button"",
@@ -37,7 +37,7 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
-                    ""name"": ""Reset Car"",
+                    ""name"": ""ResetCar"",
                     ""type"": ""Button"",
                     ""id"": ""2ad2351d-a43c-45c2-a898-68adcd219d84"",
                     ""expectedControlType"": ""Button"",
@@ -53,6 +53,51 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SwitchDriveMode"",
+                    ""type"": ""Button"",
+                    ""id"": ""be1c406f-7af1-4409-af4d-0c3decb6b80f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Handbrake"",
+                    ""type"": ""Value"",
+                    ""id"": ""e629f86f-0c8c-414f-95b7-6820f0b4e88e"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Brake"",
+                    ""type"": ""Value"",
+                    ""id"": ""fecdbef0-bcd8-40f6-8d1c-1d9c48764006"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Throttle"",
+                    ""type"": ""Value"",
+                    ""id"": ""cc35143d-1d9c-48fb-b21c-5978ab532d6b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Steer"",
+                    ""type"": ""Value"",
+                    ""id"": ""8d80f83b-ec5e-4f99-aaab-3ec5acc4589e"",
+                    ""expectedControlType"": ""Stick"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -63,7 +108,7 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Flip Car"",
+                    ""action"": ""FlipCar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -74,7 +119,7 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
-                    ""action"": ""Reset Car"",
+                    ""action"": ""ResetCar"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -88,6 +133,83 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Boost"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bf0562a3-96f0-4d68-9a85-54da7ce104c0"",
+                    ""path"": ""<XInputController>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SwitchDriveMode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8fdabd10-4e82-4fe7-8ecd-68948d187ad8"",
+                    ""path"": ""<XInputController>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Handbrake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a075b6df-d4c3-4eb2-b3b8-6e465f431d51"",
+                    ""path"": ""<XInputController>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Brake"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""1D Axis"",
+                    ""id"": ""263bf203-79cb-43c5-ad21-9d9a42323bd0"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""2bb85e44-84f3-4a92-b4fb-3095c9d965c4"",
+                    ""path"": ""<XInputController>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""13a157f0-f786-4afc-b79d-d5ee0f6dae78"",
+                    ""path"": ""<XInputController>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Throttle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69d59079-977b-450f-bcc1-6892fdb9ce7c"",
+                    ""path"": ""<XInputController>/leftStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Steer"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -96,9 +218,14 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
 }");
         // Tumbler
         m_Tumbler = asset.FindActionMap("Tumbler", throwIfNotFound: true);
-        m_Tumbler_FlipCar = m_Tumbler.FindAction("Flip Car", throwIfNotFound: true);
-        m_Tumbler_ResetCar = m_Tumbler.FindAction("Reset Car", throwIfNotFound: true);
+        m_Tumbler_FlipCar = m_Tumbler.FindAction("FlipCar", throwIfNotFound: true);
+        m_Tumbler_ResetCar = m_Tumbler.FindAction("ResetCar", throwIfNotFound: true);
         m_Tumbler_Boost = m_Tumbler.FindAction("Boost", throwIfNotFound: true);
+        m_Tumbler_SwitchDriveMode = m_Tumbler.FindAction("SwitchDriveMode", throwIfNotFound: true);
+        m_Tumbler_Handbrake = m_Tumbler.FindAction("Handbrake", throwIfNotFound: true);
+        m_Tumbler_Brake = m_Tumbler.FindAction("Brake", throwIfNotFound: true);
+        m_Tumbler_Throttle = m_Tumbler.FindAction("Throttle", throwIfNotFound: true);
+        m_Tumbler_Steer = m_Tumbler.FindAction("Steer", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,6 +290,11 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Tumbler_FlipCar;
     private readonly InputAction m_Tumbler_ResetCar;
     private readonly InputAction m_Tumbler_Boost;
+    private readonly InputAction m_Tumbler_SwitchDriveMode;
+    private readonly InputAction m_Tumbler_Handbrake;
+    private readonly InputAction m_Tumbler_Brake;
+    private readonly InputAction m_Tumbler_Throttle;
+    private readonly InputAction m_Tumbler_Steer;
     public struct TumblerActions
     {
         private @TumblerInput m_Wrapper;
@@ -170,6 +302,11 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
         public InputAction @FlipCar => m_Wrapper.m_Tumbler_FlipCar;
         public InputAction @ResetCar => m_Wrapper.m_Tumbler_ResetCar;
         public InputAction @Boost => m_Wrapper.m_Tumbler_Boost;
+        public InputAction @SwitchDriveMode => m_Wrapper.m_Tumbler_SwitchDriveMode;
+        public InputAction @Handbrake => m_Wrapper.m_Tumbler_Handbrake;
+        public InputAction @Brake => m_Wrapper.m_Tumbler_Brake;
+        public InputAction @Throttle => m_Wrapper.m_Tumbler_Throttle;
+        public InputAction @Steer => m_Wrapper.m_Tumbler_Steer;
         public InputActionMap Get() { return m_Wrapper.m_Tumbler; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -188,6 +325,21 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
             @Boost.started += instance.OnBoost;
             @Boost.performed += instance.OnBoost;
             @Boost.canceled += instance.OnBoost;
+            @SwitchDriveMode.started += instance.OnSwitchDriveMode;
+            @SwitchDriveMode.performed += instance.OnSwitchDriveMode;
+            @SwitchDriveMode.canceled += instance.OnSwitchDriveMode;
+            @Handbrake.started += instance.OnHandbrake;
+            @Handbrake.performed += instance.OnHandbrake;
+            @Handbrake.canceled += instance.OnHandbrake;
+            @Brake.started += instance.OnBrake;
+            @Brake.performed += instance.OnBrake;
+            @Brake.canceled += instance.OnBrake;
+            @Throttle.started += instance.OnThrottle;
+            @Throttle.performed += instance.OnThrottle;
+            @Throttle.canceled += instance.OnThrottle;
+            @Steer.started += instance.OnSteer;
+            @Steer.performed += instance.OnSteer;
+            @Steer.canceled += instance.OnSteer;
         }
 
         private void UnregisterCallbacks(ITumblerActions instance)
@@ -201,6 +353,21 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
             @Boost.started -= instance.OnBoost;
             @Boost.performed -= instance.OnBoost;
             @Boost.canceled -= instance.OnBoost;
+            @SwitchDriveMode.started -= instance.OnSwitchDriveMode;
+            @SwitchDriveMode.performed -= instance.OnSwitchDriveMode;
+            @SwitchDriveMode.canceled -= instance.OnSwitchDriveMode;
+            @Handbrake.started -= instance.OnHandbrake;
+            @Handbrake.performed -= instance.OnHandbrake;
+            @Handbrake.canceled -= instance.OnHandbrake;
+            @Brake.started -= instance.OnBrake;
+            @Brake.performed -= instance.OnBrake;
+            @Brake.canceled -= instance.OnBrake;
+            @Throttle.started -= instance.OnThrottle;
+            @Throttle.performed -= instance.OnThrottle;
+            @Throttle.canceled -= instance.OnThrottle;
+            @Steer.started -= instance.OnSteer;
+            @Steer.performed -= instance.OnSteer;
+            @Steer.canceled -= instance.OnSteer;
         }
 
         public void RemoveCallbacks(ITumblerActions instance)
@@ -223,5 +390,10 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
         void OnFlipCar(InputAction.CallbackContext context);
         void OnResetCar(InputAction.CallbackContext context);
         void OnBoost(InputAction.CallbackContext context);
+        void OnSwitchDriveMode(InputAction.CallbackContext context);
+        void OnHandbrake(InputAction.CallbackContext context);
+        void OnBrake(InputAction.CallbackContext context);
+        void OnThrottle(InputAction.CallbackContext context);
+        void OnSteer(InputAction.CallbackContext context);
     }
 }

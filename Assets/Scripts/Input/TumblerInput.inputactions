@@ -6,7 +6,7 @@
             "id": "ae0a52b3-1867-4b30-ab87-78ab61ab0c2a",
             "actions": [
                 {
-                    "name": "Flip Car",
+                    "name": "FlipCar",
                     "type": "Button",
                     "id": "f64e6d68-8480-43b8-bc5d-9aa4e73bc47d",
                     "expectedControlType": "Button",
@@ -15,7 +15,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Reset Car",
+                    "name": "ResetCar",
                     "type": "Button",
                     "id": "2ad2351d-a43c-45c2-a898-68adcd219d84",
                     "expectedControlType": "Button",
@@ -31,6 +31,51 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "SwitchDriveMode",
+                    "type": "Button",
+                    "id": "be1c406f-7af1-4409-af4d-0c3decb6b80f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Handbrake",
+                    "type": "Value",
+                    "id": "e629f86f-0c8c-414f-95b7-6820f0b4e88e",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Brake",
+                    "type": "Value",
+                    "id": "fecdbef0-bcd8-40f6-8d1c-1d9c48764006",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Throttle",
+                    "type": "Value",
+                    "id": "cc35143d-1d9c-48fb-b21c-5978ab532d6b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Steer",
+                    "type": "Value",
+                    "id": "8d80f83b-ec5e-4f99-aaab-3ec5acc4589e",
+                    "expectedControlType": "Stick",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -41,7 +86,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Flip Car",
+                    "action": "FlipCar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -52,7 +97,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Reset Car",
+                    "action": "ResetCar",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -64,6 +109,83 @@
                     "processors": "",
                     "groups": "",
                     "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "bf0562a3-96f0-4d68-9a85-54da7ce104c0",
+                    "path": "<XInputController>/rightShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchDriveMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "8fdabd10-4e82-4fe7-8ecd-68948d187ad8",
+                    "path": "<XInputController>/buttonWest",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Handbrake",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a075b6df-d4c3-4eb2-b3b8-6e465f431d51",
+                    "path": "<XInputController>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Brake",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "1D Axis",
+                    "id": "263bf203-79cb-43c5-ad21-9d9a42323bd0",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throttle",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Negative",
+                    "id": "2bb85e44-84f3-4a92-b4fb-3095c9d965c4",
+                    "path": "<XInputController>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throttle",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Positive",
+                    "id": "13a157f0-f786-4afc-b79d-d5ee0f6dae78",
+                    "path": "<XInputController>/rightTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Throttle",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "",
+                    "id": "69d59079-977b-450f-bcc1-6892fdb9ce7c",
+                    "path": "<XInputController>/leftStick",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Steer",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

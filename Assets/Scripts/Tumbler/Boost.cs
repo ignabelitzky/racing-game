@@ -3,16 +3,20 @@ using UnityEngine.InputSystem;
 
 public class Boost : MonoBehaviour
 {
+    internal bool isBoostActive = false;
     public Rigidbody carRigidbody;
     public TumblerInput tumblerInput;
     [Header("Boost Settings")]
-    [SerializeField] private float boostForce = 2000f;
+    [SerializeField] private float boostForce = 120f;
     [SerializeField] private ParticleSystem boostParticles;
-    [SerializeField] private bool isBoosting = false;
 
     private void Awake()
     {
         tumblerInput = new TumblerInput();
+        if (tumblerInput == null)
+        {
+            Debug.LogError("TumblerInput component not found on " + gameObject.name);
+        }
     }
 
     private void OnEnable()
@@ -41,7 +45,7 @@ public class Boost : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (isBoosting)
+        if (isBoostActive)
         {
             carRigidbody.AddForce(transform.forward * boostForce, ForceMode.Impulse);
         }
@@ -49,12 +53,12 @@ public class Boost : MonoBehaviour
 
     private void Update()
     {
-        isBoosting = tumblerInput.Tumbler.Boost.ReadValue<float>() > 0f;
-        if(isBoosting && !boostParticles.isPlaying)
+        isBoostActive = tumblerInput.Tumbler.Boost.ReadValue<float>() > 0f;
+        if(isBoostActive && !boostParticles.isPlaying)
         {
             boostParticles.Play();
         }
-        else if (!isBoosting && boostParticles.isPlaying)
+        else if (!isBoostActive && boostParticles.isPlaying)
         {
             boostParticles.Stop();
         }

@@ -8,8 +8,11 @@ public class TumblerController : MonoBehaviour
 
     internal const float SpeedToKph = 3.6f;
 
-    [Header("Car Components")]
-    [SerializeField] private Rigidbody carRigidbody;
+    internal bool isHandbrakeActive = false;
+    internal float steerInput = 0f;
+
+    public Rigidbody carRigidbody;
+    public TumblerInput tumblerInput;
 
     [Header("Wheel Colliders")]
     [SerializeField] private WheelCollider[] frontWheelsColliders;
@@ -47,31 +50,50 @@ public class TumblerController : MonoBehaviour
     private float currentAcceleration = 0f;
     private float currentBrakeForce = 0f;
     private float currentTurnAngle = 0f;
-    private bool isHandbrakeActive = false;
+
+    private void Awake()
+    {
+        carRigidbody = GetComponent<Rigidbody>();
+        if (carRigidbody == null)
+        {
+            Debug.LogError("Rigidbody component not found on " + gameObject.name);
+        }
+        tumblerInput = new TumblerInput();
+        if (tumblerInput == null)
+        {
+            Debug.LogError("TumblerInput component not found on " + gameObject.name);
+        }
+    }
+
+    private void OnEnable()
+    {
+        tumblerInput.Enable();
+    }
+
+    private void OnDisable()
+    {
+        tumblerInput.Disable();
+    }
     
-    private void Start() {
+    private void Start()
+    {
         UpdateDriveModeUI();
 
     }
     private void FixedUpdate() {
-        HandleInput();
         ApplyDrive();
         HandleSteering();
         UpdateWheels();
         AddDownForce();
     }
 
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.LeftAlt)) {
-            SwitchDriveMode();
-        }
-    }
-
-    private void HandleInput() {
-        float verticalInput = Input.GetAxis("Vertical");
-        currentAcceleration = verticalInput * (verticalInput > 0 ? acceleration : reverseAcceleration);
-        currentBrakeForce = Input.GetKey(KeyCode.LeftControl) ? brakingForce : 0f;
-        isHandbrakeActive = Input.GetKey(KeyCode.LeftShift);
+    private void Update()
+    {
+        float throttleInput = tumblerInput.Tumbler.Throttle.ReadValue<float>();
+        currentAcceleration = throttleInput * (throttleInput > 0 ? acceleration : reverseAcceleration);
+        isHandbrakeActive = tumblerInput.Tumbler.Handbrake.ReadValue<float>() > 0f;
+        currentBrakeForce = tumblerInput.Tumbler.Brake.ReadValue<float>() > 0f ? brakingForce : 0f;
+        steerInput = tumblerInput.Tumbler.Steer.ReadValue<Vector2>().x;
     }
 
     private void ApplyDrive() {
@@ -140,16 +162,32 @@ public class TumblerController : MonoBehaviour
         }
     }
 
-    private void HandleSteering() {
-        float speedFactor = Mathf.Clamp01(carRigidbody.velocity.magnitude / maxSpeedKPH);
-        float dynamicMaxTurnAngle = Mathf.Lerp(maxTurnAngleAtMaxSpeed, maxTurnAngle, 1 - speedFactor);
-        float targetTurnAngle = Input.GetAxis("Horizontal") * dynamicMaxTurnAngle;
+    private void HandleSteering()
+    {
+        // Calculate the speed factor, which is normalized between 0 and 1
+        float speedFactor = Mathf.Clamp01(carRigidbody.velocity.magnitude / (maxSpeedKPH / SpeedToKph));
+
+        // Interpolate between maxTurnAngle at standstill and maxTurnAngleAtMaxSpeed at full speed
+        float dynamicMaxTurnAngle = Mathf.Lerp(maxTurnAngle, maxTurnAngleAtMaxSpeed, speedFactor);
+
+
+        // Map steerInput from -40 to 40 to -1 to 1
+        // steerInput = Mathf.InverseLerp(-40f, 40f, steerInput) * 2f - 1f;
+        
+        // Calculate the target steering angle based on the current steer input (-1 to 1)
+        float targetTurnAngle = steerInput * dynamicMaxTurnAngle;
+        Debug.Log(steerInput.ToString());
+
+        // Smoothly interpolate the current turn angle towards the target turn angle
         currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurnAngle, Time.deltaTime * steeringResponse);
 
-        foreach(WheelCollider wheel in frontWheelsColliders) {
+        // Apply the calculated steering angle to all front wheels
+        foreach (WheelCollider wheel in frontWheelsColliders)
+        {
             wheel.steerAngle = currentTurnAngle;
         }
     }
+
 
     private void HandleGearShifting() {
         float speed = carRigidbody.velocity.magnitude * SpeedToKph;
@@ -184,20 +222,24 @@ public class TumblerController : MonoBehaviour
         carRigidbody.AddForce(Vector3.down * downForce * carRigidbody.velocity.magnitude);
     }
 
-    private void SwitchDriveMode() {
-        switch (drive) {
-            case driveType.FrontWheelDrive:
-                drive = driveType.RearWheelDrive;
-                break;
-            case driveType.RearWheelDrive:
-                drive = driveType.AllWheelDrive;
-                break;
-            case driveType.AllWheelDrive:
-                drive = driveType.FrontWheelDrive;
-                break;
+    // This function is called by the Unity Event System when the player clicks the Drive Mode button
+    public void SwitchDriveMode(InputAction.CallbackContext context) {
+        if (context.started)
+        {
+            switch (drive) {
+                case driveType.FrontWheelDrive:
+                    drive = driveType.RearWheelDrive;
+                    break;
+                case driveType.RearWheelDrive:
+                    drive = driveType.AllWheelDrive;
+                    break;
+                case driveType.AllWheelDrive:
+                    drive = driveType.FrontWheelDrive;
+                    break;
+            }
+            ResetMotorTorques();
+            UpdateDriveModeUI();
         }
-        ResetMotorTorques();
-        UpdateDriveModeUI();
     }
 
     private void ResetMotorTorques() {
