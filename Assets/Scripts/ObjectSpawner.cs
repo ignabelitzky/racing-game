@@ -4,8 +4,8 @@ using System.Collections;
 public class ObjectSpawner : MonoBehaviour
 {
     public GameObject objectPrefab; // Arrastra aquí el prefab del objeto en el Inspector
-    public int numberOfObjects = 300;
-    public float spawnDelay = 0.5f;
+    public int numberOfObjects = 600;
+    public float spawnDelay = 0.25f;
     public float minX = -450f;
     public float maxX = 450f;
     public float minZ = -450f;
