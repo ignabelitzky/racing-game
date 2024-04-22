@@ -320,4 +320,9 @@ public class TumblerController : MonoBehaviour
     {
         return maxSpeedKPH;
     }
+
+    public bool IsHandbraking()
+    {
+        return isHandbrakeActive;
+    }
 }

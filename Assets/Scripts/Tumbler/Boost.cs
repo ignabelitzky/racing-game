@@ -9,6 +9,7 @@ public class Boost : MonoBehaviour
     [Header("Boost Settings")]
     [SerializeField] private float boostForce = 120f;
     [SerializeField] private ParticleSystem boostParticles;
+    [SerializeField] private AudioSource jetEngineSound;
 
     private void Awake()
     {
@@ -36,10 +37,13 @@ public class Boost : MonoBehaviour
         {
             Debug.LogError("Rigidbody component not found on " + gameObject.name);
         }
-
         if (boostParticles == null)
         {
             Debug.LogError("No boost particles assigned on " + gameObject.name);
+        }
+        if (jetEngineSound == null)
+        {
+            Debug.LogError("No jet engine sound assigned on " + gameObject.name);
         }
     }
 
@@ -57,10 +61,12 @@ public class Boost : MonoBehaviour
         if(isBoostActive && !boostParticles.isPlaying)
         {
             boostParticles.Play();
+            jetEngineSound.Play();
         }
         else if (!isBoostActive && boostParticles.isPlaying)
         {
             boostParticles.Stop();
+            jetEngineSound.Stop();
         }
     }
 }
