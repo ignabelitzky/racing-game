@@ -137,6 +137,9 @@ public class TumblerController : MonoBehaviour
     private void ApplyBraking(WheelCollider wheel)
     {
         wheel.brakeTorque = currentBrakeForce;
+        WheelFrictionCurve frictionCurve = wheel.sidewaysFriction;
+        frictionCurve.extremumSlip = 0.2f;
+        wheel.sidewaysFriction = frictionCurve;
     }
 
     private void ApplyHandbrake()
@@ -144,6 +147,9 @@ public class TumblerController : MonoBehaviour
         foreach(WheelCollider wheel in rearWheelsColliders)
         {
             wheel.brakeTorque = handbrakeForce;
+            WheelFrictionCurve frictionCurve = wheel.sidewaysFriction;
+            frictionCurve.extremumSlip = 1f;
+            wheel.sidewaysFriction = frictionCurve;
         }
     }
 

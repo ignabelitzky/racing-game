@@ -1,8 +1,10 @@
 using System.ComponentModel.Design;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class GameManager : MonoBehaviour
 {
+    [SerializeField] private GameObject tumbler;
     [SerializeField] private Rigidbody carRigidbody;
     [SerializeField] private GameObject speedometerNeedle;
 
@@ -16,6 +18,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Quaternion resetRotation = Quaternion.identity;
 
     private float vehicleSpeedKmH;
+
+    private void Awake()
+    {
+        tumbler = GameObject.Find("Tumbler");
+        if (tumbler == null)
+        {
+            Debug.LogError("Tumbler not found in the scene. Please assign the Tumbler GameObject in the Inspector.");
+        }
+        carRigidbody = tumbler.GetComponent<Rigidbody>();
+        if (carRigidbody == null)
+        {
+            Debug.LogError("Rigidbody component not found on the Tumbler GameObject. Please add a Rigidbody component to the Tumbler GameObject.");
+        }
+        speedometerNeedle = GameObject.Find("SpeedometerNeedle");
+        if (speedometerNeedle == null)
+        {
+            Debug.LogError("SpeedometerNeedle not found in the scene. Please assign the SpeedometerNeedle GameObject in the Inspector.");
+        }
+    }
 
     private void FixedUpdate()
     {
