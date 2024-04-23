@@ -1,10 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class TumblerController : MonoBehaviour
 {
-    internal enum driveType { FrontWheelDrive, RearWheelDrive, AllWheelDrive }
+    public enum driveType { FrontWheelDrive, RearWheelDrive, AllWheelDrive }
 
     internal const float SpeedToKph = 3.6f;
 
@@ -14,6 +15,9 @@ public class TumblerController : MonoBehaviour
     public Rigidbody carRigidbody;
     public TumblerInput tumblerInput;
 
+    public UnityEvent onGearChange;
+    public UnityEvent onDriveModeChange;
+
     [Header("Wheel Colliders")]
     [SerializeField] private WheelCollider[] frontWheelsColliders;
     [SerializeField] private WheelCollider[] rearWheelsColliders;
@@ -22,9 +26,9 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private Transform[] wheelsTransforms;
 
     [Header("Performance Settings")]
-    [SerializeField] private float acceleration = 1000f;
-    [SerializeField] private float reverseAcceleration = 600f;
-    [SerializeField] private float brakingForce = 800f;
+    [SerializeField] private float forwardPower = 1200f;
+    [SerializeField] private float reversePower = 800f;
+    [SerializeField] private float brakingForce = 1000f;
     [SerializeField] private float maxTurnAngle = 40f;
     [SerializeField] private float handbrakeForce = 4000f;
     [SerializeField] private float maxSpeedKPH = 175f;
@@ -34,18 +38,13 @@ public class TumblerController : MonoBehaviour
 
     [Header("Gearbox Settings")]
     [SerializeField] private int numberOfGears = 5;
-    private int currentGear = 1;
     private float[] rpmRange = { 0f, 42000, 105000, 187000, 182000, 176000};
     private float[] gearRatios = { 0f, 1.2f, 1.5f, 1.7f, 1.3f, 1.1f };
     private float engineRPM = 0f;
     private float motorTorque = 0f;
 
-    [Header("Car Modes")]
-    [SerializeField] private driveType drive = driveType.AllWheelDrive;
-
-    [Header("UI Components")]
-    [SerializeField] private TextMeshProUGUI driveModeText;
-    [SerializeField] private TextMeshProUGUI gearText;
+    public int currentGear { get; private set;} = 1;
+    public driveType currentDriveMode { get; private set; } = driveType.AllWheelDrive;
 
     private float currentAcceleration = 0f;
     private float currentBrakeForce = 0f;
@@ -73,8 +72,9 @@ public class TumblerController : MonoBehaviour
     
     private void Start()
     {
-        UpdateDriveModeUI();
-
+        onGearChange.Invoke();
+        onDriveModeChange.Invoke();
+        carRigidbody.centerOfMass -= new Vector3(0, 0.1f, 0);
     }
     private void FixedUpdate()
     {
@@ -87,7 +87,7 @@ public class TumblerController : MonoBehaviour
     private void Update()
     {
         float throttleInput = tumblerInput.Gameplay.Throttle.ReadValue<float>();
-        currentAcceleration = throttleInput * (throttleInput > 0 ? acceleration : reverseAcceleration);
+        currentAcceleration = throttleInput * (throttleInput > 0 ? forwardPower : reversePower);
         isHandbrakeActive = tumblerInput.Gameplay.Handbrake.ReadValue<float>() > 0f;
         currentBrakeForce = tumblerInput.Gameplay.Brake.ReadValue<float>() > 0f ? brakingForce : 0f;
         steerInput = tumblerInput.Gameplay.Steer.ReadValue<Vector2>().x;
@@ -101,7 +101,7 @@ public class TumblerController : MonoBehaviour
         float currentSpeed = carRigidbody.velocity.magnitude;
         float maxSpeedInMetersPerSecond = maxSpeedKPH / SpeedToKph;
 
-        switch (drive) {
+        switch (currentDriveMode) {
             case driveType.FrontWheelDrive:
                 ApplyFrontWheelDrive(currentSpeed, maxSpeedInMetersPerSecond);
                 break;
@@ -206,15 +206,15 @@ public class TumblerController : MonoBehaviour
     {
         float speed = carRigidbody.velocity.magnitude * SpeedToKph;
         engineRPM = speed * gearRatios[currentGear] * 1000;
-        if (engineRPM > rpmRange[currentGear] && currentGear < numberOfGears)
+        if (engineRPM > rpmRange[currentGear])
         {
-            currentGear++;
-        } else if (engineRPM < rpmRange[currentGear] / 2 && currentGear > 1)
+            IncrementGear();
+        }
+        else if (engineRPM < rpmRange[currentGear] / 2)
         {
-            currentGear--;
+            DecrementGear();
         }
         motorTorque = currentAcceleration * gearRatios[currentGear];
-        gearText.text = currentGear.ToString();
     }
 
     private void UpdateWheels()
@@ -248,24 +248,24 @@ public class TumblerController : MonoBehaviour
     {
         if (context.started)
         {
-            switch (drive)
+            switch (currentDriveMode)
             {
                 case driveType.FrontWheelDrive:
-                    drive = driveType.RearWheelDrive;
+                    currentDriveMode = driveType.RearWheelDrive;
                     break;
                 case driveType.RearWheelDrive:
-                    drive = driveType.AllWheelDrive;
+                    currentDriveMode = driveType.AllWheelDrive;
                     break;
                 case driveType.AllWheelDrive:
-                    drive = driveType.FrontWheelDrive;
+                    currentDriveMode = driveType.FrontWheelDrive;
                     break;
             }
-            ResetMotorTorques();
-            UpdateDriveModeUI();
+            onDriveModeChange.Invoke();
+            ResetMotorTorque();
         }
     }
 
-    private void ResetMotorTorques()
+    private void ResetMotorTorque()
     {
         motorTorque = 0f;
         foreach(WheelCollider wheel in frontWheelsColliders)
@@ -278,25 +278,6 @@ public class TumblerController : MonoBehaviour
         }
     }
 
-    private void UpdateDriveModeUI()
-    {
-        if (driveModeText != null)
-        {
-            switch(drive)
-            {
-                case driveType.FrontWheelDrive:
-                    driveModeText.text = "FWD";
-                    break;
-                case driveType.RearWheelDrive:
-                    driveModeText.text = "RWD";
-                    break;
-                case driveType.AllWheelDrive:
-                    driveModeText.text = "AWD";
-                    break;
-            }
-        }
-    }
-
     public bool IsGrounded()
     {
         foreach(WheelCollider wheel in frontWheelsColliders)
@@ -304,6 +285,24 @@ public class TumblerController : MonoBehaviour
             if (wheel.isGrounded) return true;
         }
         return false;
+    }
+
+    public void IncrementGear()
+    {
+        if (currentGear < numberOfGears)
+        {
+            currentGear++;
+            onGearChange.Invoke();
+        }
+    }
+
+    public void DecrementGear()
+    {
+        if (currentGear > 1)
+        {
+            currentGear--;
+            onGearChange.Invoke();
+        }
     }
 
     public float GetSpeed()
