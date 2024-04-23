@@ -46,7 +46,7 @@ public class TumblerController : MonoBehaviour
     public int currentGear { get; private set;} = 1;
     public driveType currentDriveMode { get; private set; } = driveType.AllWheelDrive;
 
-    private float currentAcceleration = 0f;
+    private float currentPower = 0f;
     private float currentBrakeForce = 0f;
     private float currentTurnAngle = 0f;
 
@@ -74,7 +74,7 @@ public class TumblerController : MonoBehaviour
     {
         onGearChange.Invoke();
         onDriveModeChange.Invoke();
-        carRigidbody.centerOfMass -= new Vector3(0, 0.1f, 0);
+        carRigidbody.centerOfMass -= new Vector3(0, 0.1f, 0.3f);
     }
     private void FixedUpdate()
     {
@@ -87,7 +87,7 @@ public class TumblerController : MonoBehaviour
     private void Update()
     {
         float throttleInput = tumblerInput.Gameplay.Throttle.ReadValue<float>();
-        currentAcceleration = throttleInput * (throttleInput > 0 ? forwardPower : reversePower);
+        currentPower = throttleInput * (throttleInput > 0 ? forwardPower : reversePower);
         isHandbrakeActive = tumblerInput.Gameplay.Handbrake.ReadValue<float>() > 0f;
         currentBrakeForce = tumblerInput.Gameplay.Brake.ReadValue<float>() > 0f ? brakingForce : 0f;
         steerInput = tumblerInput.Gameplay.Steer.ReadValue<Vector2>().x;
@@ -144,7 +144,7 @@ public class TumblerController : MonoBehaviour
         {
             wheel.brakeTorque = handbrakeForce;
             WheelFrictionCurve frictionCurve = wheel.sidewaysFriction;
-            frictionCurve.extremumSlip = 1f;
+            frictionCurve.extremumSlip = 0.8f;
             wheel.sidewaysFriction = frictionCurve;
         }
     }
@@ -214,7 +214,7 @@ public class TumblerController : MonoBehaviour
         {
             DecrementGear();
         }
-        motorTorque = currentAcceleration * gearRatios[currentGear];
+        motorTorque = currentPower * gearRatios[currentGear];
     }
 
     private void UpdateWheels()
