@@ -75,12 +75,17 @@ public class EngineAudio : MonoBehaviour
     private void UpdateTireScreech()
     {
         bool isCurrentlyHandbraking = tumblerController.IsHandbraking() && currentSpeed > 0.25f;
-        if (isCurrentlyHandbraking && !isTireScreeching)
+        bool isCurrentlyGrounded = tumblerController.IsGrounded();
+        if (isCurrentlyHandbraking && !isTireScreeching && isCurrentlyGrounded)
         {
             tireScreechSound.Play();
             isTireScreeching = true;
         }
         else if (!isCurrentlyHandbraking && isTireScreeching)
+        {
+            tireScreechSound.Stop();
+            isTireScreeching = false;
+        } else if (!isCurrentlyGrounded)
         {
             tireScreechSound.Stop();
             isTireScreeching = false;

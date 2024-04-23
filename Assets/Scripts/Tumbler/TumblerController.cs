@@ -301,6 +301,15 @@ public class TumblerController : MonoBehaviour
         }
     }
 
+    public bool IsGrounded()
+    {
+        foreach(WheelCollider wheel in frontWheelsColliders)
+        {
+            if (wheel.isGrounded) return true;
+        }
+        return false;
+    }
+
     public float GetSpeed()
     {
         return carRigidbody.velocity.magnitude * SpeedToKph;
