@@ -59,10 +59,6 @@ public class TumblerController : MonoBehaviour
             Debug.LogError("Rigidbody component not found on " + gameObject.name);
         }
         tumblerInput = new TumblerInput();
-        if (tumblerInput == null)
-        {
-            Debug.LogError("TumblerInput component not found on " + gameObject.name);
-        }
     }
 
     private void OnEnable()

@@ -1,9 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class EngineAudio : MonoBehaviour
 {
     internal float maxSpeed;
     internal float currentSpeed;
+    internal float minBrakeSpeed = 0.2f;
+    internal bool tireScreechSoundIsPlaying = false;
 
     [Header("Tumbler Settings")]
     [SerializeField] private GameObject tumbler;
@@ -15,11 +18,10 @@ public class EngineAudio : MonoBehaviour
     [SerializeField] private AudioSource tireScreechSound;
 
     [Header("Audio Settings")]
-    [SerializeField] private float runningPitch = 0f;
+    [SerializeField] private float runningPitch = 0.1f;
     [SerializeField] private float runningMaxPitch = 1.5f;
 
     private TumblerController tumblerController;
-    private bool isTireScreeching = false;
 
     private void Awake()
     {
@@ -46,9 +48,27 @@ public class EngineAudio : MonoBehaviour
 
     void Start()
     {
-        // Start audio after all components are validated
-        if (startingSound != null) startingSound.Play();
-        if (idleSound != null) idleSound.Play();
+        StartCoroutine(PlayEngineStartSequence());
+        maxSpeed = tumblerController.GetMaxSpeed();
+    }
+
+    void Update()
+    {
+        UpdateEngineSound();
+        UpdateTireScreech();
+    }
+
+    private IEnumerator PlayEngineStartSequence()
+    {
+        if(startingSound != null)
+        {
+            startingSound.Play();
+            yield return new WaitForSeconds(startingSound.clip.length - 1f);
+        }
+        if(idleSound != null)
+        {
+            idleSound.Play();
+        }
         if (runningSound != null)
         {
             runningSound.Play();
@@ -56,39 +76,23 @@ public class EngineAudio : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (tumblerController == null) return;
-
-        UpdateEngineSound();
-        UpdateTireScreech();
-    }
-
     private void UpdateEngineSound()
     {
-        maxSpeed = tumblerController.GetMaxSpeed();
         currentSpeed = tumblerController.GetSpeed();
-        float pitch = Mathf.Lerp(runningPitch, runningMaxPitch, currentSpeed / maxSpeed);
-        runningSound.pitch = pitch;
+        runningSound.pitch = Mathf.Lerp(runningPitch, runningMaxPitch, currentSpeed / maxSpeed);
     }
 
     private void UpdateTireScreech()
     {
-        bool isCurrentlyHandbraking = tumblerController.IsHandbraking() && currentSpeed > 0.25f;
-        bool isCurrentlyGrounded = tumblerController.IsGrounded();
-        if (isCurrentlyHandbraking && !isTireScreeching && isCurrentlyGrounded)
+        if (!tireScreechSoundIsPlaying && tumblerController.IsGrounded() && tumblerController.IsHandbraking() && currentSpeed > minBrakeSpeed)
         {
             tireScreechSound.Play();
-            isTireScreeching = true;
+            tireScreechSoundIsPlaying = true;
         }
-        else if (!isCurrentlyHandbraking && isTireScreeching)
+        else if (((!tumblerController.IsHandbraking() || currentSpeed < minBrakeSpeed) && tireScreechSoundIsPlaying) || !tumblerController.IsGrounded())
         {
             tireScreechSound.Stop();
-            isTireScreeching = false;
-        } else if (!isCurrentlyGrounded)
-        {
-            tireScreechSound.Stop();
-            isTireScreeching = false;
+            tireScreechSoundIsPlaying = false;
         }
     }
 

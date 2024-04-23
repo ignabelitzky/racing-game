@@ -16,10 +16,10 @@ public class TumblerEffects : MonoBehaviour
 
     private void Awake()
     {
-        if(tumbler != null)
+        if (tumbler != null)
         {
             tumblerController = tumbler.GetComponent<TumblerController>();
-            if(tumblerController == null)
+            if (tumblerController == null)
             {
                 Debug.LogError($"TumblerController component not found on {tumbler.name}");
             }
@@ -29,22 +29,27 @@ public class TumblerEffects : MonoBehaviour
             Debug.LogError("Tumbler object not assigned or found in scene");
         }
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
-        CheckDrift();
-        CheckAirborne();   
+        UpdateEffects();  
     }
 
-    private void CheckDrift()
+    private void UpdateEffects()
     {
         currentSpeed = tumblerController.GetSpeed();
+
+        if (!tumblerController.IsGrounded())
+        {
+            StopEmitter();
+            foreach (ParticleSystem smoke in tireSmokes)
+            {
+                smoke.Stop();
+            }
+            return;
+        }
+
         if (tumblerController.IsHandbraking() && currentSpeed > minSpeed)
         {
             StartEmitter();
@@ -55,29 +60,18 @@ public class TumblerEffects : MonoBehaviour
         }
     }
 
-    private void CheckAirborne()
-    {
-        if (!tumblerController.IsGrounded())
-        {
-            StopEmitter();
-            foreach(ParticleSystem smoke in tireSmokes)
-            {
-                smoke.Stop();
-            }
-        }
-    }
-
     private void StartEmitter()
     {
         if (!tireMarksFlag)
         {
-            for (int i = 0; i < tireMarks.Length; i++) {
-                if(tireColliders[i].isGrounded)
+            for (int i = 0; i < tireMarks.Length; i++)
+            {
+                if (tireColliders[i].isGrounded)
                 {
                     tireMarks[i].emitting = true;
-                    if(i > 1)
+                    if (i > 1)
                     {
-                        tireSmokes[i-2].Play();
+                        tireSmokes[i - 2].Play();
                     }
                 }
             }
@@ -89,11 +83,11 @@ public class TumblerEffects : MonoBehaviour
     {
         if (tireMarksFlag)
         {
-            foreach(TrailRenderer trail in tireMarks)
+            foreach (TrailRenderer trail in tireMarks)
             {
                 trail.emitting = false;
             }
-            foreach(ParticleSystem smoke in tireSmokes)
+            foreach (ParticleSystem smoke in tireSmokes)
             {
                 smoke.Stop();
             }
