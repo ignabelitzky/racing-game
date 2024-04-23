@@ -30,8 +30,13 @@ public class ObjectSpawner : MonoBehaviour
             // Crear la posición
             Vector3 position = new Vector3(x, y, z);
 
+            x = Random.Range(0, 360);
+            y = Random.Range(0, 360);
+            z = Random.Range(0, 360);
+            float w = 0f;
+
             // Sin rotación específica, pero puedes añadir si es necesario
-            Quaternion rotation = Quaternion.identity;
+            Quaternion rotation = new Quaternion(x, y, z, w);
 
             // Instanciar el objeto
             Instantiate(objectPrefab, position, rotation);
