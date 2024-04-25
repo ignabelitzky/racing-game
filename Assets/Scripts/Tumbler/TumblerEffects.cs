@@ -11,7 +11,6 @@ public class TumblerEffects : MonoBehaviour
     [SerializeField] private TrailRenderer[] tireMarks;
     [SerializeField] private ParticleSystem[] tireSmokes;
     [SerializeField] private WheelCollider[] tireColliders;
-    private bool tireMarksFlag = false;
     private float currentSpeed = 0f;
 
     private void Awake()
@@ -62,36 +61,37 @@ public class TumblerEffects : MonoBehaviour
 
     private void StartEmitter()
     {
-        if (!tireMarksFlag)
+        for (int i = 0; i < tireMarks.Length; i++)
         {
-            for (int i = 0; i < tireMarks.Length; i++)
+            if (tireColliders[i].isGrounded)
             {
-                if (tireColliders[i].isGrounded)
+                tireMarks[i].emitting = true;
+                if (i > 1)
                 {
-                    tireMarks[i].emitting = true;
-                    if (i > 1)
-                    {
-                        tireSmokes[i - 2].Play();
-                    }
+                    tireSmokes[i - 2].Play();
                 }
             }
-            tireMarksFlag = true;
+            else
+            {
+                tireMarks[i].emitting = false;
+                if (i > 1)
+                {
+                    tireSmokes[i - 2].Stop();
+                }
+            
+            }
         }
     }
 
     private void StopEmitter()
     {
-        if (tireMarksFlag)
+        foreach (TrailRenderer trail in tireMarks)
         {
-            foreach (TrailRenderer trail in tireMarks)
-            {
-                trail.emitting = false;
-            }
-            foreach (ParticleSystem smoke in tireSmokes)
-            {
-                smoke.Stop();
-            }
-            tireMarksFlag = false;
+            trail.emitting = false;
+        }
+        foreach (ParticleSystem smoke in tireSmokes)
+        {
+            smoke.Stop();
         }
     }
 }
