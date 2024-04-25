@@ -44,7 +44,7 @@ public class TumblerEffects : MonoBehaviour
             StopEmitter();
             foreach (ParticleSystem smoke in tireSmokes)
             {
-                smoke.Stop();
+                smoke.Emit(0);
             }
             return;
         }
@@ -68,7 +68,7 @@ public class TumblerEffects : MonoBehaviour
                 tireMarks[i].emitting = true;
                 if (i > 1)
                 {
-                    tireSmokes[i - 2].Play();
+                    tireSmokes[i - 2].Emit(1);
                 }
             }
             else
@@ -76,7 +76,7 @@ public class TumblerEffects : MonoBehaviour
                 tireMarks[i].emitting = false;
                 if (i > 1)
                 {
-                    tireSmokes[i - 2].Stop();
+                    tireSmokes[i - 2].Emit(0);
                 }
             
             }
@@ -91,7 +91,7 @@ public class TumblerEffects : MonoBehaviour
         }
         foreach (ParticleSystem smoke in tireSmokes)
         {
-            smoke.Stop();
+            smoke.Emit(0);
         }
     }
 }
