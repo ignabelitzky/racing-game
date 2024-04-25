@@ -144,7 +144,7 @@ public class TumblerController : MonoBehaviour
         {
             wheel.brakeTorque = handbrakeForce;
             WheelFrictionCurve frictionCurve = wheel.sidewaysFriction;
-            frictionCurve.extremumSlip = 0.8f;
+            frictionCurve.extremumSlip = 0.5f;
             wheel.sidewaysFriction = frictionCurve;
         }
     }
