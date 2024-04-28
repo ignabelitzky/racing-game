@@ -10,12 +10,13 @@ public class EngineAudio : MonoBehaviour
 
     [Header("Tumbler Settings")]
     [SerializeField] private GameObject tumbler;
+    [SerializeField] private WheelCollider[] tireColliders;
 
     [Header("Audio Components")]
     [SerializeField] private AudioSource startingSound;
     [SerializeField] private AudioSource runningSound;
     [SerializeField] private AudioSource idleSound;
-    [SerializeField] private AudioSource tireScreechSound;
+    [SerializeField] private AudioSource[] tireScreechSounds;
 
     [Header("Audio Settings")]
     [SerializeField] private float runningPitch = 0.1f;
@@ -29,7 +30,10 @@ public class EngineAudio : MonoBehaviour
         CheckAudioSource(startingSound, "StartingSound");
         CheckAudioSource(runningSound, "RunningSound");
         CheckAudioSource(idleSound, "IdleSound");
-        CheckAudioSource(tireScreechSound, "TireScreechSound");
+        foreach (AudioSource tireScreechSound in tireScreechSounds)
+        {
+            CheckAudioSource(tireScreechSound, "TireScreechSound");
+        }
 
         // Early initialization
         if (tumbler != null)
@@ -50,6 +54,10 @@ public class EngineAudio : MonoBehaviour
     {
         StartCoroutine(PlayEngineStartSequence());
         maxSpeed = tumblerController.GetMaxSpeed();
+        foreach(AudioSource tireScreechSound in tireScreechSounds)
+        {
+            tireScreechSound.volume = 0.3f;
+        }
     }
 
     void Update()
@@ -86,12 +94,25 @@ public class EngineAudio : MonoBehaviour
     {
         if (!tireScreechSoundIsPlaying && tumblerController.IsGrounded() && tumblerController.IsHandbraking() && currentSpeed > minBrakeSpeed)
         {
-            tireScreechSound.Play();
-            tireScreechSoundIsPlaying = true;
+            for (int i = 0; i < tireColliders.Length; i++)
+            {
+                if (tireColliders[i].isGrounded && !tireScreechSounds[i].isPlaying)
+                {
+                    tireScreechSounds[i].Play();
+                }
+                else
+                {
+                    tireScreechSounds[i].Stop();
+                }
+                tireScreechSoundIsPlaying = true;
+            }
         }
         else if (((!tumblerController.IsHandbraking() || currentSpeed < minBrakeSpeed) && tireScreechSoundIsPlaying) || !tumblerController.IsGrounded())
         {
-            tireScreechSound.Stop();
+            foreach (AudioSource tireScreechSound in tireScreechSounds)
+            {
+                tireScreechSound.Stop();
+            }
             tireScreechSoundIsPlaying = false;
         }
     }
