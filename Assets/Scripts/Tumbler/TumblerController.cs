@@ -11,6 +11,7 @@ public class TumblerController : MonoBehaviour
 
     internal bool isHandbrakeActive = false;
     internal float steerInput = 0f;
+    internal bool shouldResetMotorTorque = false;
 
     public Rigidbody carRigidbody;
     public TumblerInput tumblerInput;
@@ -87,7 +88,9 @@ public class TumblerController : MonoBehaviour
     private void Update()
     {
         float throttleInput = tumblerInput.Gameplay.Throttle.ReadValue<float>();
+        float oldPower = currentPower;
         currentPower = throttleInput * (throttleInput > 0 ? forwardPower : reversePower);
+        shouldResetMotorTorque = oldPower * currentPower < 0f;
         isHandbrakeActive = tumblerInput.Gameplay.Handbrake.ReadValue<float>() > 0f;
         currentBrakeForce = tumblerInput.Gameplay.Brake.ReadValue<float>() > 0f ? brakingForce : 0f;
         steerInput = tumblerInput.Gameplay.Steer.ReadValue<Vector2>().x;
@@ -101,6 +104,14 @@ public class TumblerController : MonoBehaviour
         float currentSpeed = carRigidbody.velocity.magnitude;
         float maxSpeedInMetersPerSecond = maxSpeedKPH / SpeedToKph;
 
+        // Reset motor torque if the throttle input changes from positive to negative or vice versa
+        if (shouldResetMotorTorque)
+        {
+            ResetMotorTorque();
+            shouldResetMotorTorque = false;
+        }
+
+        // Apply the appropriate drive mode based on the current drive mode
         switch (currentDriveMode) {
             case driveType.FrontWheelDrive:
                 ApplyFrontWheelDrive(currentSpeed, maxSpeedInMetersPerSecond);
@@ -112,12 +123,15 @@ public class TumblerController : MonoBehaviour
                 ApplyAllWheelDrive(currentSpeed, maxSpeedInMetersPerSecond);
                 break;
         }
+        ApplyBrakesAndHandbrake();
+    }
 
+    private void ApplyBrakesAndHandbrake()
+    {
         foreach(WheelCollider wheel in frontWheelsColliders)
         {
             ApplyBraking(wheel);
         }
-
         if(isHandbrakeActive) {
             ApplyHandbrake();
         }
