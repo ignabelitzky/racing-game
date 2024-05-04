@@ -3,17 +3,33 @@ using TMPro;
 
 public class UIController : MonoBehaviour
 {
-    TumblerController tumblerController;
-    [SerializeField] private TextMeshProUGUI driveModeText;
-    [SerializeField] private TextMeshProUGUI gearText;
+    [HideInInspector] private TumblerController tumblerController;
+    [HideInInspector] private TextMeshProUGUI driveModeText;
+    [HideInInspector] private TextMeshProUGUI gearNumText;
 
-    private void Start()
+    private void Awake()
     {
-        tumblerController = FindObjectOfType<TumblerController>();
-        if (tumblerController == null)
+        tumblerController = FindFirstObjectByType<TumblerController>();
+        driveModeText = GameObject.Find("DriveModeText").GetComponent<TextMeshProUGUI>();
+        gearNumText = GameObject.Find("GearNumText").GetComponent<TextMeshProUGUI>();
+        if(!driveModeText)
+        {
+            Debug.LogError("DriveModeText not found in the scene. Please assign the DriveModeText GameObject in the Inspector.");
+        }
+        if(!gearNumText)
+        {
+            Debug.LogError("GearNumText not found in the scene. Please assign the GearNumText GameObject in the Inspector.");
+        }
+        if(!tumblerController)
         {
             Debug.LogError("TumblerController not found in the scene. Please assign the TumblerController GameObject in the Inspector.");
         }
+    }
+
+    private void Start()
+    {
+        UpdateDriveMode();
+        UpdateGearNum();
     }
     public void UpdateDriveMode()
     {
@@ -31,8 +47,8 @@ public class UIController : MonoBehaviour
         }
     }
 
-    public void UpdateGear()
+    public void UpdateGearNum()
     {
-        gearText.text = tumblerController.currentGear.ToString();
+        gearNumText.text = tumblerController.currentGear.ToString();
     }
 }

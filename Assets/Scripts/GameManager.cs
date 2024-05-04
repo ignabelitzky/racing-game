@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
     private void UpdateNeedle()
     {
         // Convert velocity from m/s to km/h
-        vehicleSpeedKmH = carRigidbody.velocity.magnitude * 3.6f;
+        vehicleSpeedKmH = carRigidbody.linearVelocity.magnitude * 3.6f;
 
         // Calculate the angle of the needle
         float speedNormalized = Mathf.Clamp(vehicleSpeedKmH / maxSpeed, 0f, 1f);
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     {
         if (context.started)
         {
-            carRigidbody.velocity = Vector3.zero;
+            carRigidbody.linearVelocity = Vector3.zero;
             carRigidbody.angularVelocity = Vector3.zero;
             carRigidbody.position = resetPosition;
             carRigidbody.rotation = resetRotation;
@@ -74,7 +74,7 @@ public class GameManager : MonoBehaviour
 
     public void FlipCar(InputAction.CallbackContext context)
     {
-        if (context.started && carRigidbody.velocity.magnitude < 1f)
+        if (context.started && carRigidbody.linearVelocity.magnitude < 1f)
         {
             Quaternion uprightRotation = Quaternion.LookRotation(carRigidbody.transform.forward, Vector3.up);
             carRigidbody.MoveRotation(uprightRotation);

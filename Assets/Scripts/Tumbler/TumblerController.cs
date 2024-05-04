@@ -7,7 +7,7 @@ public class TumblerController : MonoBehaviour
 {
     public enum driveType { FrontWheelDrive, RearWheelDrive, AllWheelDrive }
 
-    internal const float SpeedToKph = 3.6f;
+    internal const float SpeedToKPH = 3.6f;
 
     internal bool isHandbrakeActive = false;
     internal float steerInput = 0f;
@@ -53,12 +53,12 @@ public class TumblerController : MonoBehaviour
 
     private void Awake()
     {
+        tumblerInput = new TumblerInput();
         carRigidbody = GetComponent<Rigidbody>();
         if (carRigidbody == null)
         {
             Debug.LogError("Rigidbody component not found on " + gameObject.name);
         }
-        tumblerInput = new TumblerInput();
     }
 
     private void OnEnable()
@@ -75,7 +75,6 @@ public class TumblerController : MonoBehaviour
     {
         onGearChange.Invoke();
         onDriveModeChange.Invoke();
-        carRigidbody.centerOfMass -= new Vector3(0, 0.1f, 0.3f);
     }
     private void FixedUpdate()
     {
@@ -101,8 +100,8 @@ public class TumblerController : MonoBehaviour
         HandleGearShifting();
 
         // Calculate current speed in meters per second
-        float currentSpeed = carRigidbody.velocity.magnitude;
-        float maxSpeedInMetersPerSecond = maxSpeedKPH / SpeedToKph;
+        float currentSpeed = carRigidbody.linearVelocity.magnitude;
+        float maxSpeedInMetersPerSecond = maxSpeedKPH / SpeedToKPH;
 
         // Reset motor torque if the throttle input changes from positive to negative or vice versa
         if (shouldResetMotorTorque)
@@ -197,7 +196,7 @@ public class TumblerController : MonoBehaviour
     private void HandleSteering()
     {
         // Calculate the speed factor, which is normalized between 0 and 1
-        float speedFactor = Mathf.Clamp01(carRigidbody.velocity.magnitude / (maxSpeedKPH / SpeedToKph));
+        float speedFactor = Mathf.Clamp01(carRigidbody.linearVelocity.magnitude / (maxSpeedKPH / SpeedToKPH));
 
         // Interpolate between maxTurnAngle at standstill and maxTurnAngleAtMaxSpeed at full speed
         float dynamicMaxTurnAngle = Mathf.Lerp(maxTurnAngle, maxTurnAngleAtMaxSpeed, speedFactor);
@@ -218,7 +217,7 @@ public class TumblerController : MonoBehaviour
 
     private void HandleGearShifting()
     {
-        float speed = carRigidbody.velocity.magnitude * SpeedToKph;
+        float speed = carRigidbody.linearVelocity.magnitude * SpeedToKPH;
         engineRPM = speed * gearRatios[currentGear] * 1000;
         if (engineRPM > rpmRange[currentGear])
         {
@@ -245,16 +244,14 @@ public class TumblerController : MonoBehaviour
 
     private void UpdateWheel(WheelCollider wheel, Transform wheelTransform)
     {
-        Vector3 position;
-        Quaternion rotation;
-        wheel.GetWorldPose(out position, out rotation);
+        wheel.GetWorldPose(out Vector3 position, out Quaternion rotation);
         wheelTransform.position = position;
         wheelTransform.rotation = rotation;
     }
 
     private void AddDownForce()
     {
-        carRigidbody.AddForce(Vector3.down * downForce * carRigidbody.velocity.magnitude);
+        carRigidbody.AddForce(Vector3.down * downForce * carRigidbody.linearVelocity.magnitude);
     }
 
     // This function is called by the Unity Event System when the player clicks the Drive Mode button
@@ -321,7 +318,7 @@ public class TumblerController : MonoBehaviour
 
     public float GetSpeed()
     {
-        return carRigidbody.velocity.magnitude * SpeedToKph;
+        return carRigidbody.linearVelocity.magnitude * SpeedToKPH;
     }
 
     public float GetEngineRPM()
