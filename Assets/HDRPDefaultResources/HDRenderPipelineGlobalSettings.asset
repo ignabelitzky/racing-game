@@ -154,6 +154,7 @@ MonoBehaviour:
       sssCustomDownsampleSteps: 0
       msaaMode: 1
       materialQuality: 0
+  m_Version: 14
   m_Settings:
     m_SettingsList:
       m_List:
@@ -162,7 +163,6 @@ MonoBehaviour:
       - rid: 7724481569558626535
       - rid: 7724481569558626536
       - rid: 7724481569558626537
-      - rid: 7724481569558626538
       - rid: 7724481569558626539
       - rid: 7724481569558626540
       - rid: 7724481569558626541
@@ -187,6 +187,15 @@ MonoBehaviour:
       - rid: 7724481569558626560
       - rid: 7724481569558626561
       - rid: 7724481569558626562
+      - rid: 5121521450299949059
+      - rid: 5121521450299949060
+      - rid: 5121521450299949061
+      - rid: 5121521450299949062
+      - rid: 5121521450299949063
+      - rid: 5121521450299949064
+      - rid: 5121521450299949065
+      - rid: 5121521450299949066
+      - rid: 5121521450299949067
     m_RuntimeSettings:
       m_List: []
   renderingLayerNames:
@@ -214,15 +223,118 @@ MonoBehaviour:
     obsoleteHasProbeVolumes:
       m_Keys: []
       m_Values: 
-  m_Version: 14
   references:
     version: 2
     RefIds:
-    - rid: 7724481569558626533
-      type: {class: HDRenderPipelineRuntimeMaterials, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
+    - rid: 5121521450299949059
+      type: {class: WorldRenderPipelineResources, ns: UnityEngine.PathTracing.Core, asm: Unity.PathTracing.Runtime}
+      data:
+        _version: 3
+        _blitCubemap: {fileID: 7200000, guid: 5a992812cb320d146a66cc600200cce7, type: 3}
+        _blitGrayScaleCookie: {fileID: 7200000, guid: 557fa399e33bf7647bda5697c5c158df, type: 3}
+        _setAlphaChannelShader: {fileID: 7200000, guid: 5efaea0e81c66334aa9d062d6573e6fd, type: 3}
+        _environmentImportanceSamplingBuild: {fileID: 7200000, guid: 5bb2534d2411d344cbc54f880232640f, type: 3}
+        _skyBoxMesh: {fileID: 4300000, guid: 0529e6c5f6dea8c4a8c2835ed7de57cb, type: 2}
+        _sixFaceSkyBoxMesh: {fileID: 4300000, guid: a80925ceebd011741b42509226cefc74, type: 2}
+        _buildLightGridShader: {fileID: 7200000, guid: 16e47c1641bd0104e92b624601457bb0, type: 3}
+        _solidColorShader: {fileID: 4800000, guid: 3765a7ac691541038de4d587b94ae768, type: 3}
+    - rid: 5121521450299949060
+      type: {class: RayTracingRenderPipelineResources, ns: UnityEngine.Rendering.UnifiedRayTracing, asm: Unity.UnifiedRayTracing.Runtime}
+      data:
+        m_Version: 1
+        m_GeometryPoolKernels: {fileID: 7200000, guid: 98e3d58cae7210c4786f67f504c9e899, type: 3}
+        m_CopyBuffer: {fileID: 7200000, guid: 1b95b5dcf48d1914c9e1e7405c7660e3, type: 3}
+        m_CopyPositions: {fileID: 7200000, guid: 1ad53a96b58d3c3488dde4f14db1aaeb, type: 3}
+        m_BitHistogram: {fileID: 7200000, guid: 8670f7ce4b60cef43bed36148aa1b0a2, type: 3}
+        m_BlockReducePart: {fileID: 7200000, guid: 4e034cc8ea2635c4e9f063e5ddc7ea7a, type: 3}
+        m_BlockScan: {fileID: 7200000, guid: 4d6d5de35fa45ef4a92119397a045cc9, type: 3}
+        m_BuildHlbvh: {fileID: 7200000, guid: 2d70cd6be91bd7843a39a54b51c15b13, type: 3}
+        m_RestructureBvh: {fileID: 7200000, guid: 56641cb88dcb31a4398a4997ef7a7a8c, type: 3}
+        m_Scatter: {fileID: 7200000, guid: a2eaeefdac4637a44b734e85b7be9186, type: 3}
+    - rid: 5121521450299949061
+      type: {class: VolumetricCloudsRuntimeResources, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
+      data:
+        m_VolumetricCloudsCS: {fileID: 7200000, guid: f911a8577fa9a4546a6b255bcf888baf, type: 3}
+        m_VolumetricCloudsTraceCS: {fileID: 7200000, guid: 66eaa9becc91a8646a88c15375af8b86, type: 3}
+        m_VolumetricCloudsTraceShadowsCS: {fileID: 7200000, guid: f350c5c3b41fd1b408aac9076f96610e, type: 3}
+        m_VolumetricCloudsShadowFilterCS: {fileID: 7200000, guid: 771ea9a52996c024095906ac37a8a71f, type: 3}
+        m_VolumetricCloudMapGeneratorCS: {fileID: 7200000, guid: 6b22771f0aa98744cb09f455a5a818cb, type: 3}
+        m_VolumetricCloudsCombinePS: {fileID: 4800000, guid: 12f1a69ddf916f042ae6ce8a994506f3, type: 3}
+        m_CloudLutRainAO: {fileID: 2800000, guid: e0bcfddf26ed5584ba3d8b94d3200114, type: 3}
+        m_WorleyNoise128RGBA: {fileID: 11700000, guid: 1fe54a721d0e2504e89f121c723404a8, type: 3}
+        m_WorleyNoise32RGB: {fileID: 11700000, guid: ec156c314a242914dbb706f73ad78cf2, type: 3}
+        m_PerlinNoise32RGB: {fileID: 11700000, guid: d1aae012f8a4f23478471851f17ff915, type: 3}
+    - rid: 5121521450299949062
+      type: {class: ColorCheckerResources, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
+      data:
+        m_ColorCheckerMaterial: {fileID: 2100000, guid: 7a1044256d39dba4aa777255550527bf, type: 2}
+    - rid: 5121521450299949063
+      type: {class: WaterSystemRuntimeResources, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
       data:
         m_WaterMaterial: {fileID: -876546973899608171, guid: 3fda5e465882bec4d8e64161b681806c, type: 3}
         m_WaterExclusionMaterial: {fileID: 2100000, guid: 1e520c84f7fd17c46af5586f6632155c, type: 2}
+        m_WaterDecalMaterial: {fileID: -876546973899608171, guid: 7e2c0d424490bfc4698c37245b8c63ed, type: 3}
+        m_WaterSimulationCS: {fileID: 7200000, guid: 32ac7f445960a854595586a600c24034, type: 3}
+        m_FourierTransformCS: {fileID: 7200000, guid: bc2ee21836a0b5147900ef35a6e1f508, type: 3}
+        m_WaterEvaluationCS: {fileID: 7200000, guid: c24e765a2bbaace4d9a0ecec600e1967, type: 3}
+        m_WaterPS: {fileID: -6465566751694194690, guid: 3fda5e465882bec4d8e64161b681806c, type: 3}
+        m_WaterLightingCS: {fileID: 7200000, guid: 05d00ad19f202ee4891fdaa90d6d1b23, type: 3}
+        m_WaterLineCS: {fileID: 7200000, guid: 1e7e38362b5026d44ab4f3ff4a612026, type: 3}
+        m_WaterCausticsPS: {fileID: 4800000, guid: 020d64d10886f754e91664d240248c13, type: 3}
+        m_WaterDecalPS: {fileID: 4800000, guid: cf863cbd7bbd44a43b414caed214ba29, type: 3}
+        m_WaterDeformationCS: {fileID: 7200000, guid: 9b8063fa5834d4243bfca8c68a92d9f1, type: 3}
+        m_WaterFoamCS: {fileID: 7200000, guid: 0d16d14b783e65f4d81dbcece2bd0ef9, type: 3}
+        m_WaterDecalMigrationShader: {fileID: -6465566751694194690, guid: 9f1661ed5b4d6ee4685ad5683b09a903, type: 3}
+        m_FoamMask: {fileID: 2800000, guid: ca1d72d84c34dba4390eab4c86e62f62, type: 3}
+    - rid: 5121521450299949064
+      type: {class: WaterSystemGlobalSettings, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
+      data:
+        m_Version: 1
+        m_EnableMaskAndCurrentWaterDecals: 0
+    - rid: 5121521450299949065
+      type: {class: RenderingDebuggerRuntimeResources, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
+      data:
+        m_version: 0
+        m_PanelSettings: {fileID: 11400000, guid: fa69697be3070b04a893666f5947f18c, type: 2}
+        m_StyleSheets:
+        - {fileID: 7433441132597879392, guid: 0ff99fd36f66f1a41bcc1d3c90e0922a, type: 3}
+        - {fileID: 7433441132597879392, guid: 3a8aa4d508da46d4dace18b280f064aa, type: 3}
+        m_VisualTreeAsset: {fileID: 9197481963319205126, guid: b647ceb1e15264943b9b439971e71110, type: 3}
+    - rid: 5121521450299949066
+      type: {class: VrsRenderPipelineRuntimeResources, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
+      data:
+        m_TextureComputeShader: {fileID: 7200000, guid: cacb30de6c40c7444bbc78cb0a81fd2a, type: 3}
+        m_VisualizationShader: {fileID: 4800000, guid: 620b55b8040a88d468e94abe55bed5ba, type: 3}
+        m_VisualizationLookupTable:
+          m_Data:
+          - {r: 0.785, g: 0.23, b: 0.2, a: 1}
+          - {r: 1, g: 0.8, b: 0.8, a: 1}
+          - {r: 0.4, g: 0.2, b: 0.2, a: 1}
+          - {r: 0.51, g: 0.8, b: 0.6, a: 1}
+          - {r: 0.6, g: 0.8, b: 1, a: 1}
+          - {r: 0.2, g: 0.4, b: 0.6, a: 1}
+          - {r: 0.8, g: 1, b: 0.8, a: 1}
+          - {r: 0.2, g: 0.4, b: 0.2, a: 1}
+          - {r: 0.125, g: 0.22, b: 0.36, a: 1}
+        m_ConversionLookupTable:
+          m_Data:
+          - {r: 0.785, g: 0.23, b: 0.2, a: 1}
+          - {r: 1, g: 0.8, b: 0.8, a: 1}
+          - {r: 0.4, g: 0.2, b: 0.2, a: 1}
+          - {r: 0.51, g: 0.8, b: 0.6, a: 1}
+          - {r: 0.6, g: 0.8, b: 1, a: 1}
+          - {r: 0.2, g: 0.4, b: 0.6, a: 1}
+          - {r: 0.8, g: 1, b: 0.8, a: 1}
+          - {r: 0.2, g: 0.4, b: 0.2, a: 1}
+          - {r: 0.125, g: 0.22, b: 0.36, a: 1}
+    - rid: 5121521450299949067
+      type: {class: LightmapSamplingSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
+      data:
+        m_Version: 1
+        m_UseBicubicLightmapSampling: 0
+    - rid: 7724481569558626533
+      type: {class: HDRenderPipelineRuntimeMaterials, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
+      data:
         m_PBRSkyMaterial: {fileID: -876546973899608171, guid: 02532cbb810fb404db49da84f1efe41e, type: 3}
         m_AreaLightMaterial: {fileID: 2100000, guid: ef5f65c980e25304098a95e28f3bd20b, type: 2}
         m_AreaLightCookieMaterial: {fileID: 2100000, guid: 78c6825c5d9c3664f9879ae8609618c7, type: 2}
@@ -302,23 +414,6 @@ MonoBehaviour:
         m_BakeCloudTextureCS: {fileID: 7200000, guid: 09a7f6850ee9fb4439e5ebd632127da5, type: 3}
         m_BakeCloudShadowsCS: {fileID: 7200000, guid: 3e7317e0800c066448ee07a3e47f102b, type: 3}
         m_SkyLUTGenerator: {fileID: 7200000, guid: 79224112d91b32241be6b65802863db4, type: 3}
-        m_VolumetricCloudsCS: {fileID: 7200000, guid: f911a8577fa9a4546a6b255bcf888baf, type: 3}
-        m_VolumetricCloudsTraceCS: {fileID: 7200000, guid: 66eaa9becc91a8646a88c15375af8b86, type: 3}
-        m_VolumetricCloudsTraceShadowsCS: {fileID: 7200000, guid: f350c5c3b41fd1b408aac9076f96610e, type: 3}
-        m_VolumetricCloudsShadowFilterCS: {fileID: 7200000, guid: 771ea9a52996c024095906ac37a8a71f, type: 3}
-        m_VolumetricCloudMapGeneratorCS: {fileID: 7200000, guid: 6b22771f0aa98744cb09f455a5a818cb, type: 3}
-        m_VolumetricCloudsCombinePS: {fileID: 4800000, guid: 12f1a69ddf916f042ae6ce8a994506f3, type: 3}
-        m_WaterSimulationCS: {fileID: 7200000, guid: 32ac7f445960a854595586a600c24034, type: 3}
-        m_FourierTransformCS: {fileID: 7200000, guid: bc2ee21836a0b5147900ef35a6e1f508, type: 3}
-        m_WaterEvaluationCS: {fileID: 7200000, guid: c24e765a2bbaace4d9a0ecec600e1967, type: 3}
-        m_WaterPS: {fileID: -6465566751694194690, guid: 3fda5e465882bec4d8e64161b681806c, type: 3}
-        m_WaterLightingCS: {fileID: 7200000, guid: 05d00ad19f202ee4891fdaa90d6d1b23, type: 3}
-        m_WaterLineCS: {fileID: 7200000, guid: 1e7e38362b5026d44ab4f3ff4a612026, type: 3}
-        m_WaterCausticsPS: {fileID: 4800000, guid: 020d64d10886f754e91664d240248c13, type: 3}
-        m_WaterDeformationPS: {fileID: 4800000, guid: 575db5571f0ebfb439b332bf5b0a405b, type: 3}
-        m_WaterDeformationCS: {fileID: 7200000, guid: 9b8063fa5834d4243bfca8c68a92d9f1, type: 3}
-        m_WaterFoamPS: {fileID: 4800000, guid: cf863cbd7bbd44a43b414caed214ba29, type: 3}
-        m_WaterFoamCS: {fileID: 7200000, guid: 0d16d14b783e65f4d81dbcece2bd0ef9, type: 3}
         m_LineStagePrepareCS: {fileID: 7200000, guid: 53231d98bbe64477aacc1adc14ba2619, type: 3}
         m_LineStageSetupSegmentCS: {fileID: 7200000, guid: 028836c66d494d8d94e1b2ca7d5382ae, type: 3}
         m_LineStageShadingSetupCS: {fileID: 7200000, guid: fefde0fac988da24a93bc2d8d6e0a0a1, type: 3}
@@ -333,6 +428,7 @@ MonoBehaviour:
         m_PreIntegratedFGD_MarschnerPS: {fileID: 4800000, guid: 31f36caf0a5e7f848a1b5328b6ad3eb8, type: 3}
         m_PreIntegratedFiberScatteringCS: {fileID: 7200000, guid: 4a087c9d074552c48aeb85184d56312e, type: 3}
         m_VolumetricMaterialCS: {fileID: 7200000, guid: 26f18c9cb0bccbf4481f8c84579affb1, type: 3}
+        m_ClearVolumetricMaterialCS: {fileID: 7200000, guid: a34e917ab17a38d419e6dd712988ac15, type: 3}
         m_EyeMaterialCS: {fileID: 7200000, guid: 76f78ba05cea1ed449c1ef613ab90597, type: 3}
         m_FilterAreaLightCookiesPS: {fileID: 4800000, guid: c243aac96dda5fa40bed693ed5ba02c4, type: 3}
         m_BuildProbabilityTablesCS: {fileID: 7200000, guid: b9f26cf340afe9145a699753531b2a4c, type: 3}
@@ -395,6 +491,8 @@ MonoBehaviour:
         m_DofCoCMinMaxCS: {fileID: 7200000, guid: c70dd492c3d2fe94589d6ca8d4e37915, type: 3}
         m_DofMinMaxDilateCS: {fileID: 7200000, guid: 757a3f81b35177b44b2b178909b49172, type: 3}
         m_DofCombineCS: {fileID: 7200000, guid: d9b940a90a2d0884f94990a0dde43a53, type: 3}
+        m_DofComputeSlowTilesCS: {fileID: 7200000, guid: b89f86a76de81ee42ae16daad78eb382, type: 3}
+        m_DofComputeApertureShapeCS: {fileID: 7200000, guid: dd5acecb27e20334fa3be332e85172df, type: 3}
         m_MotionBlurMotionVecPrepCS: {fileID: 7200000, guid: ed9438fa777911d48933402087203b15, type: 3}
         m_MotionBlurGenTileCS: {fileID: 7200000, guid: 336e1fdbb3a1b8647b06208415f87804, type: 3}
         m_MotionBlurMergeTileCS: {fileID: 7200000, guid: cd14ddf849edeed43b0e3ccf66023038, type: 3}
@@ -454,11 +552,6 @@ MonoBehaviour:
       data:
         m_Version: 0
         m_SpecularFade: 0
-    - rid: 7724481569558626538
-      type: {class: RenderGraphSettings, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
-      data:
-        m_Version: 0
-        m_DynamicRenderPassCulling: 0
     - rid: 7724481569558626539
       type: {class: HDRPRayTracingResources, ns: UnityEngine.Rendering.HighDefinition, asm: Unity.RenderPipelines.HighDefinition.Runtime}
       data:
@@ -586,11 +679,6 @@ MonoBehaviour:
         m_HairAttenuationLUT: {fileID: 11700000, guid: d37662e2b254e594abf839dddc5ab653, type: 2}
         m_HairAzimuthalScatteringLUT: {fileID: 11700000, guid: d217deac7ff61094080126811521ab5b, type: 2}
         m_HairLongitudinalScatteringLUT: {fileID: 11700000, guid: 0da412d38ea6ba3459322abe6984ca9b, type: 2}
-        m_CloudLutRainAO: {fileID: 2800000, guid: e0bcfddf26ed5584ba3d8b94d3200114, type: 3}
-        m_WorleyNoise128RGBA: {fileID: 11700000, guid: 1fe54a721d0e2504e89f121c723404a8, type: 3}
-        m_WorleyNoise32RGB: {fileID: 11700000, guid: ec156c314a242914dbb706f73ad78cf2, type: 3}
-        m_PerlinNoise32RGB: {fileID: 11700000, guid: d1aae012f8a4f23478471851f17ff915, type: 3}
-        m_FoamMask: {fileID: 2800000, guid: ca1d72d84c34dba4390eab4c86e62f62, type: 3}
         m_FilmGrainTex:
         - {fileID: 2800000, guid: 284a1ac236869fa4eacf377d73c7dff8, type: 3}
         - {fileID: 2800000, guid: bd74961b009b93145a998ae93a5fc186, type: 3}
@@ -752,10 +840,12 @@ MonoBehaviour:
         dilationShader: {fileID: 7200000, guid: 6bb382f7de370af41b775f54182e491d, type: 3}
         subdivideSceneCS: {fileID: 7200000, guid: bb86f1f0af829fd45b2ebddda1245c22, type: 3}
         voxelizeSceneShader: {fileID: 4800000, guid: c8b6a681c7b4e2e4785ffab093907f9e, type: 3}
-        traceVirtualOffsetCS: {fileID: 7200000, guid: 805f10d263aac4b4098c0279cd37a4f3, type: 3}
-        traceVirtualOffsetRT: {fileID: 4807578003741378534, guid: b60511f4aa1443f4d8c0b18f4fec92f4, type: 3}
-        skyOcclusionCS: {fileID: 7200000, guid: 798f52ec82fa04048a12826bbbbcf7b4, type: 3}
-        skyOcclusionRT: {fileID: 4807578003741378534, guid: dfaf42b38dd001f49a72d8102b709f29, type: 3}
+        traceVirtualOffsetCS: {fileID: -6772857160820960102, guid: ff2cbab5da58bf04d82c5f34037ed123, type: 3}
+        traceVirtualOffsetRT: {fileID: -5126288278712620388, guid: ff2cbab5da58bf04d82c5f34037ed123, type: 3}
+        skyOcclusionCS: {fileID: -6772857160820960102, guid: 5a2a534753fbdb44e96c3c78b5a6999d, type: 3}
+        skyOcclusionRT: {fileID: -5126288278712620388, guid: 5a2a534753fbdb44e96c3c78b5a6999d, type: 3}
+        renderingLayerCS: {fileID: -6772857160820960102, guid: 94a070d33e408384bafc1dea4a565df9, type: 3}
+        renderingLayerRT: {fileID: -5126288278712620388, guid: 94a070d33e408384bafc1dea4a565df9, type: 3}
     - rid: 7724481569558626556
       type: {class: ProbeVolumeGlobalSettings, ns: UnityEngine.Rendering, asm: Unity.RenderPipelines.Core.Runtime}
       data:
