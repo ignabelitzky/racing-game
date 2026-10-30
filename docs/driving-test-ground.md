@@ -1,6 +1,6 @@
 # Sandbox driving test ground
 
-Branch: `feat/tumbler-underbody-detail` — continues the approved Tumbler visual work.
+Available on `main` — continues the approved Tumbler visual work. The temporary review branch has been integrated and removed.
 
 This document records the ground addition in `33d9aaf`. Subsequent [contact-mark and exposure updates](contact-marks-and-exposure.md) revise the visual effects and add a scene-local exposure Volume.
 

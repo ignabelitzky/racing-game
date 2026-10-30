@@ -1,8 +1,10 @@
-# Tumbler Driving Sandbox — Unity
+# Tumbler Sandbox — Unity
 
 A personal Unity sandbox for learning and experimenting with vehicle gameplay. Drive a Tumbler inspired by the Batmobile from *Batman Begins*, explore a physics playground, and experiment with different drivetrain modes.
 
-This repository (`racing-game`) is a learning project, not a finished commercial game. The project includes a six-zone driving test ground in Sandbox. Unity Editor checks cover the new colliders and per-surface wheel grip; manual driving and player-build validation remain separate checks.
+This repository (`tumbler-sandbox`) is a learning project, not a finished commercial game. The project includes a six-zone driving test ground in Sandbox. Unity Editor checks cover the new colliders and per-surface wheel grip; manual driving and player-build validation remain separate checks.
+
+`main` is the maintained branch. The Tumbler visual updates, driving test ground, contact marks, menu colors and fixed exposure have been integrated into it; the temporary review branch has been removed.
 
 ## Features
 
@@ -30,7 +32,7 @@ This repository (`racing-game`) is a learning project, not a finished commercial
 | Cinemachine | **6.6.0**, camera components serialized in Sandbox |
 | Unity UI / TextMeshPro | uGUI **2.6.0**, menu and driving HUD |
 
-Versions come from `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.json`. HDRP is the only installed render pipeline; Graphics Settings selects its existing asset and all quality levels inherit that selection. Unused URP and legacy Postprocessing packages, configurations and exclusive demo resources were removed after reference auditing. Other installed packages are not evidence of implemented gameplay features. The versions above reflect the Unity upgrade already present on this branch; the driving-test-ground change does not alter packages or project settings.
+Versions come from `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.json`. HDRP is the only installed render pipeline; Graphics Settings selects its existing asset and all quality levels inherit that selection. Unused URP and legacy Postprocessing packages, configurations and exclusive demo resources were removed after reference auditing. Other installed packages are not evidence of implemented gameplay features. The versions above reflect the Unity upgrade already present in the project; the driving-test-ground change does not alter packages or project settings.
 
 ## Getting started
 
@@ -39,8 +41,8 @@ Requirements: Git, Unity Hub, Unity Editor **6000.6.7f1**, an HDRP-capable graph
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/ignabelitzky/racing-game.git
-   cd racing-game
+   git clone https://github.com/ignabelitzky/tumbler-sandbox.git
+   cd tumbler-sandbox
    ```
 
 2. Install Unity **6000.6.7f1** through Unity Hub. If it is not listed, use Hub's link to the Unity download archive.
@@ -94,7 +96,7 @@ Each wheel can leave subtle marks where it actually contacts the road while brak
 ## Project structure
 
 ```text
-racing-game/
+tumbler-sandbox/
 ├── Assets/
 │   ├── _Project/
 │   │   ├── Art/                   # Tumbler visual details and driving-ground assets
@@ -154,6 +156,8 @@ Unity HDRP capture with a temporary overview camera and fixed preview exposure. 
 ## Current status and validation
 
 The repository implements the sandbox systems described above. It does not claim a complete racing game, a verified release build, or cross-platform controller support. No future roadmap is committed here.
+
+The validation reports retain the original branch names and baseline commits as historical records. All integrated features are available on `main`.
 
 The new ground is one scene-root prefab. The approved Tumbler source FBX, vehicle physics/controller, wheel colliders, suspension, torque, input bindings, HUD, audio and camera setup retain their existing data. The surface adapter adds local grip behavior. Visual updates replace the six legacy TrailRenderers with contact-projected marks, revise `TumblerEffects`, add a Sandbox-only exposure Volume and unify the menu option palette. Packages and project settings are unchanged by these additions.
 

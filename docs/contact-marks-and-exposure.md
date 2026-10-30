@@ -1,6 +1,6 @@
 # Contact marks, menu colors and exposure
 
-Branch: `feat/tumbler-underbody-detail`. This change follows the driving ground introduced in `33d9aaf`.
+Available on `main`. The temporary review branch has been integrated and removed. This change follows the driving ground introduced in `33d9aaf`.
 
 ## Per-wheel contact marks
 

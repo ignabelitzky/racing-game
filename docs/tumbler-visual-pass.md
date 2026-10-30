@@ -1,6 +1,6 @@
-# Tumbler visual pass — review branch
+# Tumbler visual pass
 
-Branch: `feat/tumbler-underbody-detail`
+Available on `main`. This document records the original visual pass introduced in `670fb7d`; the temporary review branch has been integrated and removed. Later changes are documented in the [driving test ground](driving-test-ground.md) and [contact marks and exposure](contact-marks-and-exposure.md).
 
 Baseline main: `483ae13b648b21638287e2dbbbd15bd5cdef69bb`
 
@@ -32,12 +32,12 @@ The original base plate remains. The five added mesh groups total **4,380 triang
 
 ## Review in Unity
 
-1. Fetch and check out `feat/tumbler-underbody-detail`; do not merge to main yet.
+1. Fetch the repository and check out the latest `main`.
 2. Open with Unity `6000.6.7f1` and open `Assets/_Project/Scenes/Sandbox.unity`.
 3. In Scene view select `Tumbler`. Inspect its underside and look at the armor from inside/outside.
 4. Toggle **Tumbler → Underbody Detail (Visual Only)** to compare the new relief with the original flat base. Individual mesh groups can also be toggled.
 5. Check driving, ground clearance appearance, steering/suspension travel, vehicle rollover/recovery, boost/particles and audio in Play Mode. The added detail follows the vehicle automatically as a child; it does not change physical collision geometry.
-6. For a complete original-material comparison, use main: disabling the detail prefab alone intentionally retains the backface visibility fix.
+6. For a complete original-material comparison, use baseline commit `483ae13` in a separate working copy. Disabling the detail prefab alone intentionally retains the backface visibility fix.
 
 ## Validation actually performed
 
@@ -49,7 +49,7 @@ The original base plate remains. The five added mesh groups total **4,380 triang
 - Before/after views rendered from real project meshes through HDRP with identical studio camera/light setups. These are comparison renders, not AI illustrations or gameplay captures.
 - Static file/scene comparison confirms original FBX/importer, gameplay code, physics components, settings and all unrelated assets remain unchanged.
 
-Manual driving, physical controller testing, frame-rate profiling and player builds were not run for this visual pass. The branch is intentionally provided for personal acceptance testing.
+Manual driving, physical controller testing, frame-rate profiling and player builds were not run for this visual pass. Its changes are now integrated into `main` following personal acceptance of the review branch.
 
 ## HDRP comparison renders
 
