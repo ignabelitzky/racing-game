@@ -1,2 +1,32 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Keep Unity YAML and source readable in diffs; do not enable LFS implicitly.
+*.cs text
+*.shader text
+*.cginc text
+*.hlsl text
+*.json text
+*.inputactions text
+*.meta text
+*.unity text
+*.prefab text
+*.mat text
+*.md text
+
+# Binary source assets must never undergo text conversion.
+*.fbx binary
+*.exr binary
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.tga binary
+*.tif binary
+*.tiff binary
+*.psd binary
+*.ogg binary
+*.wav binary
+*.mp3 binary
+*.ttf binary
+*.otf binary
+*.pdf binary
