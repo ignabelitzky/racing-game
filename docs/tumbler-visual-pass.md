@@ -1,6 +1,6 @@
 # Tumbler visual pass
 
-Available on `main`. This document records the original visual pass introduced in `670fb7d`; the temporary review branch has been integrated and removed. Later changes are documented in the [driving test ground](driving-test-ground.md) and [contact marks and exposure](contact-marks-and-exposure.md).
+Available on `main`. This document records the original visual pass introduced in `670fb7d`; the temporary review branch has been integrated and removed. Later changes are documented in the [driving test ground](driving-test-ground.md), [contact marks and exposure](contact-marks-and-exposure.md), and [underbody collision update](underbody-collision.md).
 
 Baseline main: `483ae13b648b21638287e2dbbbd15bd5cdef69bb`
 

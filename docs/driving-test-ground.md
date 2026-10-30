@@ -2,7 +2,7 @@
 
 Available on `main` — continues the approved Tumbler visual work. The temporary review branch has been integrated and removed.
 
-This document records the ground addition in `33d9aaf`. Subsequent [contact-mark and exposure updates](contact-marks-and-exposure.md) revise the visual effects and add a scene-local exposure Volume.
+This document records the ground addition in `33d9aaf`. Subsequent [contact-mark and exposure updates](contact-marks-and-exposure.md) revise the visual effects and add a scene-local exposure Volume. The later [underbody collision update](underbody-collision.md) adjusts the vehicle's lower collision hull and friction while preserving its visible geometry and original mass properties.
 
 Scene: `Assets/_Project/Scenes/Sandbox.unity`
 

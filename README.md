@@ -102,6 +102,7 @@ tumbler-sandbox/
 │   │   ├── Art/                   # Tumbler visual details and driving-ground assets
 │   │   ├── Prefabs/               # Additive underbody and driving-test-ground prefabs
 │   │   ├── Input/                 # Input actions and generated C# wrapper
+│   │   ├── Physics/               # Beveled lower-body collision hull and glide material
 │   │   ├── Rendering/             # Sandbox-only exposure profile
 │   │   ├── Scenes/                # Main Menu and Sandbox
 │   │   └── Scripts/
@@ -159,15 +160,18 @@ The repository implements the sandbox systems described above. It does not claim
 
 The validation reports retain the original branch names and baseline commits as historical records. All integrated features are available on `main`.
 
-The new ground is one scene-root prefab. The approved Tumbler source FBX, vehicle physics/controller, wheel colliders, suspension, torque, input bindings, HUD, audio and camera setup retain their existing data. The surface adapter adds local grip behavior. Visual updates replace the six legacy TrailRenderers with contact-projected marks, revise `TumblerEffects`, add a Sandbox-only exposure Volume and unify the menu option palette. Packages and project settings are unchanged by these additions.
+The driving-ground addition uses one scene-root prefab and preserved the approved Tumbler source FBX, vehicle physics/controller, wheel colliders, suspension, torque, input bindings, HUD, audio and camera setup. Its surface adapter adds local grip behavior. Visual updates replace the six legacy TrailRenderers with contact-projected marks, revise `TumblerEffects`, add a Sandbox-only exposure Volume and unify the menu option palette. Packages and project settings are unchanged by these additions.
 
 A subsequent controller fix makes `IsGrounded()` detect contact from any of the six wheels, including rear-only contact. Its current caller is the tire-audio logic; drive torque is not gated by this method. Ground contact alone does not guarantee traction when an obstacle supports the vehicle's underbody. This fix does not change colliders, suspension, grip or torque.
+
+The later [underbody collision update](docs/underbody-collision.md) replaces the lower rectangular collider with a beveled convex hull and a dedicated low-friction material to reduce ledge snagging. Visible vehicle geometry and proportions remain unchanged. The original center of mass and inertia are explicitly preserved; wheel grip, suspension and drivetrain settings retain their existing values.
 
 Validation performed:
 
 - Native scene-load and physics-contact checks in Unity **6000.6.7f1**: ramp/landing heights, upward contact normals, terrain profiles, all six zones, movable markers and clear spawn/reset positions.
 - Play Mode checks with the actual Tumbler: all six wheels contact each comparison surface, grip multipliers apply and restore on unmarked terrain, disable/reenable restores/reapplies the profile, and the existing handbrake slip adjustment survives the adapter.
 - Ground-contact regression: isolated support under each of the six wheels, rear-only support, all-wheel support, airborne and contact-loss cases. Repeat these with `tools/verify-driving-ground.py`; see [test-ground validation instructions](docs/driving-test-ground.md#validation).
+- Underbody collision checks compare the original and updated vehicle on temporary rail, curb and platform fixtures, plus an isolated high-speed lower-hull impact. Repeat with `tools/verify-chassis.py`; see [method and limitations](docs/underbody-collision.md#validation).
 - Authentic HDRP renders of the overview, ramps, suspension and surface areas, plus static preservation and asset-reference checks. Results are recorded in [test-ground validation](docs/driving-test-ground-validation.json).
 - Contact-mark/menu/exposure checks: native braking and unbraked sliding generate projected marks, asphalt/camber vertices follow the surface, airborne/reset motion creates no bridging strokes, the Vulkan shader renders and fades, and the resolved exposure stays fixed at different camera angles. See [visual validation](docs/visual-feedback-validation.json).
 - **Not run:** physical controller driving, timed handling/braking comparisons, repeated landings at different speeds, performance profiling, audio evaluation or player builds. Grip and visual values are initial profiles for personal tuning.

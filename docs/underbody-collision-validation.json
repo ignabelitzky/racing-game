@@ -1,0 +1,147 @@
+{
+  "date": "2026-10-30",
+  "status": "PASS",
+  "unity": "6000.6.7f1",
+  "baseline_commit": "e86319b69caeab64f20eb41169cf15616b147008",
+  "checks": {
+    "chassis": {
+      "edit_checks": 39,
+      "play_checks": 24
+    },
+    "driving_ground_regression": {
+      "edit_checks": 89,
+      "play_checks": 199
+    }
+  },
+  "scene_preservation": {
+    "total_existing_blocks": 244,
+    "changed_blocks": [
+      "2040198345356866088",
+      "4642507706151084181"
+    ],
+    "other_blocks_byte_identical": 242,
+    "rigidbody_changes_limited_to_retaining_original_mass_properties": true,
+    "visible_geometry_fbx_sha256": "14714cc91ccb51eeb3f8c5d69fabd0441f95548bfa0d9658f7ee80c0c378e04d",
+    "rendered_assets_scripts_inputs_packages_and_project_settings_unchanged": true,
+    "new_meta_guids_unique": true
+  },
+  "physics_comparisons": [
+    {
+      "scenario": "gravity slide on 7 degree center rail",
+      "shape": "original box and original friction",
+      "drive": "none",
+      "rearContacts": 0,
+      "frontContacts": 0,
+      "rearContactForce": 0.0,
+      "forwardTravel": 0.0
+    },
+    {
+      "scenario": "gravity slide on 7 degree center rail",
+      "shape": "beveled hull and glide friction",
+      "drive": "none",
+      "rearContacts": 0,
+      "frontContacts": 0,
+      "rearContactForce": 0.0,
+      "forwardTravel": 5.677703857421875
+    },
+    {
+      "scenario": "6 cm curb with equal low friction and 9000 N push",
+      "shape": "original box",
+      "drive": "none",
+      "rearContacts": 0,
+      "frontContacts": 0,
+      "rearContactForce": 0.0,
+      "forwardTravel": 0.54583740234375
+    },
+    {
+      "scenario": "6 cm curb with equal low friction and 9000 N push",
+      "shape": "beveled hull",
+      "drive": "none",
+      "rearContacts": 0,
+      "frontContacts": 0,
+      "rearContactForce": 0.0,
+      "forwardTravel": 8.8048095703125
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "original box and original friction",
+      "drive": "AllWheelDrive forward",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 661.3756103515625,
+      "forwardTravel": 0.0
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "beveled hull and glide friction",
+      "drive": "AllWheelDrive forward",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 26570.646484375,
+      "forwardTravel": 30.75384521484375
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "original box and original friction",
+      "drive": "RearWheelDrive forward",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 661.3756103515625,
+      "forwardTravel": 0.0
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "beveled hull and glide friction",
+      "drive": "RearWheelDrive forward",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 26570.646484375,
+      "forwardTravel": 9.621185302734375
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "original box and original friction",
+      "drive": "FrontWheelDrive forward",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 661.3756103515625,
+      "forwardTravel": 0.0
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "beveled hull and glide friction",
+      "drive": "FrontWheelDrive forward",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 26570.646484375,
+      "forwardTravel": 26.850982666015625
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "original box and original friction",
+      "drive": "RearWheelDrive reverse",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 661.3756103515625,
+      "forwardTravel": 0.0
+    },
+    {
+      "scenario": "1.5 m platform edge",
+      "shape": "beveled hull and glide friction",
+      "drive": "RearWheelDrive reverse",
+      "rearContacts": 4,
+      "frontContacts": 0,
+      "rearContactForce": 26570.646484375,
+      "forwardTravel": -1.695831298828125
+    }
+  ],
+  "limitations": [
+    "Controlled fixtures use temporary motion constraints and scripted 0.02 s simulation steps.",
+    "Rail/curb external test force is verification-only; the platform trial uses existing controller torque.",
+    "Updated vehicle exits the representative edge forward in AWD, RWD and FWD.",
+    "Reverse trial progresses about 1.7 m toward the upper platform without a full return.",
+    "No automatic lift or recovery impulse; complete underbody support can still leave insufficient traction.",
+    "Physical controller driving, player builds, performance profiling and exhaustive obstacle coverage were not run.",
+    "An existing Unity Editor Search indexing exception occurred separately from the passing native assertions."
+  ]
+}
