@@ -37948,6 +37948,7 @@ MonoBehaviour:
   maxTurnAngleAtMaxSpeed: 15
   steeringResponse: 5
   downForce: 10
+  maxSteeringLateralAcceleration: 9
   numberOfGears: 5
 --- !u!114 &2040198345356866090
 MonoBehaviour:

@@ -1,0 +1,192 @@
+{
+  "date": "2026-10-30",
+  "status": "PASS",
+  "unity": "6000.6.7f1",
+  "input_system": "1.20.1",
+  "baseline_commit": "bb52d1903f5a82a40c94334313ad2baf5c47cdee",
+  "checks": {
+    "handling": {
+      "play_checks": 75
+    },
+    "driving_ground": {
+      "edit_checks": 89,
+      "play_checks": 199
+    },
+    "chassis": {
+      "edit_checks": 39,
+      "play_checks": 24
+    }
+  },
+  "total_native_checks": 426,
+  "source_sha256": "284c725b3e1c2c889ce50d9f19ce271e57fad18ae62d4d3951847921214771a0",
+  "configuration": {
+    "wheelbase_m": 4.513,
+    "max_steering_lateral_acceleration_m_s2": 9,
+    "max_speed_cutoff_kmh": 175
+  },
+  "method": {
+    "fixture_size_m": 6000,
+    "held_input_seconds": 35,
+    "straightening_seconds": 8,
+    "average_window_seconds": [
+      30,
+      35
+    ],
+    "sample_interval_seconds": 0.5,
+    "frame_delta_seconds": 0.019999992102384567,
+    "physics_delta_seconds": 0.02,
+    "motion_constraints": "None",
+    "legacy_comparison": "Only original steering formula replayed; drivetrain and other physics code identical"
+  },
+  "comparisons": [
+    {
+      "mode": "FrontWheelDrive",
+      "steering_input": 0,
+      "before_mean_kmh": 125.8388442993164,
+      "after_mean_kmh": 125.83914184570312,
+      "before_final_held_kmh": 128.3488006591797,
+      "after_final_held_kmh": 128.3490447998047,
+      "before_mean_front_steer_degrees": 0.0,
+      "after_mean_front_steer_degrees": 0.0,
+      "before_mean_total_wheel_torque_nm": 3120.0,
+      "minimum_body_clearance_m": 0.23453521728515625
+    },
+    {
+      "mode": "FrontWheelDrive",
+      "steering_input": 1,
+      "before_mean_kmh": 30.469213485717773,
+      "after_mean_kmh": 97.1239013671875,
+      "before_final_held_kmh": 30.53350830078125,
+      "after_final_held_kmh": 102.96363067626953,
+      "before_mean_front_steer_degrees": 35.648216941139914,
+      "after_mean_front_steer_degrees": 3.211170044812289,
+      "before_mean_total_wheel_torque_nm": 2880.0,
+      "minimum_body_clearance_m": 0.15311431884765625
+    },
+    {
+      "mode": "FrontWheelDrive",
+      "steering_input": -1,
+      "before_mean_kmh": 30.45610809326172,
+      "after_mean_kmh": 97.4632797241211,
+      "before_final_held_kmh": 30.38869857788086,
+      "after_final_held_kmh": 103.41838836669922,
+      "before_mean_front_steer_degrees": 35.64811463789506,
+      "after_mean_front_steer_degrees": 3.189361723986539,
+      "before_mean_total_wheel_torque_nm": 2880.0,
+      "minimum_body_clearance_m": 0.149017333984375
+    },
+    {
+      "mode": "RearWheelDrive",
+      "steering_input": 0,
+      "before_mean_kmh": 161.5526580810547,
+      "after_mean_kmh": 161.5526580810547,
+      "before_final_held_kmh": 164.30589294433594,
+      "after_final_held_kmh": 164.30589294433594,
+      "before_mean_front_steer_degrees": 0.0,
+      "after_mean_front_steer_degrees": 0.0,
+      "before_mean_total_wheel_torque_nm": 5280.0,
+      "minimum_body_clearance_m": 0.2331085205078125
+    },
+    {
+      "mode": "RearWheelDrive",
+      "steering_input": 1,
+      "before_mean_kmh": 34.33114242553711,
+      "after_mean_kmh": 154.27149963378906,
+      "before_final_held_kmh": 34.264617919921875,
+      "after_final_held_kmh": 155.8316192626953,
+      "before_mean_front_steer_degrees": 35.09455108642578,
+      "after_mean_front_steer_degrees": 1.267426068132574,
+      "before_mean_total_wheel_torque_nm": 5760.0,
+      "minimum_body_clearance_m": 0.1802215576171875
+    },
+    {
+      "mode": "RearWheelDrive",
+      "steering_input": -1,
+      "before_mean_kmh": 33.308780670166016,
+      "after_mean_kmh": 156.2659912109375,
+      "before_final_held_kmh": 33.239383697509766,
+      "after_final_held_kmh": 157.5925750732422,
+      "before_mean_front_steer_degrees": 35.2405593178489,
+      "after_mean_front_steer_degrees": 1.2352111664685337,
+      "before_mean_total_wheel_torque_nm": 5760.0,
+      "minimum_body_clearance_m": 0.17807769775390625
+    },
+    {
+      "mode": "AllWheelDrive",
+      "steering_input": 0,
+      "before_mean_kmh": 174.96339416503906,
+      "after_mean_kmh": 174.95115661621094,
+      "before_final_held_kmh": 175.10231018066406,
+      "after_final_held_kmh": 175.10203552246094,
+      "before_mean_front_steer_degrees": 0.0,
+      "after_mean_front_steer_degrees": 0.0,
+      "before_mean_total_wheel_torque_nm": 4320.0,
+      "minimum_body_clearance_m": 0.22870635986328125
+    },
+    {
+      "mode": "AllWheelDrive",
+      "steering_input": 1,
+      "before_mean_kmh": 109.58399963378906,
+      "after_mean_kmh": 174.95590209960938,
+      "before_final_held_kmh": 110.67852783203125,
+      "after_final_held_kmh": 174.865966796875,
+      "before_mean_front_steer_degrees": 24.36939014088024,
+      "after_mean_front_steer_degrees": 0.9842030243440107,
+      "before_mean_total_wheel_torque_nm": 10407.272727272728,
+      "minimum_body_clearance_m": 0.14853668212890625
+    },
+    {
+      "mode": "AllWheelDrive",
+      "steering_input": -1,
+      "before_mean_kmh": 106.40316009521484,
+      "after_mean_kmh": 174.98623657226562,
+      "before_final_held_kmh": 109.84944152832031,
+      "after_final_held_kmh": 175.10440063476562,
+      "before_mean_front_steer_degrees": 24.8439247824929,
+      "after_mean_front_steer_degrees": 0.9841501225124706,
+      "before_mean_total_wheel_torque_nm": 11978.181818181818,
+      "minimum_body_clearance_m": 0.14478302001953125
+    }
+  ],
+  "preservation": {
+    "scene_blocks": 244,
+    "only_changed_scene_block": "2040198345356866089",
+    "scene_change": "One explicit steering-assist setting",
+    "unchanged_controller_methods": [
+      "AddDownForce",
+      "ApplyAllWheelDrive",
+      "ApplyBrakesAndHandbrake",
+      "ApplyBraking",
+      "ApplyDrive",
+      "ApplyFrontWheelDrive",
+      "ApplyHandbrake",
+      "ApplyRearWheelDrive",
+      "DecrementGear",
+      "FixedUpdate",
+      "GetEngineRPM",
+      "GetMaxSpeed",
+      "GetMotorTorque",
+      "GetSpeed",
+      "HandleGearShifting",
+      "IncrementGear",
+      "IsGrounded",
+      "IsHandbraking",
+      "OnDisable",
+      "OnEnable",
+      "ResetMotorTorque",
+      "Start",
+      "SwitchDriveMode",
+      "Update",
+      "UpdateWheel",
+      "UpdateWheels"
+    ],
+    "geometry_colliders_mass_properties_inputs_grip_packages_and_project_settings_unchanged": true
+  },
+  "limitations": [
+    "Controlled fixture speeds differ from user-reported 40/60 km/h and are not universal top speeds.",
+    "Measured values average the last five seconds of held input; some corrected modes are still accelerating.",
+    "Full steering requests a wider curve at speed; physical cornering limits and per-wheel drivetrain power differences remain.",
+    "Keyboard/Xbox checks used virtual devices; physical controller driving, player builds, performance profiling and exhaustive terrain coverage were not run.",
+    "An existing Unity Editor Search indexing exception appeared separately from the passing native assertions."
+  ]
+}

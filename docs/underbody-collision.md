@@ -2,6 +2,8 @@
 
 Available on `main`. This update follows the six-wheel `IsGrounded()` correction in `e86319b`.
 
+This document records the underbody update in `bb52d19`. The subsequent [steering correction](steering-and-acceleration.md) changes speed-dependent steering without changing this collision hull, its material or mass properties.
+
 ## Contact with edges
 
 The original Sandbox Tumbler used a wide rectangular lower BoxCollider. On a sharp platform edge, that box could support most of the vehicle's weight while all four rear wheels still reported contact. The resulting low tire load and friction between the body and platform could prevent movement in either direction, including AWD and RWD.

@@ -37,6 +37,11 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private float steeringResponse = 5f;
     [SerializeField] private float downForce = 150f;
 
+    [Header("Steering Assist")]
+    [Tooltip("Maximum lateral acceleration requested by steering at speed, in m/s². Low-speed steering keeps its original range.")]
+    [SerializeField, Min(0.1f)] private float maxSteeringLateralAcceleration = 9f;
+    private float wheelbase;
+
     [Header("Gearbox Settings")]
     [SerializeField] private int numberOfGears = 5;
     private float[] rpmRange = { 0f, 42000, 105000, 187000, 182000, 176000};
@@ -59,6 +64,7 @@ public class TumblerController : MonoBehaviour
         {
             Debug.LogError("Rigidbody component not found on " + gameObject.name);
         }
+        CacheWheelbase();
     }
 
     private void OnEnable()
@@ -195,23 +201,53 @@ public class TumblerController : MonoBehaviour
 
     private void HandleSteering()
     {
-        // Calculate the speed factor, which is normalized between 0 and 1
-        float speedFactor = Mathf.Clamp01(carRigidbody.linearVelocity.magnitude / (maxSpeedKPH / SpeedToKPH));
-
-        // Interpolate between maxTurnAngle at standstill and maxTurnAngleAtMaxSpeed at full speed
-        float dynamicMaxTurnAngle = Mathf.Lerp(maxTurnAngle, maxTurnAngleAtMaxSpeed, speedFactor);
+        float planarSpeed = Vector3.ProjectOnPlane(carRigidbody.linearVelocity, Vector3.up).magnitude;
+        float dynamicMaxTurnAngle = GetMaxSteeringAngle(planarSpeed);
         
         // Calculate the target steering angle based on the current steer input (-1 to 1)
         float targetTurnAngle = steerInput * dynamicMaxTurnAngle;
 
         // Smoothly interpolate the current turn angle towards the target turn angle
-        currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurnAngle, Time.deltaTime * steeringResponse);
+        currentTurnAngle = Mathf.Lerp(currentTurnAngle, targetTurnAngle, Time.fixedDeltaTime * steeringResponse);
+        currentTurnAngle = Mathf.Clamp(currentTurnAngle, -dynamicMaxTurnAngle, dynamicMaxTurnAngle);
 
         // Apply the calculated steering angle to all front wheels
         foreach (WheelCollider wheel in frontWheelsColliders)
         {
             wheel.steerAngle = currentTurnAngle;
         }
+    }
+
+    private float GetMaxSteeringAngle(float speed)
+    {
+        float speedFactor = Mathf.Clamp01(speed / (maxSpeedKPH / SpeedToKPH));
+        float originalLimit = Mathf.Lerp(maxTurnAngle, maxTurnAngleAtMaxSpeed, speedFactor);
+        if (wheelbase <= 0f || speed <= 0f) return originalLimit;
+
+        // Bicycle model: lateral acceleration = speed² * tan(steering angle) / wheelbase.
+        // Keep full lock for parking, then widen the requested curve as speed rises.
+        float corneringLimit = Mathf.Atan(wheelbase * Mathf.Max(0.1f, maxSteeringLateralAcceleration) / (speed * speed)) * Mathf.Rad2Deg;
+        return Mathf.Min(originalLimit, corneringLimit);
+    }
+
+    private void CacheWheelbase()
+    {
+        if (frontWheelsColliders == null || rearWheelsColliders == null ||
+            frontWheelsColliders.Length == 0 || rearWheelsColliders.Length == 0) return;
+
+        float frontPosition = 0f;
+        float rearPosition = 0f;
+        foreach (var wheel in frontWheelsColliders)
+        {
+            if (wheel == null) return;
+            frontPosition += transform.InverseTransformPoint(wheel.transform.position).z;
+        }
+        foreach (var wheel in rearWheelsColliders)
+        {
+            if (wheel == null) return;
+            rearPosition += transform.InverseTransformPoint(wheel.transform.position).z;
+        }
+        wheelbase = Mathf.Abs(frontPosition / frontWheelsColliders.Length - rearPosition / rearWheelsColliders.Length);
     }
 
 

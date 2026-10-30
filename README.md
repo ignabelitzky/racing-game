@@ -12,6 +12,7 @@ This repository (`tumbler-sandbox`) is a learning project, not a finished commer
 - Xbox controller and keyboard bindings for every driving action, including WASD and arrow-key driving.
 - Boost with forward impulses, particles and jet audio.
 - Switchable AWD, FWD and RWD; automatic five-gear shifting.
+- Steering that keeps parking lock and progressively widens the requested curve at speed to reduce tire scrub under full input.
 - Vehicle reset and low-speed upright recovery.
 - Engine startup, idle and speed-dependent running audio; handbrake tire sounds and contact-based tire smoke.
 - Subtle surface-projected tire marks during braking and lateral sliding, with independent wheel contact and gradual fading.
@@ -166,12 +167,15 @@ A subsequent controller fix makes `IsGrounded()` detect contact from any of the 
 
 The later [underbody collision update](docs/underbody-collision.md) replaces the lower rectangular collider with a beveled convex hull and a dedicated low-friction material to reduce ledge snagging. Visible vehicle geometry and proportions remain unchanged. The original center of mass and inertia are explicitly preserved; wheel grip, suspension and drivetrain settings retain their existing values.
 
+The [steering update](docs/steering-and-acceleration.md) addresses the acceleration plateau when holding full steering. It limits cornering demand using actual wheelbase and horizontal speed, retaining low-speed lock and analog control. Power, grip, gearing, brakes and the 175 km/h motor cutoff retain their original settings; straight-line acceleration is unchanged in the native comparison.
+
 Validation performed:
 
 - Native scene-load and physics-contact checks in Unity **6000.6.7f1**: ramp/landing heights, upward contact normals, terrain profiles, all six zones, movable markers and clear spawn/reset positions.
 - Play Mode checks with the actual Tumbler: all six wheels contact each comparison surface, grip multipliers apply and restore on unmarked terrain, disable/reenable restores/reapplies the profile, and the existing handbrake slip adjustment survives the adapter.
 - Ground-contact regression: isolated support under each of the six wheels, rear-only support, all-wheel support, airborne and contact-loss cases. Repeat these with `tools/verify-driving-ground.py`; see [test-ground validation instructions](docs/driving-test-ground.md#validation).
 - Underbody collision checks compare the original and updated vehicle on temporary rail, curb and platform fixtures, plus an isolated high-speed lower-hull impact. Repeat with `tools/verify-chassis.py`; see [method and limitations](docs/underbody-collision.md#validation).
+- Handling checks compare original/corrected straight, full-left and full-right steering for FWD/RWD/AWD, including virtual keyboard/Xbox inputs, analog steering, parking/recentering, reverse steering, brakes and handbrake settings. Repeat with `tools/verify-handling.py`; see [method and limits](docs/steering-and-acceleration.md#validation).
 - Authentic HDRP renders of the overview, ramps, suspension and surface areas, plus static preservation and asset-reference checks. Results are recorded in [test-ground validation](docs/driving-test-ground-validation.json).
 - Contact-mark/menu/exposure checks: native braking and unbraked sliding generate projected marks, asphalt/camber vertices follow the surface, airborne/reset motion creates no bridging strokes, the Vulkan shader renders and fades, and the resolved exposure stays fixed at different camera angles. See [visual validation](docs/visual-feedback-validation.json).
 - **Not run:** physical controller driving, timed handling/braking comparisons, repeated landings at different speeds, performance profiling, audio evaluation or player builds. Grip and visual values are initial profiles for personal tuning.
