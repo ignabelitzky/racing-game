@@ -1,17 +1,16 @@
 {
   "baseline": "0cf4539c1a5ea3ff6ea07b313cefeca4a6d3b532",
-  "original_project_files_checked": 1124,
-  "byte_identical_original_files": 1122,
-  "expected_path_only_edits": 2,
+  "original_project_files_checked": 1056,
+  "byte_identical_original_files": 1050,
+  "expected_configuration_edits": 6,
+  "allowlisted_files_removed": 68,
+  "removed_bytes_from_working_tree": 189045976,
   "moved_tracked_paths": 31,
-  "original_meta_guids_preserved": 594,
-  "current_meta_guids": 597,
-  "serialized_guid_reference_occurrences": 6890,
-  "unchanged_external_or_unresolved_guids": 536,
-  "baseline_orphan_metas_unchanged": [
-    "Assets/Editor.meta",
-    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Materials/Standard.meta"
-  ],
+  "retained_original_meta_guids_preserved": 556,
+  "current_meta_guids": 559,
+  "serialized_guid_reference_occurrences": 2353,
+  "retained_external_or_unresolved_guids": 483,
+  "baseline_orphan_metas_remaining": [],
   "errors": [],
   "unity_runtime_tests": "NOT RUN: exact Unity 6000.0.0f1 unavailable"
 }

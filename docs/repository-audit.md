@@ -1,121 +1,91 @@
-# Repository organization audit
+# Repository organization and cleanup audit
 
-## Baseline and scope
+## Scope and baselines
 
-Inspected `ignabelitzky/racing-game` through the connected GitHub integration, then cloned `main` with its history. Baseline SHA: `0cf4539c1a5ea3ff6ea07b313cefeca4a6d3b532` (project inspection performed on 2026-10-30).
+Original main: `0cf4539c1a5ea3ff6ea07b313cefeca4a6d3b532`. Organization-only head: `19946456cbdca706a807f1bf959aa07231779709`. Inspected on 2026-10-30 through GitHub and a full local clone. All assets, scripts and scenes named in the original request existed. The user subsequently authorized removal of unnecessary files, a single rendering pipeline, merging to main and deletion of obsolete branches.
 
-All files and scenes named in the supplied inspection list existed at this SHA. Unity version is 6000.0.0f1. The dependency graph was recorded before moving anything. The change is limited to navigation, documentation, ignore/attribute rules and two required path edits.
+The final project retains **Unity 6000.0.0f1 and HDRP 17.0.3**. HDRP was already active; this is removal of unused pipelines, not a visual conversion or an Editor upgrade. No retained package version changes.
 
-## Asset ownership and dependency map
-
-Project-specific scene wiring and gameplay components live in `_Project`. This identifies their role, not verified original authorship. The repository does not contain a complete provenance ledger for models, sounds, textures, suspension code or the skidmark shader.
-
-| Area | Evidence / dependency | Decision |
-| --- | --- | --- |
-| Main Menu | MenuController, TMP/UI assets; button calls `LoadScene` with `Sandbox` | Move scene and controller; preserve scene name and serialized bytes |
-| Sandbox | Vehicle and HUD scripts, input asset, six WheelColliders, ten Rigidbodies across the scene, models, terrain, audio, prototype materials, TMP and Particle Pack resources | Move scene; preserve every component, fileID, event and reference |
-| Gameplay scripts | GameManager, TumblerController, Boost, EngineAudio, TumblerEffects, UIController are referenced by Sandbox | Group under Core, Vehicle/Tumbler and UI; preserve class names and content |
-| ObjectSpawner | Present in source, absent from the two build scenes' GUID graphs | Retain under Core; do not remove an apparently unused helper |
-| Suspension | `EasySuspenssion.cs` declares `EasySuspension`; its GUID occurs in Sandbox | Move with meta; preserve mismatch rather than changing component identity |
-| Input | `Gameplay` action map; explicit XInput bindings; no control schemes; PlayerInput event wiring in Sandbox; polling wrappers in controller and boost | Move asset and generated wrapper together, update importer output path only |
-| Rendering | GraphicsSettings selects GUID `dc3b6d5c06e42df499acdc8306dc06ad`, resolving to `RenderingAssets/HDRP Render/HDRenderPipelineAsset.asset`; six quality levels have null overrides | HDRP 17.0.3 is active; leave rendering resources and URP installed assets intact |
-| Camera | Sandbox Main Camera has enabled script GUID `72ece51f2901e7445ab60da3685d6b5f` | Identified as CinemachineBrain by the official upstream meta; package manifest pins Cinemachine 3.1.0 |
-| Thirdparty/Ciathyza | Gridbox Prototype Materials; project materials reference imported textures | Leave complete imported tree in place |
-| UnityTechnologies | Particle Pack, with its own Editor scripts and Readme; Sandbox references particle materials/textures | Leave complete imported tree, including special Editor folders, in place |
-| TextMeshPro | Fonts, shaders, Resources and OFL text | Leave imported resources and notices in place |
-| Resources | Fonts and HUD dial/needle images; serialized scene dependencies | Preserve special path and all contents |
-| Prefabs | Actually includes FBX source models, including Tumbler and playground geometry; imported subobjects have serialized fileIDs | Leave names, import settings, externalObjects mappings and binary contents unchanged |
-| Audios, Materials, PhysicsMaterials, Textures | Referenced runtime source content, partly uncertain provenance; imported shader and material dependencies | Leave in place to avoid claiming ownership or restructuring imported bundles |
-| Root terrain and render assets | Includes `New Terrain 1.asset`, DefaultVolumeProfile and URP global settings | Retain; no visual or pipeline change |
-
-The pre-move textual GUID traversal found 16 distinct direct GUIDs / 7 transitive local assets for Main Menu and 51 direct GUIDs / 51 transitive local assets for Sandbox. [scene-dependencies.json](scene-dependencies.json) lists the local transitive dependencies at their final paths. This scan follows serialized textual GUIDs and importer references; it cannot infer hidden references inside binaries or resolve package-internal resources before Unity package restoration. Identical binary hashes and unchanged import metadata provide the conservative safeguard for those files.
-
-Cinemachine identification source: [official CinemachineBrain.cs.meta](https://github.com/Unity-Technologies/com.unity.cinemachine/blob/main/com.unity.cinemachine/Runtime/Behaviours/CinemachineBrain.cs.meta). This confirms the component GUID; the installed version comes from this project's manifest, not upstream main.
-
-## Before and after
+## Organization and runtime dependencies
 
 ```text
-Before                                    After
-Assets/Scripts/GameManager.cs              Assets/_Project/Scripts/Core/GameManager.cs
-Assets/Scripts/ObjectSpawner.cs            Assets/_Project/Scripts/Core/ObjectSpawner.cs
-Assets/Scripts/Tumbler/*                   Assets/_Project/Scripts/Vehicle/Tumbler/*
-Assets/Scripts/UI/*                        Assets/_Project/Scripts/UI/*
-Assets/Scripts/Input/*                     Assets/_Project/Input/*
-Assets/Scenes/*                            Assets/_Project/Scenes/*
+Before                              After
+Assets/Scripts/GameManager.cs        Assets/_Project/Scripts/Core/GameManager.cs
+Assets/Scripts/Tumbler/              Assets/_Project/Scripts/Vehicle/Tumbler/
+Assets/Scripts/UI/                   Assets/_Project/Scripts/UI/
+Assets/Scripts/Input/                Assets/_Project/Input/
+Assets/Scenes/                      Assets/_Project/Scenes/
 ```
 
-Each move used `git mv` and included the original `.meta`. The Scripts, Tumbler, UI, Input and Scenes folder metas also moved with their original GUIDs. Three new folder metas are required for `_Project`, `Core` and `Vehicle`; only these receive new GUIDs. [asset-moves.json](asset-moves.json) records all 31 tracked path moves, including folder metas.
+All moves used `git mv` with original metas. Three new folder metas were added for `_Project`, Core and Vehicle. The [move manifest](asset-moves.json) records the original 31 moves, including ObjectSpawner which was subsequently removed as unused. Retained GUIDs are never regenerated.
 
-Only two existing project file contents change:
+Main Menu uses MenuController and UI/TMP resources; its button loads `Sandbox` by unchanged scene name. Sandbox contains the Tumbler, six WheelColliders, ten Rigidbodies across the scene, terrain, vehicle/audio/effects scripts, HUD and PlayerInput callbacks. The [scene dependency map](scene-dependencies.json) records its unchanged transitive local dependencies: Main Menu has 7 local dependencies and Sandbox 51, from 16/51 direct GUIDs respectively.
 
-1. `ProjectSettings/EditorBuildSettings.asset`: scene paths now point into `_Project/Scenes`; order, enabled flags and scene GUIDs remain unchanged (Main Menu first, Sandbox second).
-2. `Assets/_Project/Input/TumblerInput.inputactions.meta`: `wrapperCodePath` now targets `Assets/_Project/Input/Input.cs`; all other importer settings and GUIDs remain unchanged.
+The active HDRP pipeline GUID is `dc3b6d5c06e42df499acdc8306dc06ad` at `Assets/RenderingAssets/HDRP Render/HDRenderPipelineAsset.asset`. Six quality levels have no override. Both the HDRP asset and all quality settings are byte-identical to baseline. GraphicsSettings retains the HDRP global settings and removes only the unused URP global map entry. Its built-in shader entries remain because UI and imported effects may require them; these entries are not an additional installed render pipeline.
 
-The wrapper is byte-identical generated code. Its header's old generation path is historical metadata, not a runtime lookup. Scene loading uses the unchanged `Sandbox` name, and there are no runtime Resources.Load or hardcoded moved asset paths in the project scripts. `ProjectSettings.asset` already contains a templateDefaultScene path to absent `Assets/Scenes/SampleScene.unity`; it is unrelated to either enabled build scene and is left unchanged.
+Sandbox's enabled camera brain GUID matches the [official CinemachineBrain meta](https://github.com/Unity-Technologies/com.unity.cinemachine/blob/main/com.unity.cinemachine/Runtime/Behaviours/CinemachineBrain.cs.meta). The project manifest pins Cinemachine 3.1.0; upstream main is used only for GUID identification.
 
-## Static validation results
+Special Resources/Editor folders remain intact except for a pre-existing unused orphan Editor.meta. Scene names, object names, event IDs, callbacks, physics values, colliders and component settings are unchanged. Input remains XInput-specific; `activeInputHandler: 2` remains Both. The generated wrapper was moved without manual edits; its historical header retains the old path/version.
 
-Run `python3 tools/validate-organization.py` from the repository root. The script compares against the full recorded baseline SHA; an optional argument selects another baseline for investigation. It is a migration-specific integrity check, not a general Unity test suite.
+## Necessary configuration edits
 
-[validation-results.json](validation-results.json) records the actual run:
+Six original project files change:
 
-- 1,124 original files under Assets, Packages and ProjectSettings checked; none removed.
-- 1,122 files byte-identical; two match exact, allowlisted path substitutions.
-- All 594 original meta GUIDs resolve at their expected final paths; 597 current GUIDs are unique.
-- All 6,890 serialized GUID reference occurrences match before/after, accounting for moved source paths.
-- Every original scene, prefab, shader, material, model, audio file, generated wrapper and other C# source is byte-identical. Their local fileIDs, component references and importer dependencies therefore remain unchanged.
-- Both build scene paths exist and match their meta GUIDs; generated-wrapper output target exists.
-- Package manifests/lock and Input Actions parse as JSON and are unchanged.
-- Graphics, quality, input handler and physics settings are byte-identical. `activeInputHandler: 2` (Both) is retained.
-- No Library, Temp, Obj, Build, Builds, Logs or UserSettings directories are tracked.
+1. EditorBuildSettings: both scene paths now use `_Project/Scenes`; order, enabled flags and GUIDs unchanged.
+2. TumblerInput importer meta: wrapperCodePath now points to `_Project/Input/Input.cs`.
+3. GraphicsSettings: remove only the unused URP global settings map entry.
+4. SceneTemplateSettings: remove the two legacy PostProcessProfile/PostProcessResources type entries.
+5. Packages/manifest.json: remove Universal RP and Postprocessing.
+6. Packages/packages-lock.json: remove Universal RP, Universal RP config and Postprocessing; all other entries are preserved.
 
-There are **536 unchanged external or unresolved GUIDs** in baseline text, including package references. Their preservation establishes that this change introduces no new GUID target losses; it does not establish that all baseline references resolve in Unity. Package restoration and Editor inspection are still necessary. Existing orphan folder metas are `Assets/Editor.meta` and `Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Materials/Standard.meta`; neither has a tracked folder payload. They remain unchanged and are reported separately, not silently removed.
+HDRP, Core, ShaderGraph, HDRP config, VFX Graph, mathematics, Burst and collections remain. Shared dependencies were not pruned just because URP used them.
 
-## Manual Unity acceptance checklist — NOT RUN
+## Files removed and evidence
 
-Unity Editor **6000.0.0f1** was not installed in the available environment. Installed 6000.3.0f1 and 6000.6.7f1 were deliberately not used to open or upgrade this project. No Editor import, compilation, runtime, screenshot or build result is claimed.
+The [cleanup manifest](cleanup-manifest.json) lists every removed path, byte size and SHA256, plus the exact legacy package GUID index. In total **68 tracked files / 189,045,976 bytes (180.29 MiB)** were removed from the current tree. Historical Git objects remain; no history was rewritten.
 
-Before merging, use the exact version and an Xbox/XInput controller:
+| Group | Removal and evidence |
+| --- | --- |
+| Unused source content | Ford GT40 model, engine-rev audio, duplicate cyan material and ObjectSpawner helper: no external GUID consumers or code/name/path loads anywhere in the repository. Each asset and its meta removed. |
+| Old sky | skybox_1 material has no consumers; pure_sky EXR was consumed only by that material. Both removed with metas, plus the empty Textures folder meta. Active HDRP sky settings remain unchanged. |
+| Orphan metas | Assets/Editor.meta and Ciathyza Materials/Standard.meta (plus the now-empty Materials folder meta): no payload and no GUID consumers. |
+| URP | Universal RP asset/renderer/folder meta, root URP global settings, root empty DefaultVolumeProfile (used only by URP), and two unused TMP URP shadergraphs with metas: 13 files. Their consumers are exclusively within this set except for the explicitly removed GraphicsSettings map entry. |
+| Legacy demo | Entire Particle Pack Scenes subtree and its meta, including exclusive baked lighting/reflections/profile, plus Shared/Prefabs/Player.prefab and meta: 39 files. No GUID consumer exists outside the deleted group. Main Menu and Sandbox do not reference this demo. |
+| Legacy package | Postprocessing 3.4.0 was consumed only by the demo profile and Player prefab; reverse dependency closure adds only the demo scene. Removing these permits removal of the package without changing Sandbox's HDRP volumes/effects. |
 
-- [ ] Restore packages, complete import and confirm C# compilation without errors.
-- [ ] Open Main Menu, check Console, and load Sandbox through its button.
-- [ ] Confirm Tumbler meshes, components, colliders, terrain, materials, textures and HDRP rendering.
-- [ ] Exercise steering, RT acceleration, LT reverse and B braking.
-- [ ] Exercise A boost, particles/jet audio and X handbrake with tire trails/smoke/screech.
-- [ ] Cycle RB through AWD, FWD and RWD; check gear changes and both HUD labels.
-- [ ] Check Left Stick Click reset and Y upright recovery below 1 m/s.
-- [ ] Check startup/idle/running audio, camera and speedometer needle.
-- [ ] Verify Escape quit/stop and menu exit behavior; inspect Console for missing scripts/references.
-- [ ] Build for the intended supported target and smoke-test the player, if baseline build issues permit it.
+The exact Postprocessing 3.4.0 package was inspected from the official Unity registry; its 287 meta GUIDs were cross-referenced against every tracked file, including binaries. Its tarball SHA256 is `277198219c82e40a84fc5899c1c82ed274a3f6fea0c2a3d0c57101f4c29b7ee2`. Source URL and GUID inventory are in the cleanup manifest.
 
-## Existing issues outside scope
+Deletion audits searched textual GUIDs, UTF-16 forms, canonical binary GUIDs and common little-endian UUID/32-bit-word forms. Source inspection found no dynamic Resources/Addressables/AssetBundle or name/path loading of the removed candidates. This is stronger than merely checking two scene graphs, but it remains static evidence rather than an Editor import result.
 
-- `EasySuspenssion.cs` and `EasySuspension` do not match. Sandbox serializes this script GUID (including a disabled instance). Unity component recognition needs manual inspection; renaming was not assumed safe.
-- `MenuController.ExitGame` uses `UnityEditor.EditorApplication` behind a runtime `Application.isEditor` condition rather than a compile-time editor guard. This is a potential player-build compilation problem; no code fix is included.
-- GameManager and UIController rely on exact object names and some dereferences precede null checks. Scene bytes and names remain unchanged; no general logic refactoring is included.
-- Sandbox contains historical PlayerInput action-name strings inconsistent with current map labels, while action IDs and callbacks remain intact. No rebinding or scene serialization changes were made.
-- Two orphan metas, unresolved GUIDs and the absent template scene path predate this change. Investigate independently in the exact Editor; do not delete assets on the basis of the static scan.
-- Materials such as `prototype_512x512_cyan 1.mat`, extra car models and `engine-rev.ogg` may look redundant, but no deletion is justified merely by names or absence from the two scene graphs. All retained.
+Remaining Thirdparty/Ciathyza, UnityTechnologies Particle Pack effect resources, TextMeshPro fonts/shaders, Resources HUD art and FBX models used by Sandbox stay in their original locations. No license or credit notices are removed. The build-scene dependency map is unchanged, including imported particle materials/textures.
 
-## Git hygiene and large assets
+## Validation
 
-The existing Unity ignore rules already covered generated project folders and IDE build files. Additional exclusions cover local IDE/OS state, swap files, `.slnx` and crash diagnostics. Shared `.vscode` configuration is retained. Attributes retain automatic text handling, add explicit source/Unity text types, and mark known binary source formats to prevent text conversion. Generic `.asset` files are intentionally not forced to text because Unity assets may be binary.
+Run `python3 tools/validate-organization.py`. It compares original files against baseline, applies only the six specified configuration changes, and allows only the inventoried deletions whose original hashes match. Missing files outside the manifest fail validation. All retained original files are compared byte-for-byte.
 
-Largest source assets in the baseline (MiB, rounded):
+Additional checks cover retained GUID preservation/uniqueness, asset/meta pairs, build scene paths/GUIDs, generated wrapper target, serialized reference equality after expected configuration edits, absence of retained references to deleted GUIDs and the 287 removed package GUIDs (including common binary representations), JSON validity, package lock closure and absence of tracked generated project folders. [validation-results.json](validation-results.json) contains the actual latest results. Existing external/unresolved GUIDs are reported separately; they must not be interpreted as verified package resolution.
 
-| File | MiB |
-| --- | ---: |
-| `Assets/Prefabs/ford_gt40.fbx` | 99.59 |
-| `Assets/Prefabs/tumbler_v7.fbx` | 87.38 |
-| `Assets/Textures/pure_sky.exr` | 70.52 |
-| `Assets/Prefabs/alfa_romeo.fbx` | 11.68 |
-| `Assets/Prefabs/Playground_prefabs/complete_grill_fence.fbx` | 8.97 |
-| `Assets/Prefabs/Playground_prefabs/half_grill_fence.fbx` | 8.96 |
+README local links and `git diff <original-main> --check` are also checked. .gitignore excludes Unity generated folders, IDE temporary output, OS metadata and crash reports; shared .vscode settings remain. .gitattributes retains text normalization and marks known binary sources without enabling LFS. Generic .asset files are not forced to text because Unity assets can be binary.
 
-Git LFS merits a separate decision for these FBX/EXR sources and large Particle Pack texture sources if they will change regularly. Plan client setup, hosting quotas and collaborator access first. No LFS filters, migrations, history rewrites, model removal or binary changes are included. GPLv3 and all bundled notices are byte-identical.
+## Unity execution — NOT RUN
 
-## Attribution follow-up
+Exact Unity 6000.0.0f1 is unavailable. Installed newer Editors were not used to upgrade the project. Import, C# compilation, runtime/controller/audio/HUD/rendering and player builds have **not** been executed. The user authorized merging with these documented limitations.
 
-The known external asset trees stay separated. Ciathyza Gridbox Prototype Materials and Unity Particle Pack are identifiable from imported folder names and bundled Particle Pack Readme, but no standalone license grant was located in those trees. Liberation Sans includes Red Hat copyright and SIL OFL 1.1 text in `Assets/TextMeshPro/Fonts/LiberationSans - OFL.txt`.
+Manual acceptance checklist:
 
-Model filenames, audio filenames, HUD art, sky source, skidmark shader, friction assets and suspension code do not establish their authorship. Obtain and record original source links/license evidence before redistributing or presenting them as original work. This audit documents repository evidence and does not replace the existing license or certify third-party permissions.
+- [ ] Restore packages and import with Unity 6000.0.0f1; confirm no compile/import/missing-reference errors, especially after removing URP and Postprocessing.
+- [ ] Open Main Menu and load Sandbox through its button.
+- [ ] Confirm Tumbler meshes/components/colliders, terrain, textures, materials and HDRP sky/rendering.
+- [ ] Exercise steering, RT acceleration, LT reverse, B brake, X handbrake and A boost.
+- [ ] Confirm particles, jet/engine/tire audio and tire trails/smoke.
+- [ ] Cycle RB AWD/FWD/RWD; check gears, HUD, speedometer and camera.
+- [ ] Test Left Stick Click reset, Y recovery below 1 m/s, Escape and menu exit.
+- [ ] Build and smoke-test intended player target if baseline build issues permit.
+
+## Existing issues and attribution
+
+`EasySuspenssion.cs` declares `EasySuspension`; Sandbox serializes this GUID, including a disabled instance. No rename or functional fix is included. MenuController uses UnityEditor.EditorApplication behind a runtime condition rather than a compile-time guard, a potential player-build problem. Named-object lookups can dereference before null checks. Historical PlayerInput action-name strings differ from current map names, but IDs/callbacks are preserved. ProjectSettings still points templateDefaultScene to absent SampleScene.unity, unrelated to enabled build scenes. Investigate these separately; this cleanup does not claim to resolve them.
+
+The largest retained source model is tumbler_v7.fbx (87.38 MiB); alfa_romeo.fbx (11.68 MiB) and playground models remain because they are referenced. Consider LFS separately if these sources change regularly; no filters or migration were applied.
+
+GPLv3 and bundled credits remain unchanged. Ciathyza Gridbox textures and Unity Particle Pack effects have identifiable origins but no standalone license grants were located in their imported trees. Liberation Sans retains Red Hat copyright and SIL OFL 1.1. Model/audio/art/suspension/skidmark provenance is not fully established by repository metadata; location does not imply original authorship. No ownership of Batman/Tumbler or external resources is claimed.

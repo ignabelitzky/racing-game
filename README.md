@@ -26,7 +26,7 @@ This repository (`racing-game`) is a learning project, not a finished commercial
 | Cinemachine | **3.1.0**, camera components serialized in Sandbox |
 | Unity UI / TextMeshPro | uGUI **2.0.0**, menu and driving HUD |
 
-Versions come from `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.json`. URP 17.0.3 is also installed and its assets remain in the project, but Graphics Settings selects HDRP and all quality levels inherit that selection. Other installed packages are not evidence of implemented gameplay features. No Unity or package upgrades are part of this reorganization.
+Versions come from `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.json`. HDRP is the only installed render pipeline; Graphics Settings selects its existing asset and all quality levels inherit that selection. Unused URP and legacy Postprocessing packages, configurations and exclusive demo resources were removed after reference auditing. Other installed packages are not evidence of implemented gameplay features. No Unity or retained-package versions were upgraded.
 
 ## Getting started
 
@@ -75,7 +75,7 @@ racing-game/
 │   │   ├── Input/                 # Input actions and generated C# wrapper
 │   │   ├── Scenes/                # Main Menu and Sandbox
 │   │   └── Scripts/
-│   │       ├── Core/             # GameManager and ObjectSpawner
+│   │       ├── Core/             # GameManager
 │   │       ├── Vehicle/Tumbler/  # Driving, boost, audio, effects, suspension
 │   │       └── UI/               # Menu and HUD controllers
 │   ├── Audios/                   # Existing audio sources; provenance unconfirmed
@@ -83,8 +83,7 @@ racing-game/
 │   ├── PhysicsMaterials/         # Existing friction assets
 │   ├── Prefabs/                  # Existing FBX models and playground geometry
 │   ├── Resources/                # Fonts and HUD images; special Unity folder
-│   ├── Textures/
-│   ├── RenderingAssets/          # HDRP and retained URP assets
+│   ├── RenderingAssets/          # Active HDRP asset
 │   ├── HDRPDefaultResources/
 │   ├── TextMeshPro/              # Imported TMP resources and font license
 │   ├── Thirdparty/               # Ciathyza Gridbox Prototype Materials
@@ -95,7 +94,7 @@ racing-game/
 └── tools/                        # Read-only static reorganization validator
 ```
 
-Root-level terrain and render settings assets also remain in `Assets`. This is a deliberately small reorganization: imported content, binary sources, special folders and assets with uncertain provenance keep their existing locations. Project-specific organization does not imply ownership of every script or asset.
+The root-level terrain asset remains in `Assets`. Retained imported content, binary sources and special folders keep their existing locations. Verified unused sources, URP resources and the legacy Particle Pack demo were removed; the particle resources used by Sandbox remain. Project-specific organization does not imply ownership of every script or asset.
 
 ## Architecture
 
@@ -110,7 +109,6 @@ Root-level terrain and render settings assets also remain in `Assets`. This is a
 | Input System | `TumblerInput.inputactions` supplies bindings; `Input.cs` is the generated `TumblerInput` class. Vehicle/boost poll wrappers, and scene PlayerInput events dispatch callbacks. |
 | `UIController` | Finds HUD text objects and displays the current gear and drivetrain; scene Unity events connect it to vehicle state changes. |
 | `MenuController` | Loads a scene by name and handles the menu exit action. Scene names remain unchanged. |
-| `ObjectSpawner` | Coroutine-based random prefab spawning helper; no reference from the two build scenes was found. |
 
 Scene objects, Inspector references and Unity events provide the wiring. There is no dependency injection or architectural framework implied. Named object lookups such as `Tumbler`, `SpeedometerNeedle`, `DriveModeText` and `GearNumText` remain significant.
 
@@ -124,7 +122,7 @@ Authentic screenshots have not been captured in this environment. This section i
 
 The repository implements the sandbox systems described above. It does not claim a complete racing game, a verified release build, or cross-platform controller support. No future roadmap is committed here.
 
-The organization change preserves every original asset GUID, all C# source bytes, input bindings, scene contents, materials, shaders, models, audio, physics settings and package versions. Available static checks pass; this does **not** establish runtime or player-build correctness. Unity 6000.0.0f1 was unavailable in the authoring environment, so import, compilation, Play mode, rendering, controller testing and build testing were **not run**.
+The organization and cleanup preserve retained asset GUIDs, gameplay C# source bytes, input bindings, build-scene contents, active HDRP settings and physics values. Removed files are explicitly inventoried in [cleanup-manifest.json](docs/cleanup-manifest.json); no retained package was upgraded. Available static checks pass; this does **not** establish runtime or player-build correctness. Unity 6000.0.0f1 was unavailable in the authoring environment, so import, compilation, Play mode, rendering, controller testing and build testing were **not run**.
 
 Run the repeatable static comparison with Python 3 and Git:
 
@@ -139,7 +137,7 @@ See the [audit and manual checklist](docs/repository-audit.md), [machine-readabl
 The existing [GNU GPLv3 license](LICENSE) is retained unchanged. External assets can carry different licenses; the repository license does not establish ownership or redistribution rights for those resources.
 
 - **Ciathyza — Gridbox Prototype Materials:** imported under `Assets/Thirdparty/Ciathyza`; Sandbox materials reference its textures. No separate license text was found in that imported folder.
-- **Unity Technologies — Particle Pack:** imported under `Assets/UnityTechnologies/ParticlePack`; Sandbox references particle materials and textures. Its bundled `Readme.asset` identifies the pack but is not a license grant.
+- **Unity Technologies — Particle Pack:** imported under `Assets/UnityTechnologies/ParticlePack`; Sandbox references particle materials and textures, which are retained; the unused first-person demo and its legacy postprocessing dependency were removed. Its bundled `Readme.asset` identifies the pack but is not a license grant.
 - **TextMeshPro / Liberation Sans:** bundled TMP resources; Liberation Sans credits Red Hat, Inc. and includes the [SIL Open Font License 1.1](Assets/TextMeshPro/Fonts/LiberationSans%20-%20OFL.txt).
 - **Unity packages:** retain their respective package license terms.
 - **Other models, audio, images, materials and adapted scripts:** authorship and original license terms are not fully established by repository metadata. Confirm their sources and permissions before redistributing them; see the audit inventory.
