@@ -1,0 +1,55 @@
+{
+  "parent": "b6245330e0f9ec22140bed35da20393735393000",
+  "reason": "Unused Gridbox demonstration scene and exclusive demo materials/lightmap parameters. No consumers outside removed subtree or dynamic code loads. Runtime Gridbox textures retained.",
+  "outside_consumers": {},
+  "guids": [
+    "3d252abe04c3e3543bf218f891408699",
+    "b234e1586ac9f524f8162eb03da23c35",
+    "735c40e4d7967d7458e6a4db48651d2a",
+    "eafbe44f5a9eb364491e4baa0077c944",
+    "c833c6a9a24b72f40ae6e54d900acae3",
+    "f9a5ce4748e5abd4288cab387226ef27"
+  ],
+  "removed_files": {
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo.meta": {
+      "bytes": 172,
+      "sha256": "2816eccb296e980933ca934acc42964868c90791aac7b82fe9b90850ed6a884d"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo.meta": {
+      "bytes": 172,
+      "sha256": "40b6ff3614fa8a561f9b681e0846520de6367f3867eda3d1e0fb421c8741ccfa"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo.unity": {
+      "bytes": 642982,
+      "sha256": "befef7c0f7fbcd8216e383dd1b5e578a6ac9ef80852690344358aa2e6c410f0b"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo.unity.meta": {
+      "bytes": 155,
+      "sha256": "294ab31894c3546642ad270c8279069fd48574c67801a99bb8182babd42e6dfe"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo/Demo Lightmap Parameters.giparams": {
+      "bytes": 589,
+      "sha256": "355e58478f0256cb37b62821106705a0263f411de81b5db288b5bb60b4c25fe1"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo/Demo Lightmap Parameters.giparams.meta": {
+      "bytes": 190,
+      "sha256": "175ea2f6c61425c097c314e56541fe97667977d8cceef9e2ab681686e4fe8db5"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo/GI Blocker.mat": {
+      "bytes": 9169,
+      "sha256": "a43c1610e61d6c5f2eac56e933a56b861c5907d636b80d793d9ebaf996ea7d44"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo/GI Blocker.mat.meta": {
+      "bytes": 188,
+      "sha256": "5474bce13654be2beff731347579b5bc8d355171b5e45bd4bd94460a5a32e754"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo/Neon Light.mat": {
+      "bytes": 9201,
+      "sha256": "4fec8049a9d21ba1e2a2cfbc0dffad9e82579e6c4a851492dbc38a90b5c8487e"
+    },
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Demo/Prototype Materials Demo/Neon Light.mat.meta": {
+      "bytes": 188,
+      "sha256": "32671601a9d5253595f3613b294f689d9ffaa45cd82a1e9eca517512f137635e"
+    }
+  }
+}

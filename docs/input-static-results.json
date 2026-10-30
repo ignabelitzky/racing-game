@@ -1,0 +1,16 @@
+{
+  "baseline": "b6245330e0f9ec22140bed35da20393735393000",
+  "byte_identical_retained_project_files": 1046,
+  "intentional_input_and_routing_edits": [
+    "Assets/_Project/Input/Input.cs",
+    "Assets/_Project/Input/TumblerInput.inputactions",
+    "Assets/_Project/Scenes/Sandbox.unity"
+  ],
+  "asset_meta_guids": 553,
+  "removed_demo_files": 10,
+  "removed_demo_bytes": 663006,
+  "preserved_action_ids": 9,
+  "binding_count": 28,
+  "unchanged_scene_objects": 242,
+  "errors": []
+}

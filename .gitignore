@@ -83,3 +83,8 @@ Thumbs.db
 # Unity crash and diagnostic output
 /CrashReports/
 /UnityPass/
+
+# Local Unity test and coverage reports (keep test source versioned)
+/[Tt]est[Rr]esults/
+/TestResults*.xml
+/[Cc]ode[Cc]overage/

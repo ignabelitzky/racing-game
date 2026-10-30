@@ -2,12 +2,12 @@
 
 A personal Unity sandbox for learning and experimenting with vehicle gameplay. Drive a Tumbler inspired by the Batmobile from *Batman Begins*, explore a physics playground, and experiment with different drivetrain modes.
 
-This repository (`racing-game`) is a learning project, not a finished commercial game. The features below are verified in source and serialized scenes; runtime verification of the repository reorganization is still pending.
+This repository (`racing-game`) is a learning project, not a finished commercial game. The features below are verified in source and serialized scenes; isolated input simulations pass, while full-game runtime verification is still pending.
 
 ## Features
 
 - Rigidbody and WheelCollider vehicle physics, with wheel mesh updates, speed-dependent steering and downforce.
-- Xbox/XInput controller bindings for acceleration, reverse, steering, braking and handbrake.
+- Xbox controller and keyboard bindings for every driving action, including WASD and arrow-key driving.
 - Boost with forward impulses, particles and jet audio.
 - Switchable AWD, FWD and RWD; automatic five-gear shifting.
 - Vehicle reset and low-speed upright recovery.
@@ -30,7 +30,7 @@ Versions come from `ProjectSettings/ProjectVersion.txt` and `Packages/manifest.j
 
 ## Getting started
 
-Requirements: Git, Unity Hub, Unity Editor **6000.0.0f1**, an HDRP-capable graphics environment, and an Xbox controller recognized by Unity as an XInput device. Other controllers and operating systems have not been verified.
+Requirements: Git, Unity Hub, Unity Editor **6000.0.0f1**, an HDRP-capable graphics environment, and a keyboard or an Xbox controller recognized by Unity as a Gamepad. Physical hardware and operating-system compatibility have not been verified in this environment.
 
 1. Clone the repository:
 
@@ -43,28 +43,30 @@ Requirements: Git, Unity Hub, Unity Editor **6000.0.0f1**, an HDRP-capable graph
 3. In Hub, choose **Add project from disk**, select this repository's root, and open it with that exact Editor version.
 4. Allow Package Manager resolution and the first asset import to finish. The initial download/import includes large binary source assets.
 5. Open `Assets/_Project/Scenes/Main Menu.unity` and press **Play**, then use the menu to load Sandbox. For direct driving, open `Assets/_Project/Scenes/Sandbox.unity` and press **Play**.
-6. Connect an Xbox controller and use the mapping below.
+6. Use the keyboard immediately, or connect an Xbox controller and use the mapping below. No input-mode selection is required.
 
 Keep `Assets` and its `.meta` files, both package manifests, and `ProjectSettings` together. Avoid opening with a newer Editor unless you intend to perform a separate, reviewed upgrade. A player build has not been validated; see [validation and existing issues](docs/repository-audit.md).
 
-## Xbox controller mapping
+## Controls — Xbox and keyboard
 
-Bindings are read from [TumblerInput.inputactions](Assets/_Project/Input/TumblerInput.inputactions). Gamepad paths explicitly target `<XInputController>`.
+Bindings come from [TumblerInput.inputactions](Assets/_Project/Input/TumblerInput.inputactions). Xbox uses Unity's `<Gamepad>` layout, including XInput-derived Xbox devices. This avoids limiting the bindings to the Windows-specific XInput family.
 
-| Xbox input | Action | Input System action |
+| Action | Xbox controller | Keyboard |
 | --- | --- | --- |
-| Left Stick, horizontal axis | Steering | `Steer` |
-| RT | Acceleration | Positive side of `Throttle` |
-| LT | Reverse | Negative side of `Throttle` |
-| A | Boost | `Boost` |
-| B | Brake | `Brake` |
-| X | Handbrake | `Handbrake` |
-| Y | Upright recovery, below 1 m/s | `FlipCar` |
-| RB | Cycle AWD → FWD → RWD → AWD | `SwitchDriveMode` |
-| Left Stick Click | Reset position, rotation and velocity | `ResetCar` |
-| Escape, keyboard | Quit / stop Editor Play mode | `QuitGame` |
+| Steering | Left Stick, horizontal axis | A / D or Left / Right Arrow |
+| Acceleration | RT | W or Up Arrow |
+| Reverse | LT | S or Down Arrow |
+| Boost | A | Left Shift |
+| Brake | B | Left Ctrl |
+| Handbrake | X | Space |
+| Upright recovery, below 1 m/s | Y | F |
+| Cycle AWD → FWD → RWD → AWD | RB | E |
+| Reset position, rotation and velocity | Left Stick Click | R |
+| Quit / stop Editor Play mode | Start / Menu | Escape |
 
-The keyboard binding is `<Keyboard>/{Cancel}` (Escape on a standard keyboard). The two triggers form a single signed throttle axis. No keyboard driving bindings or additional controller compatibility are claimed. Historical action labels in the scene differ in places; event action IDs and the input asset are preserved.
+The Xbox triggers remain a signed analog throttle axis, and the stick retains analog steering. Keyboard throttle/steering are digital; opposing keyboard directions cancel. Reverse and brake remain separate controls. You can combine acceleration, steering, boost and handbrake, subject to the existing vehicle behavior. No physics values or drivetrain/gearbox logic changed.
+
+Both device types remain available together without exclusive control schemes. One scene PlayerInput dispatches recovery, reset, drivetrain and quit events; the vehicle and boost components continue polling their generated input wrappers. Other controllers may use the same Gamepad layout, but no physical compatibility claim is made for them.
 
 ## Project structure
 
@@ -106,13 +108,13 @@ The root-level terrain asset remains in `Assets`. Retained imported content, bin
 | `EngineAudio` | Coordinates startup/idle/running sources, adjusts pitch with speed, and handles handbrake tire sounds. |
 | `TumblerEffects` | Controls tire trails and smoke using handbrake, speed and grounding state. |
 | `EasySuspension` | Calculates child WheelCollider spring/damper settings and suspension distances, including in Edit mode. The existing filename `EasySuspenssion.cs` is preserved; see the audit for the naming mismatch. |
-| Input System | `TumblerInput.inputactions` supplies bindings; `Input.cs` is the generated `TumblerInput` class. Vehicle/boost poll wrappers, and scene PlayerInput events dispatch callbacks. |
+| Input System | `TumblerInput.inputactions` supplies bindings; `Input.cs` is the generated `TumblerInput` class. Vehicle/boost poll wrappers, and a single scene PlayerInput dispatches recovery, reset, drivetrain and quit callbacks to their original components. |
 | `UIController` | Finds HUD text objects and displays the current gear and drivetrain; scene Unity events connect it to vehicle state changes. |
 | `MenuController` | Loads a scene by name and handles the menu exit action. Scene names remain unchanged. |
 
 Scene objects, Inspector references and Unity events provide the wiring. There is no dependency injection or architectural framework implied. Named object lookups such as `Tumbler`, `SpeedometerNeedle`, `DriveModeText` and `GearNumText` remain significant.
 
-The Input Actions importer now generates to `Assets/_Project/Input/Input.cs`. Its generated source was moved without edits, so its header still records the original generation path and generator version 1.8.1; the installed package version is 1.8.2. Regenerate through Unity's importer only when needed.
+The Input Actions importer generates `Assets/_Project/Input/Input.cs` using Input System **1.8.2**. The wrapper has been regenerated with the official generator, keeping the original action IDs and meta GUIDs. Edit the `.inputactions` source and regenerate through Unity; do not edit generated C# manually.
 
 ## Screenshots
 
@@ -122,21 +124,33 @@ Authentic screenshots have not been captured in this environment. This section i
 
 The repository implements the sandbox systems described above. It does not claim a complete racing game, a verified release build, or cross-platform controller support. No future roadmap is committed here.
 
-The organization and cleanup preserve retained asset GUIDs, gameplay C# source bytes, input bindings, build-scene contents, active HDRP settings and physics values. Removed files are explicitly inventoried in [cleanup-manifest.json](docs/cleanup-manifest.json); no retained package was upgraded. Available static checks pass; this does **not** establish runtime or player-build correctness. Unity 6000.0.0f1 was unavailable in the authoring environment, so import, compilation, Play mode, rendering, controller testing and build testing were **not run**.
+Vehicle physics, gearbox, boost force, audio/effects scripts, active HDRP configuration and package versions remain unchanged. Input bindings and the scene's input dispatch were updated together; the redundant second PlayerInput was removed. Verified unused content is inventoried in the [earlier cleanup](docs/cleanup-manifest.json) and [unused materials demo removal](docs/input-cleanup.json).
 
-Run the repeatable static comparison with Python 3 and Git:
+Validation performed:
+
+- **53 assertions passed** with virtual keyboard/Xbox devices in an isolated Unity **6000.3.0f1** Play Mode harness using the project's exact **Input System 1.8.2**. Tests cover axes, keyboard combinations, all action callbacks, analog input, disconnect/reconnect and disable/reenable behavior. The imported/generated wrapper compiled and matched its source asset.
+- Static comparisons check that vehicle code, physics components, colliders and unrelated scene objects/settings remain unchanged; retained GUIDs and dependencies are preserved. See [input simulation results](docs/input-validation-results.json) and [static integrity results](docs/input-static-results.json).
+- **Not run:** the full game in Unity **6000.0.0f1**, physical Xbox/keyboard driving, graphics/audio/HUD checks or player builds. The newer Editor was used only for a disposable input harness, not to open or upgrade this repository.
+
+Run static validation with Python 3 and Git:
 
 ```sh
-python3 tools/validate-organization.py
+python3 tools/validate-project.py
 ```
 
-See the [audit and manual checklist](docs/repository-audit.md), [machine-readable results](docs/validation-results.json), [move manifest](docs/asset-moves.json), and [scene dependency map](docs/scene-dependencies.json).
+Run the isolated input simulations with an installed Unity Editor (the helper creates a temporary project and resolves Input System 1.8.2):
+
+```sh
+python3 tools/verify-inputs.py --unity /path/to/Unity
+```
+
+After intentionally changing bindings, pass `--regenerate` to copy back the official importer-generated wrapper only after all checks pass. `--input-package /path/to/extracted/package` can use a local official 1.8.2 package. `--report /path/to/results.json` saves a report; temporary files are cleaned on success and logs are kept on failure. Tests never import the full game. See the [historical organization audit and manual checklist](docs/repository-audit.md) for outstanding full-game checks.
 
 ## Credits and licensing
 
 The existing [GNU GPLv3 license](LICENSE) is retained unchanged. External assets can carry different licenses; the repository license does not establish ownership or redistribution rights for those resources.
 
-- **Ciathyza — Gridbox Prototype Materials:** imported under `Assets/Thirdparty/Ciathyza`; Sandbox materials reference its textures. No separate license text was found in that imported folder.
+- **Ciathyza — Gridbox Prototype Materials:** imported under `Assets/Thirdparty/Ciathyza`; Sandbox materials reference its retained textures. The unreferenced demonstration scene and exclusive demo materials were removed. No separate license text was found in that imported folder.
 - **Unity Technologies — Particle Pack:** imported under `Assets/UnityTechnologies/ParticlePack`; Sandbox references particle materials and textures, which are retained; the unused first-person demo and its legacy postprocessing dependency were removed. Its bundled `Readme.asset` identifies the pack but is not a license grant.
 - **TextMeshPro / Liberation Sans:** bundled TMP resources; Liberation Sans credits Red Hat, Inc. and includes the [SIL Open Font License 1.1](Assets/TextMeshPro/Fonts/LiberationSans%20-%20OFL.txt).
 - **Unity packages:** retain their respective package license terms.

@@ -1,4 +1,6 @@
-# Repository organization and cleanup audit
+# Repository organization and cleanup audit — historical snapshot
+
+> This audit records the organization/cleanup at `b6245330e0f9ec22140bed35da20393735393000`. The subsequent keyboard/Xbox update is described in the current [README](../README.md), [input simulation results](input-validation-results.json), [static results](input-static-results.json) and [additional demo cleanup](input-cleanup.json). The former migration-only validator was retired in favor of `tools/validate-project.py`; the historical counts and unchanged-scene statements below describe that earlier snapshot.
 
 ## Scope and baselines
 
@@ -61,9 +63,9 @@ Remaining Thirdparty/Ciathyza, UnityTechnologies Particle Pack effect resources,
 
 ## Validation
 
-Run `python3 tools/validate-organization.py`. It compares original files against baseline, applies only the six specified configuration changes, and allows only the inventoried deletions whose original hashes match. Missing files outside the manifest fail validation. All retained original files are compared byte-for-byte.
+The historical migration-only validator compared original files against baseline, applies only the six specified configuration changes, and allows only the inventoried deletions whose original hashes match. Missing files outside the manifest fail validation. All retained original files are compared byte-for-byte.
 
-Additional checks cover retained GUID preservation/uniqueness, asset/meta pairs, build scene paths/GUIDs, generated wrapper target, serialized reference equality after expected configuration edits, absence of retained references to deleted GUIDs and the 287 removed package GUIDs (including common binary representations), JSON validity, package lock closure and absence of tracked generated project folders. [validation-results.json](validation-results.json) contains the actual latest results. Existing external/unresolved GUIDs are reported separately; they must not be interpreted as verified package resolution.
+Additional checks cover retained GUID preservation/uniqueness, asset/meta pairs, build scene paths/GUIDs, generated wrapper target, serialized reference equality after expected configuration edits, absence of retained references to deleted GUIDs and the 287 removed package GUIDs (including common binary representations), JSON validity, package lock closure and absence of tracked generated project folders. [validation-results.json](validation-results.json) contains the historical migration results. Existing external/unresolved GUIDs are reported separately; they must not be interpreted as verified package resolution.
 
 README local links and `git diff <original-main> --check` are also checked. .gitignore excludes Unity generated folders, IDE temporary output, OS metadata and crash reports; shared .vscode settings remain. .gitattributes retains text normalization and marks known binary sources without enabling LFS. Generic .asset files are not forced to text because Unity assets can be binary.
 
