@@ -1,0 +1,34 @@
+{
+  "baseline_branch_commit": "670fb7d3310de722c751cdb802af1b5661e1b412",
+  "branch": "feat/tumbler-underbody-detail",
+  "unity": "6000.6.7f1",
+  "hdrp": "17.6.0",
+  "original_project_files_byte_identical": 1089,
+  "original_scene_blocks_byte_identical_except_scene_root_list": 245,
+  "scene_additions": "One DrivingTestGround prefab root instance and one SceneRoots entry",
+  "original_fbx_sha256": "14714cc91ccb51eeb3f8c5d69fabd0441f95548bfa0d9658f7ee80c0c378e04d",
+  "original_vehicle_code_physics_meshes_and_settings_unchanged": true,
+  "unique_asset_meta_guids": 603,
+  "new_asset_guid_and_local_fileid_references": "PASS",
+  "test_zones": 6,
+  "new_materials": 7,
+  "new_meshes": 14,
+  "new_runtime_scripts": [
+    "DrivingSurface",
+    "WheelSurfaceGrip"
+  ],
+  "native_scene_and_contact_assertions": 89,
+  "native_play_mode_assertions": 128,
+  "native_runtime_checks": [
+    "All six wheels ground on asphalt/gravel/wet lanes",
+    "Per-surface forward and sideways stiffness multipliers",
+    "Baseline restored on unmarked terrain and component disable",
+    "Profile reapplied after component enable",
+    "Existing handbrake slip adjustment and release preserved"
+  ],
+  "verification_scope": "Stationary native WheelCollider contacts with temporary positional/rotational restraints; no scene changes saved",
+  "hdrp_render_review": "PASS - overview, jumps, suspension, surfaces and slopes; temporary preview lighting/cameras only",
+  "editor_note": "Unity Editor Search indexing logged an ArgumentOutOfRangeException; native gameplay assertions completed successfully",
+  "manual_driving_physical_controller_timed_comparisons_performance_and_player_build": "NOT RUN",
+  "errors": []
+}

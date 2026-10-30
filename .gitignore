@@ -88,3 +88,7 @@ Thumbs.db
 /[Tt]est[Rr]esults/
 /TestResults*.xml
 /[Cc]ode[Cc]overage/
+
+# Python validation helpers
+__pycache__/
+*.py[cod]
