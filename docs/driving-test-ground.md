@@ -2,6 +2,8 @@
 
 Branch: `feat/tumbler-underbody-detail` — continues the approved Tumbler visual work.
 
+This document records the ground addition in `33d9aaf`. Subsequent [contact-mark and exposure updates](contact-marks-and-exposure.md) revise the visual effects and add a scene-local exposure Volume.
+
 Scene: `Assets/_Project/Scenes/Sandbox.unity`
 
 Unity: `6000.6.7f1` / HDRP `17.6.0`

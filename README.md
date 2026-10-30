@@ -11,7 +11,9 @@ This repository (`racing-game`) is a learning project, not a finished commercial
 - Boost with forward impulses, particles and jet audio.
 - Switchable AWD, FWD and RWD; automatic five-gear shifting.
 - Vehicle reset and low-speed upright recovery.
-- Engine startup, idle and speed-dependent running audio; handbrake tire sounds, trails and smoke.
+- Engine startup, idle and speed-dependent running audio; handbrake tire sounds and contact-based tire smoke.
+- Subtle surface-projected tire marks during braking and lateral sliding, with independent wheel contact and gradual fading.
+- Stable, scene-local fixed exposure in Sandbox and consistent Main Menu option colors.
 - Speedometer needle, current gear and drivetrain HUD.
 - Main menu and Sandbox scenes, with a Cinemachine camera setup.
 - Six signed driving-test zones: progressive jumps, slalom/braking, suspension, surface grip, slopes and a skidpad.
@@ -85,6 +87,10 @@ Open `Assets/_Project/Scenes/Sandbox.unity`. From the spawn, follow the amber ar
 
 The three comparison lanes change actual WheelCollider grip. The wet lane is a test profile, without a water simulation. See [test-ground layout, grip settings and validation](docs/driving-test-ground.md) for details.
 
+## Tire marks and exposure
+
+Each wheel can leave subtle marks where it actually contacts the road while braking or sliding. Marks follow slopes, stop in the air, remain fixed after vehicle resets and fade over time. Sandbox uses its own fixed exposure at EV100 **12.5** to keep brightness stable when the camera turns. See [contact marks, exposure, menu styles and native validation](docs/contact-marks-and-exposure.md) for settings and verification.
+
 ## Project structure
 
 ```text
@@ -94,6 +100,7 @@ racing-game/
 │   │   ├── Art/                   # Tumbler visual details and driving-ground assets
 │   │   ├── Prefabs/               # Additive underbody and driving-test-ground prefabs
 │   │   ├── Input/                 # Input actions and generated C# wrapper
+│   │   ├── Rendering/             # Sandbox-only exposure profile
 │   │   ├── Scenes/                # Main Menu and Sandbox
 │   │   └── Scripts/
 │   │       ├── Environment/      # Surface profiles and wheel-grip adapter
@@ -101,7 +108,7 @@ racing-game/
 │   │       ├── Vehicle/Tumbler/  # Driving, boost, audio, effects, suspension
 │   │       └── UI/               # Menu and HUD controllers
 │   ├── Audios/                   # Existing audio sources; provenance unconfirmed
-│   ├── Materials/                # Existing materials and skidmark shader
+│   ├── Materials/                # Existing prototype materials
 │   ├── PhysicsMaterials/         # Existing friction assets
 │   ├── Prefabs/                  # Existing FBX models and playground geometry
 │   ├── Resources/                # Fonts and HUD images; special Unity folder
@@ -126,7 +133,8 @@ The root-level terrain asset remains in `Assets`. Retained imported content, bin
 | `GameManager` | Finds the named vehicle and speedometer needle, updates the needle, handles reset, low-speed upright recovery and quit callbacks. |
 | `Boost` | Reads boost input and applies forward impulses while controlling assigned particles and jet audio. |
 | `EngineAudio` | Coordinates startup/idle/running sources, adjusts pitch with speed, and handles handbrake tire sounds. |
-| `TumblerEffects` | Controls tire trails and smoke using handbrake, speed and grounding state. |
+| `TumblerEffects` | Samples each wheel’s contact, speed, braking and lateral slip; emits contact marks and rear tire smoke. |
+| `SurfaceSkidmarks` | Projects a bounded world-space ribbon mesh onto the contacted surface; the HDRP shader softens and fades marks. |
 | `EasySuspension` | Calculates child WheelCollider spring/damper settings and suspension distances, including in Edit mode. The existing filename `EasySuspenssion.cs` is preserved; see the audit for the naming mismatch. |
 | Input System | `TumblerInput.inputactions` supplies bindings; `Input.cs` is the generated `TumblerInput` class. Vehicle/boost poll wrappers, and a single scene PlayerInput dispatches recovery, reset, drivetrain and quit callbacks to their original components. |
 | `UIController` | Finds HUD text objects and displays the current gear and drivetrain; scene Unity events connect it to vehicle state changes. |
@@ -147,14 +155,15 @@ Unity HDRP capture with a temporary overview camera and fixed preview exposure. 
 
 The repository implements the sandbox systems described above. It does not claim a complete racing game, a verified release build, or cross-platform controller support. No future roadmap is committed here.
 
-The new ground is one scene-root prefab. All existing Sandbox objects, including the approved Tumbler, retain their serialized data. Vehicle scripts, source FBX, wheel colliders, suspension, torque, input bindings, HUD, audio, cameras and project settings are unchanged. The surface adapter adds the local grip behavior described above.
+The new ground is one scene-root prefab. The approved Tumbler source FBX, vehicle physics/controller, wheel colliders, suspension, torque, input bindings, HUD, audio and camera setup retain their existing data. The surface adapter adds local grip behavior. Visual updates replace the six legacy TrailRenderers with contact-projected marks, revise `TumblerEffects`, add a Sandbox-only exposure Volume and unify the menu option palette. Packages and project settings are unchanged by these additions.
 
-Validation performed for the test ground:
+Validation performed:
 
 - Native scene-load and physics-contact checks in Unity **6000.6.7f1**: ramp/landing heights, upward contact normals, terrain profiles, all six zones, movable markers and clear spawn/reset positions.
 - Play Mode checks with the actual Tumbler: all six wheels contact each comparison surface, grip multipliers apply and restore on unmarked terrain, disable/reenable restores/reapplies the profile, and the existing handbrake slip adjustment survives the adapter.
 - Authentic HDRP renders of the overview, ramps, suspension and surface areas, plus static preservation and asset-reference checks. Results are recorded in [test-ground validation](docs/driving-test-ground-validation.json).
-- **Not run:** physical controller driving, timed handling/braking comparisons, repeated landings at different speeds, audio evaluation or player builds. Grip values are initial test profiles for personal tuning.
+- Contact-mark/menu/exposure checks: native braking and unbraked sliding generate projected marks, asphalt/camber vertices follow the surface, airborne/reset motion creates no bridging strokes, the Vulkan shader renders and fades, and the resolved exposure stays fixed at different camera angles. See [visual validation](docs/visual-feedback-validation.json).
+- **Not run:** physical controller driving, timed handling/braking comparisons, repeated landings at different speeds, performance profiling, audio evaluation or player builds. Grip and visual values are initial profiles for personal tuning.
 
 The earlier [input simulation results](docs/input-validation-results.json), [static input results](docs/input-static-results.json) and [repository audit](docs/repository-audit.md) describe historical work. The 53 virtual keyboard/Xbox assertions used Input System **1.8.2** in an isolated Unity **6000.3.0f1** harness. They are not a rerun against the current upgraded package set. The helpers in `tools/validate-project.py` and `tools/verify-inputs.py` retain those historical baselines; do not use `--regenerate` to overwrite the current 1.20.1 wrapper. Regenerate current input code through the installed Unity importer.
 
