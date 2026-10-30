@@ -1,0 +1,17 @@
+{
+  "baseline": "0cf4539c1a5ea3ff6ea07b313cefeca4a6d3b532",
+  "original_project_files_checked": 1124,
+  "byte_identical_original_files": 1122,
+  "expected_path_only_edits": 2,
+  "moved_tracked_paths": 31,
+  "original_meta_guids_preserved": 594,
+  "current_meta_guids": 597,
+  "serialized_guid_reference_occurrences": 6890,
+  "unchanged_external_or_unresolved_guids": 536,
+  "baseline_orphan_metas_unchanged": [
+    "Assets/Editor.meta",
+    "Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Materials/Standard.meta"
+  ],
+  "errors": [],
+  "unity_runtime_tests": "NOT RUN: exact Unity 6000.0.0f1 unavailable"
+}
