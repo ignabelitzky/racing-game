@@ -13,6 +13,10 @@ public static class DrivingGroundVerify
  static string ReportPath(string name) { var folder=Environment.GetEnvironmentVariable("DRIVING_GROUND_RESULTS") ?? "TestResults/DrivingGround";Directory.CreateDirectory(folder);return Path.Combine(folder,name); }
  static readonly List<string> Results=new List<string>();
  static int step;static double next;static Rigidbody body;static WheelCollider[] wheels;static float[] f,s;static WheelSurfaceGrip service;
+ static TumblerController contactController;
+ static WheelCollider[] contactWheels;
+ static GameObject[] contactPads;
+ static int contactCase;
  static DrivingGroundVerify(){EditorApplication.playModeStateChanged+=State;EditorApplication.update+=Tick;}
  static void Check(bool condition,string message){if(!condition)throw new Exception(message);Results.Add("PASS "+message);}
  public static void Run()
@@ -84,9 +88,71 @@ public static class DrivingGroundVerify
     case 8:
      Grip(.55f,.35f,"Handbrake on wet",true);Check(wheels.Count(w=>Mathf.Abs(w.sidewaysFriction.extremumSlip-.5f)<.001f)==4,"Handbrake retains rear-wheel slip change");body.GetComponent<TumblerController>().enabled=true;next=EditorApplication.timeSinceStartup+.3;break;
     case 9:
-     Grip(.55f,.35f,"Handbrake release");File.WriteAllLines(ReportPath("play-validation.txt"),Results);SessionState.SetBool(Flag,false);Debug.Log("DRIVING GROUND NATIVE VALIDATION PASS "+Results.Count+" runtime checks");EditorApplication.Exit(0);break;
+     Grip(.55f,.35f,"Handbrake release");PrepareContactChecks();break;
+    case 10:
+     if(CheckContacts())
+     {
+      File.WriteAllLines(ReportPath("play-validation.txt"),Results);SessionState.SetBool(Flag,false);Debug.Log("DRIVING GROUND NATIVE VALIDATION PASS "+Results.Count+" runtime checks");EditorApplication.Exit(0);
+     }
+     else step=10;
+     break;
    }
   }catch(Exception ex){Fail(ex);}
+ }
+ // Isolate each real vehicle wheel with a small support pad. The body is held
+ // above the playground so neither the terrain nor another wheel can mask a failure.
+ static void PrepareContactChecks()
+ {
+  contactController=body.GetComponent<TumblerController>();
+  var serialized=new SerializedObject(contactController);
+  contactWheels=new[]{"frontWheelsColliders","rearWheelsColliders"}
+   .SelectMany(name=>
+   {
+    var array=serialized.FindProperty(name);
+    return Enumerable.Range(0,array.arraySize).Select(i=>(WheelCollider)array.GetArrayElementAtIndex(i).objectReferenceValue);
+   }).ToArray();
+  Check(contactWheels.Length==6,"Ground-contact fixture includes both front and all four rear wheels");
+  contactController.enabled=false;
+  service.enabled=false;
+  body.interpolation=RigidbodyInterpolation.None;
+  body.constraints=RigidbodyConstraints.FreezeAll;
+  body.linearVelocity=Vector3.zero;body.angularVelocity=Vector3.zero;
+  body.transform.SetPositionAndRotation(new Vector3(250,50,450),Quaternion.identity);
+  body.position=body.transform.position;body.rotation=body.transform.rotation;
+  Physics.SyncTransforms();
+  contactPads=new GameObject[contactWheels.Length];
+  for(int i=0;i<contactWheels.Length;i++)
+  {
+   var wheel=contactWheels[i];
+   wheel.motorTorque=0;wheel.brakeTorque=0;
+   var pad=GameObject.CreatePrimitive(PrimitiveType.Cube);
+   pad.name="Temporary wheel support "+i;
+   pad.transform.localScale=new Vector3(.25f,.1f,.25f);
+   pad.transform.position=wheel.transform.TransformPoint(wheel.center)-wheel.transform.up*(wheel.radius+wheel.suspensionDistance*.5f+.05f);
+   contactPads[i]=pad;
+  }
+  contactCase=-1;SetContactPads();
+ }
+ static bool ExpectedContact(int wheel)
+ {
+  if(contactCase>=0&&contactCase<6)return wheel==contactCase;
+  if(contactCase==6)return wheel>=2;
+  return contactCase==7;
+ }
+ static void SetContactPads()
+ {
+  for(int i=0;i<contactPads.Length;i++)contactPads[i].SetActive(ExpectedContact(i));
+  Physics.SyncTransforms();next=EditorApplication.timeSinceStartup+.35;
+ }
+ static bool CheckContacts()
+ {
+  string label=contactCase<0?"Airborne":contactCase<6?"Only wheel "+contactCase:contactCase==6?"Rear wheels only":contactCase==7?"All wheels":"Contact lost";
+  for(int i=0;i<contactWheels.Length;i++)
+   Check(contactWheels[i].isGrounded==ExpectedContact(i),label+": actual wheel contact "+i);
+  bool expected=Enumerable.Range(0,contactWheels.Length).Any(ExpectedContact);
+  Check(contactController.IsGrounded()==expected,label+": IsGrounded reflects any of the six wheels");
+  if(contactCase==8)return true;
+  contactCase++;SetContactPads();return false;
  }
  static void Fail(Exception ex){SessionState.SetBool(Flag,false);File.WriteAllLines(ReportPath("failed.txt"),Results.Concat(new[]{ex.ToString()}));Debug.LogException(ex);EditorApplication.Exit(1);}
 }

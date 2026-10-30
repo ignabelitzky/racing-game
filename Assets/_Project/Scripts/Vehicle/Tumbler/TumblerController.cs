@@ -295,6 +295,10 @@ public class TumblerController : MonoBehaviour
         {
             if (wheel.isGrounded) return true;
         }
+        foreach(WheelCollider wheel in rearWheelsColliders)
+        {
+            if (wheel.isGrounded) return true;
+        }
         return false;
     }
 

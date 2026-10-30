@@ -53,6 +53,8 @@ All pre-existing Sandbox object blocks are preserved exactly; only a root prefab
 
 The committed [validation report](driving-test-ground-validation.json) records native scene-load, contact and Play Mode checks. The actual six-wheel Tumbler was placed on each surface during the grip checks; temporary restraints isolated stationary contact from lateral motion. Checks cover baseline restoration, disable/reenable and preservation of the existing handbrake slip change. This is a contact/behavior check, not a timed driving comparison.
 
+The helper also tests `TumblerController.IsGrounded()` with the actual six WheelColliders, using temporary isolated support pads: no wheel touching, each wheel individually, all four rear wheels only, all six wheels, and contact loss. It verifies the actual contact pattern before checking the controller result. This regression covers the correction from front-only detection to detection of any front or rear wheel. It does not test escape from a vehicle supported on its underbody.
+
 To repeat the native checks, close the project in Unity, then run with its matching installed Editor:
 
 ```sh
