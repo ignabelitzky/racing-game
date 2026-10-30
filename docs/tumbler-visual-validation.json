@@ -1,0 +1,19 @@
+{
+  "baseline_main": "483ae13b648b21638287e2dbbbd15bd5cdef69bb",
+  "branch": "feat/tumbler-underbody-detail",
+  "protected_original_files_byte_identical": 1072,
+  "original_fbx_sha256": "14714cc91ccb51eeb3f8c5d69fabd0441f95548bfa0d9658f7ee80c0c378e04d",
+  "original_fbx_and_meta_unchanged": true,
+  "original_scene_geometry_physics_and_callbacks_preserved": true,
+  "original_mesh_count": 7,
+  "body_only_double_sided_variants": 6,
+  "wheel_colliders": 6,
+  "vehicle_rigidbodies": 1,
+  "added_triangles": 4380,
+  "added_mesh_groups": 5,
+  "added_physics_or_behaviour_components": 0,
+  "added_geometry_within_original_bounds": true,
+  "unique_asset_meta_guids": 575,
+  "editor_and_hdrp_render_checks": "PASS - Unity 6000.6.7f1",
+  "manual_driving_and_player_build": "NOT RUN"
+}
