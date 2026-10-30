@@ -11,16 +11,16 @@ This repository (`tumbler-sandbox`) is a learning project, not a finished commer
 - Rigidbody and WheelCollider vehicle physics, with wheel mesh updates, speed-dependent steering and downforce.
 - Xbox controller and keyboard bindings for every driving action, including WASD and arrow-key driving.
 - Boost with forward impulses, particles and jet audio.
-- Switchable AWD, FWD and RWD; automatic five-gear shifting.
-- Steering that keeps parking lock and progressively widens the requested curve at speed to reduce tire scrub under full input.
+- Switchable AWD, FWD and RWD, seven automatic forward gears and a 260 km/h forward governor.
+- Speed-sensitive steering with full parking lock and a retained steering allowance at high speed.
 - Vehicle reset and low-speed upright recovery.
-- Engine startup, idle and speed-dependent running audio; handbrake tire sounds and contact-based tire smoke.
+- Engine startup, idle and RPM-synchronous running audio with pitch drops on upshifts; handbrake tire sounds and contact-based tire smoke.
 - Subtle surface-projected tire marks during braking and lateral sliding, with independent wheel contact and gradual fading.
 - Stable, scene-local fixed exposure in Sandbox and consistent Main Menu option colors.
-- Speedometer needle, current gear and drivetrain HUD.
+- Compact bottom-right digital speed, gear/reverse, drivetrain and RPM instruments, with a green-to-red tachometer.
 - Main menu and Sandbox scenes, with a Cinemachine camera setup.
 - Six signed driving-test zones: progressive jumps, slalom/braking, suspension, surface grip, slopes and a skidpad.
-- Original Tumbler geometry with the approved additive underbody details; see [visual changes](docs/tumbler-visual-pass.md).
+- Original Tumbler geometry with additive central/outer floor relief, front subframe details and service lines; see the [latest vehicle update](docs/tumbler-upgrade.md).
 
 ## Tech stack
 
@@ -68,7 +68,7 @@ Bindings come from [TumblerInput.inputactions](Assets/_Project/Input/TumblerInpu
 | Handbrake | X | Space |
 | Upright recovery, below 1 m/s | Y | F |
 | Cycle AWD → FWD → RWD → AWD | RB | E |
-| Reset position, rotation and velocity | Left Stick Click | R |
+| Reset position, rotation, velocity and transmission | Left Stick Click | R |
 | Quit / stop Editor Play mode | Start / Menu | Escape |
 
 The Xbox triggers remain a signed analog throttle axis, and the stick retains analog steering. Keyboard throttle/steering are digital; opposing keyboard directions cancel. Reverse and brake remain separate controls. You can combine acceleration, steering, boost and handbrake, subject to the existing vehicle behavior. Drivetrain, gearbox, torque, suspension and control bindings are unchanged by the test ground. Only tire stiffness is scaled while each wheel touches a marked test surface, and the original stiffness is restored on exit.
@@ -134,18 +134,18 @@ The root-level terrain asset remains in `Assets`. Retained imported content, bin
 | Component | Responsibility |
 | --- | --- |
 | `TumblerController` | Reads steering/throttle/brake/handbrake, applies wheel torque and downforce, updates wheels, shifts gears, switches drive modes, and exposes speed/gear state. |
-| `GameManager` | Finds the named vehicle and speedometer needle, updates the needle, handles reset, low-speed upright recovery and quit callbacks. |
+| `GameManager` | Finds the named vehicle and handles reset, low-speed upright recovery and quit callbacks; reset also clears transmission/wheel spin. |
 | `Boost` | Reads boost input and applies forward impulses while controlling assigned particles and jet audio. |
-| `EngineAudio` | Coordinates startup/idle/running sources, adjusts pitch with speed, and handles handbrake tire sounds. |
+| `EngineAudio` | Coordinates startup/idle/running sources, follows the controller's engine RPM, and handles handbrake tire sounds. |
 | `TumblerEffects` | Samples each wheel’s contact, speed, braking and lateral slip; emits contact marks and rear tire smoke. |
 | `SurfaceSkidmarks` | Projects a bounded world-space ribbon mesh onto the contacted surface; the HDRP shader softens and fades marks. |
 | `EasySuspension` | Calculates child WheelCollider spring/damper settings and suspension distances, including in Edit mode. The existing filename `EasySuspenssion.cs` is preserved; see the audit for the naming mismatch. |
 | Input System | `TumblerInput.inputactions` supplies bindings; `Input.cs` is the generated `TumblerInput` class. Vehicle/boost poll wrappers, and a single scene PlayerInput dispatches recovery, reset, drivetrain and quit callbacks to their original components. |
-| `UIController` | Finds HUD text objects and displays the current gear and drivetrain; scene Unity events connect it to vehicle state changes. |
+| `UIController` / `DigitalVehicleHUD` | Serialized references connect the controller and gear/drivetrain events to compact digital speed, gear, drive-mode and colored RPM instruments. |
 | `DrivingSurface` / `WheelSurfaceGrip` | Mark test surfaces and scale each contacting wheel’s stiffness; restore baseline outside them and when disabled. |
 | `MenuController` | Loads a scene by name and handles the menu exit action. Scene names remain unchanged. |
 
-Scene objects, Inspector references and Unity events provide the wiring. There is no dependency injection or architectural framework implied. Named object lookups such as `Tumbler`, `SpeedometerNeedle`, `DriveModeText` and `GearNumText` remain significant.
+Scene objects, Inspector references and Unity events provide the wiring. There is no dependency injection or architectural framework implied. The `Tumbler` object name remains significant to the existing game manager; the digital HUD uses serialized view references.
 
 The Input Actions importer generates `Assets/_Project/Input/Input.cs` using Input System **1.20.1**. The wrapper has been regenerated with the official generator, keeping the original action IDs and meta GUIDs. Edit the `.inputactions` source and regenerate through Unity; do not edit generated C# manually.
 
@@ -167,7 +167,7 @@ A subsequent controller fix makes `IsGrounded()` detect contact from any of the 
 
 The later [underbody collision update](docs/underbody-collision.md) replaces the lower rectangular collider with a beveled convex hull and a dedicated low-friction material to reduce ledge snagging. Visible vehicle geometry and proportions remain unchanged. The original center of mass and inertia are explicitly preserved; wheel grip, suspension and drivetrain settings retain their existing values.
 
-The [steering update](docs/steering-and-acceleration.md) addresses the acceleration plateau when holding full steering. It limits cornering demand using actual wheelbase and horizontal speed, retaining low-speed lock and analog control. Power, grip, gearing, brakes and the 175 km/h motor cutoff retain their original settings; straight-line acceleration is unchanged in the native comparison.
+The [earlier steering update](docs/steering-and-acceleration.md) records the initial acceleration-plateau correction. The current [vehicle upgrade](docs/tumbler-upgrade.md) restores useful high-speed steering, adds seven gears and a 260 km/h governor, synchronizes RPM/audio, replaces the analog gauge with digital instruments and extends the floor detailing. The original FBX, colliders, suspension, mass properties and input bindings are retained. Reverse is governed at 80 km/h.
 
 Validation performed:
 
@@ -175,7 +175,7 @@ Validation performed:
 - Play Mode checks with the actual Tumbler: all six wheels contact each comparison surface, grip multipliers apply and restore on unmarked terrain, disable/reenable restores/reapplies the profile, and the existing handbrake slip adjustment survives the adapter.
 - Ground-contact regression: isolated support under each of the six wheels, rear-only support, all-wheel support, airborne and contact-loss cases. Repeat these with `tools/verify-driving-ground.py`; see [test-ground validation instructions](docs/driving-test-ground.md#validation).
 - Underbody collision checks compare the original and updated vehicle on temporary rail, curb and platform fixtures, plus an isolated high-speed lower-hull impact. Repeat with `tools/verify-chassis.py`; see [method and limitations](docs/underbody-collision.md#validation).
-- Handling checks compare original/corrected straight, full-left and full-right steering for FWD/RWD/AWD, including virtual keyboard/Xbox inputs, analog steering, parking/recentering, reverse steering, brakes and handbrake settings. Repeat with `tools/verify-handling.py`; see [method and limits](docs/steering-and-acceleration.md#validation).
+- Current vehicle checks cover FWD/RWD/AWD reaching seventh and 260 km/h without boost, RPM/pitch drops, shift stability, braking/reset, high-speed and sustained steering, virtual keyboard/Xbox inputs, HUD values/colors/layout and visual-only underbody geometry. Repeat with `tools/verify-tumbler-update.py` (or `tools/verify-handling.py`); add `--graphics` for native HDRP previews. See [method, results and limits](docs/tumbler-upgrade.md#verification).
 - Authentic HDRP renders of the overview, ramps, suspension and surface areas, plus static preservation and asset-reference checks. Results are recorded in [test-ground validation](docs/driving-test-ground-validation.json).
 - Contact-mark/menu/exposure checks: native braking and unbraked sliding generate projected marks, asphalt/camber vertices follow the surface, airborne/reset motion creates no bridging strokes, the Vulkan shader renders and fades, and the resolved exposure stays fixed at different camera angles. See [visual validation](docs/visual-feedback-validation.json).
 - **Not run:** physical controller driving, timed handling/braking comparisons, repeated landings at different speeds, performance profiling, audio evaluation or player builds. Grip and visual values are initial profiles for personal tuning.

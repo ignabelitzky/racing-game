@@ -2,6 +2,8 @@
 
 Available on `main`. This document records the original visual pass introduced in `670fb7d`; the temporary review branch has been integrated and removed. Later changes are documented in the [driving test ground](driving-test-ground.md), [contact marks and exposure](contact-marks-and-exposure.md), and [underbody collision update](underbody-collision.md).
 
+The later [vehicle upgrade](tumbler-upgrade.md) extends the outer floor and front mechanical relief with another visual-only prefab. The five groups described here remain intact.
+
 Baseline main: `483ae13b648b21638287e2dbbbd15bd5cdef69bb`
 
 Unity: `6000.6.7f1` / HDRP `17.6.0`

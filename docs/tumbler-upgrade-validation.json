@@ -1,0 +1,390 @@
+{
+  "date": "2026-10-30",
+  "status": "PASS",
+  "baseline_commit": "e36e9776683af22916a2bdf46bccfbdc39c65839",
+  "unity": "6000.6.7f1",
+  "input_system": "1.20.1",
+  "native_checks": {
+    "vehicle": {
+      "edit_checks": 50,
+      "play_checks": 64
+    },
+    "driving_ground": {
+      "edit_checks": 89,
+      "play_checks": 199
+    },
+    "chassis": {
+      "edit_checks": 39,
+      "play_checks": 24
+    }
+  },
+  "total_native_checks": 465,
+  "gpu_inspection": {
+    "pipeline": "HDRP 17.6.0",
+    "graphics_api": "Vulkan",
+    "native_captures": 8,
+    "resolutions": [
+      "1920x1080",
+      "1280x720",
+      "1600x1100",
+      "1600x1000"
+    ],
+    "visually_reviewed": true
+  },
+  "scene_preservation": {
+    "baseline_blocks": 244,
+    "changed_existing_blocks": [
+      "1665185318273656989",
+      "1824967744",
+      "2040198345356866089",
+      "2040198345356866091",
+      "666236941",
+      "666236943",
+      "666236944"
+    ],
+    "removed_legacy_hud_blocks": 18,
+    "added_prefab_reference_blocks": 5,
+    "other_existing_blocks_byte_identical": 219,
+    "rigidbody_and_all_six_wheel_colliders_byte_identical": true
+  },
+  "assets_preserved": {
+    "original_fbx_sha256": "14714cc91ccb51eeb3f8c5d69fabd0441f95548bfa0d9658f7ee80c0c378e04d",
+    "original_fbx_importer_exterior_wheels_and_five_detail_groups_unchanged": true,
+    "physics_materials_hull_inputs_audio_clips_menu_packages_and_project_settings_unchanged": true,
+    "new_asset_meta_guids_unique": true
+  },
+  "retired_assets": [
+    "Assets/Resources/Images/dial 1.png",
+    "Assets/Resources/Images/needle.png",
+    "tools/handling/HandlingVerify.cs"
+  ],
+  "performance": {
+    "runs": [
+      {
+        "mode": "FrontWheelDrive",
+        "topSpeed": 260.0434265136719,
+        "finalSpeed": 260.0150451660156,
+        "finalRPM": 7199.9990234375,
+        "finalGear": 7,
+        "shifts": [
+          {
+            "time": 4.360000133514404,
+            "speed": 50.050785064697266,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 4880.58251953125,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.3766142129898071,
+            "from": 1,
+            "to": 2
+          },
+          {
+            "time": 6.639999866485596,
+            "speed": 72.35940551757812,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5129.28564453125,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.422012448310852,
+            "from": 2,
+            "to": 3
+          },
+          {
+            "time": 9.800000190734863,
+            "speed": 99.61451721191406,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5488.07373046875,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.4875054359436035,
+            "from": 3,
+            "to": 4
+          },
+          {
+            "time": 13.719999313354492,
+            "speed": 128.3043212890625,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5658.68212890625,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.5186482667922974,
+            "from": 4,
+            "to": 5
+          },
+          {
+            "time": 19.119998931884766,
+            "speed": 160.16229248046875,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5500.43359375,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.4897615909576416,
+            "from": 5,
+            "to": 6
+          },
+          {
+            "time": 30.459999084472656,
+            "speed": 205.8966064453125,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5455.7705078125,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.4816088676452637,
+            "from": 6,
+            "to": 7
+          }
+        ]
+      },
+      {
+        "mode": "RearWheelDrive",
+        "topSpeed": 260.0408020019531,
+        "finalSpeed": 259.8763427734375,
+        "finalRPM": 7199.9990234375,
+        "finalGear": 7,
+        "shifts": [
+          {
+            "time": 2.740000009536743,
+            "speed": 50.06902313232422,
+            "rpmBefore": 7197.48046875,
+            "rpmAfter": 4876.94580078125,
+            "pitchBefore": 1.7995400428771973,
+            "pitchAfter": 1.3759503364562988,
+            "from": 1,
+            "to": 2
+          },
+          {
+            "time": 4.179999828338623,
+            "speed": 72.58124542236328,
+            "rpmBefore": 7199.8798828125,
+            "rpmAfter": 5130.45751953125,
+            "pitchBefore": 1.7999780178070068,
+            "pitchAfter": 1.4222263097763062,
+            "from": 2,
+            "to": 3
+          },
+          {
+            "time": 6.039999961853027,
+            "speed": 99.87464904785156,
+            "rpmBefore": 7199.99755859375,
+            "rpmAfter": 5489.453125,
+            "pitchBefore": 1.799999475479126,
+            "pitchAfter": 1.4877573251724243,
+            "from": 3,
+            "to": 4
+          },
+          {
+            "time": 8.15999984741211,
+            "speed": 128.41371154785156,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5658.45654296875,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.5186070203781128,
+            "from": 4,
+            "to": 5
+          },
+          {
+            "time": 10.779999732971191,
+            "speed": 160.3038787841797,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5500.4794921875,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.4897700548171997,
+            "from": 5,
+            "to": 6
+          },
+          {
+            "time": 15.59999942779541,
+            "speed": 205.99058532714844,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5455.677734375,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.4815919399261475,
+            "from": 6,
+            "to": 7
+          }
+        ]
+      },
+      {
+        "mode": "AllWheelDrive",
+        "topSpeed": 260.04052734375,
+        "finalSpeed": 259.8905334472656,
+        "finalRPM": 7083.3310546875,
+        "finalGear": 7,
+        "shifts": [
+          {
+            "time": 2.740000009536743,
+            "speed": 50.290985107421875,
+            "rpmBefore": 7173.65966796875,
+            "rpmAfter": 4868.33544921875,
+            "pitchBefore": 1.795191764831543,
+            "pitchAfter": 1.3743786811828613,
+            "from": 1,
+            "to": 2
+          },
+          {
+            "time": 4.159999847412109,
+            "speed": 72.57005310058594,
+            "rpmBefore": 7194.25537109375,
+            "rpmAfter": 5127.06982421875,
+            "pitchBefore": 1.7989513874053955,
+            "pitchAfter": 1.4216079711914062,
+            "from": 2,
+            "to": 3
+          },
+          {
+            "time": 6.0,
+            "speed": 99.68997192382812,
+            "rpmBefore": 7199.0986328125,
+            "rpmAfter": 5486.857421875,
+            "pitchBefore": 1.799835443496704,
+            "pitchAfter": 1.48728346824646,
+            "from": 3,
+            "to": 4
+          },
+          {
+            "time": 8.119999885559082,
+            "speed": 128.37062072753906,
+            "rpmBefore": 7199.91259765625,
+            "rpmAfter": 5658.0126953125,
+            "pitchBefore": 1.7999839782714844,
+            "pitchAfter": 1.5185260772705078,
+            "from": 4,
+            "to": 5
+          },
+          {
+            "time": 10.739999771118164,
+            "speed": 160.40020751953125,
+            "rpmBefore": 7199.99609375,
+            "rpmAfter": 5501.13037109375,
+            "pitchBefore": 1.7999992370605469,
+            "pitchAfter": 1.4898887872695923,
+            "from": 5,
+            "to": 6
+          },
+          {
+            "time": 15.539999961853027,
+            "speed": 206.00112915039062,
+            "rpmBefore": 7199.9990234375,
+            "rpmAfter": 5455.73046875,
+            "pitchBefore": 1.799999713897705,
+            "pitchAfter": 1.481601595878601,
+            "from": 6,
+            "to": 7
+          }
+        ]
+      }
+    ],
+    "turns": [
+      {
+        "speed": 60.0,
+        "allowance": 0.0,
+        "headingChange": 39.18696212768555,
+        "finalSpeed": 80.54643249511719,
+        "frontAngle": 4.6713175773620605,
+        "sidewaysSlip": 0.09689680486917496
+      },
+      {
+        "speed": 60.0,
+        "allowance": 4.0,
+        "headingChange": 66.79074096679688,
+        "finalSpeed": 69.44806671142578,
+        "frontAngle": 10.165250778198242,
+        "sidewaysSlip": 0.1769249588251114
+      },
+      {
+        "speed": 120.0,
+        "allowance": 0.0,
+        "headingChange": 15.613483428955078,
+        "finalSpeed": 129.51959228515625,
+        "frontAngle": 1.8013579845428467,
+        "sidewaysSlip": 0.07324596494436264
+      },
+      {
+        "speed": 120.0,
+        "allowance": 4.0,
+        "headingChange": 42.18635940551758,
+        "finalSpeed": 114.89864349365234,
+        "frontAngle": 6.267782211303711,
+        "sidewaysSlip": 0.20945465564727783
+      },
+      {
+        "speed": 180.0,
+        "allowance": 0.0,
+        "headingChange": 8.280017852783203,
+        "finalSpeed": 178.12783813476562,
+        "frontAngle": 0.9515289068222046,
+        "sidewaysSlip": 0.05686713755130768
+      },
+      {
+        "speed": 180.0,
+        "allowance": 4.0,
+        "headingChange": 28.560396194458008,
+        "finalSpeed": 164.87014770507812,
+        "frontAngle": 5.103295803070068,
+        "sidewaysSlip": 0.24804046750068665
+      },
+      {
+        "speed": 240.0,
+        "allowance": 0.0,
+        "headingChange": 5.170085430145264,
+        "finalSpeed": 227.55613708496094,
+        "frontAngle": 0.5827635526657104,
+        "sidewaysSlip": 0.04795153811573982
+      },
+      {
+        "speed": 240.0,
+        "allowance": 4.0,
+        "headingChange": 27.230430603027344,
+        "finalSpeed": 208.4353790283203,
+        "frontAngle": 4.6793928146362305,
+        "sidewaysSlip": 0.2992217242717743
+      }
+    ],
+    "corners": [
+      {
+        "mode": "FrontWheelDrive",
+        "input": -1.0,
+        "meanFinalSpeed": 92.65037536621094,
+        "finalSpeed": 94.45204162597656,
+        "minimumUpright": 0.9976304769515991
+      },
+      {
+        "mode": "FrontWheelDrive",
+        "input": 1.0,
+        "meanFinalSpeed": 91.87765502929688,
+        "finalSpeed": 93.6314468383789,
+        "minimumUpright": 0.9977959394454956
+      },
+      {
+        "mode": "RearWheelDrive",
+        "input": -1.0,
+        "meanFinalSpeed": 111.918701171875,
+        "finalSpeed": 114.38651275634766,
+        "minimumUpright": 0.9936679005622864
+      },
+      {
+        "mode": "RearWheelDrive",
+        "input": 1.0,
+        "meanFinalSpeed": 106.91084289550781,
+        "finalSpeed": 107.95806121826172,
+        "minimumUpright": 0.993590235710144
+      },
+      {
+        "mode": "AllWheelDrive",
+        "input": -1.0,
+        "meanFinalSpeed": 119.22420501708984,
+        "finalSpeed": 121.79631042480469,
+        "minimumUpright": 0.996457576751709
+      },
+      {
+        "mode": "AllWheelDrive",
+        "input": 1.0,
+        "meanFinalSpeed": 122.60791778564453,
+        "finalSpeed": 125.56990814208984,
+        "minimumUpright": 0.9964998364448547
+      }
+    ]
+  },
+  "limits": [
+    "Controlled native simulations and virtual keyboard/Xbox input; physical hardware driving not run.",
+    "Steering tests compare body heading while speed is free to change.",
+    "The RPM model is a simplified game drivetrain, not measured Tumbler engine data.",
+    "Layout previews use representative values on a stationary scene; performance is measured separately.",
+    "Player builds, performance profiling, subjective audio evaluation and exhaustive terrain/obstacle coverage were not run.",
+    "An existing Unity Editor Search indexing exception appeared independently of passing native assertions."
+  ]
+}

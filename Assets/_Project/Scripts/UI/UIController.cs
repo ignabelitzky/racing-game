@@ -1,54 +1,24 @@
 using UnityEngine;
-using TMPro;
 
 public class UIController : MonoBehaviour
 {
-    [HideInInspector] private TumblerController tumblerController;
-    [HideInInspector] private TextMeshProUGUI driveModeText;
-    [HideInInspector] private TextMeshProUGUI gearNumText;
+    [SerializeField] private TumblerController tumblerController;
+    [SerializeField] private DigitalVehicleHUD hud;
 
     private void Awake()
     {
-        tumblerController = FindFirstObjectByType<TumblerController>();
-        driveModeText = GameObject.Find("DriveModeText").GetComponent<TextMeshProUGUI>();
-        gearNumText = GameObject.Find("GearNumText").GetComponent<TextMeshProUGUI>();
-        if(!driveModeText)
-        {
-            Debug.LogError("DriveModeText not found in the scene. Please assign the DriveModeText GameObject in the Inspector.");
-        }
-        if(!gearNumText)
-        {
-            Debug.LogError("GearNumText not found in the scene. Please assign the GearNumText GameObject in the Inspector.");
-        }
-        if(!tumblerController)
-        {
-            Debug.LogError("TumblerController not found in the scene. Please assign the TumblerController GameObject in the Inspector.");
-        }
+        if (tumblerController == null) tumblerController = FindFirstObjectByType<TumblerController>();
+        if (hud == null) hud = FindFirstObjectByType<DigitalVehicleHUD>();
     }
 
-    private void Start()
-    {
-        UpdateDriveMode();
-        UpdateGearNum();
-    }
-    public void UpdateDriveMode()
-    {
-        switch(tumblerController.currentDriveMode)
-        {
-            case TumblerController.driveType.AllWheelDrive:
-                driveModeText.text = "AWD";
-                break;
-            case TumblerController.driveType.FrontWheelDrive:
-                driveModeText.text = "FWD";
-                break;
-            case TumblerController.driveType.RearWheelDrive:
-                driveModeText.text = "RWD";
-                break;
-        }
-    }
+    private void LateUpdate() => Refresh();
+    public void UpdateDriveMode() => Refresh();
+    public void UpdateGearNum() => Refresh();
 
-    public void UpdateGearNum()
+    private void Refresh()
     {
-        gearNumText.text = tumblerController.currentGear.ToString();
+        if (tumblerController == null || hud == null) return;
+        hud.Refresh(tumblerController.GetSpeed(), tumblerController.GetEngineRPM(), tumblerController.GetRedlineRPM(),
+            tumblerController.currentGear, tumblerController.IsReversing, tumblerController.currentDriveMode);
     }
 }

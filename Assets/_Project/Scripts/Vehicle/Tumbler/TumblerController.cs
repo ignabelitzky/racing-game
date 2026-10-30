@@ -27,30 +27,42 @@ public class TumblerController : MonoBehaviour
     [SerializeField] private Transform[] wheelsTransforms;
 
     [Header("Performance Settings")]
-    [SerializeField] private float forwardPower = 1200f;
+    [SerializeField] private float forwardPower = 1400f;
     [SerializeField] private float reversePower = 800f;
     [SerializeField] private float brakingForce = 1000f;
     [SerializeField] private float maxTurnAngle = 40f;
     [SerializeField] private float handbrakeForce = 4000f;
-    [SerializeField] private float maxSpeedKPH = 175f;
+    [SerializeField] private float maxSpeedKPH = 260f;
     [SerializeField] private float maxTurnAngleAtMaxSpeed = 20f;
     [SerializeField] private float steeringResponse = 5f;
     [SerializeField] private float downForce = 150f;
 
     [Header("Steering Assist")]
-    [Tooltip("Maximum lateral acceleration requested by steering at speed, in m/s². Low-speed steering keeps its original range.")]
+    [Tooltip("Base cornering demand used to taper steering, in m/s². The separate high-speed allowance keeps steering responsive.")]
     [SerializeField, Min(0.1f)] private float maxSteeringLateralAcceleration = 9f;
+    [Tooltip("Soft steering allowance retained at high speed, in degrees.")]
+    [SerializeField, Range(0f, 10f)] private float highSpeedSteeringAllowance = 4f;
     private float wheelbase;
 
     [Header("Gearbox Settings")]
-    [SerializeField] private int numberOfGears = 5;
-    private float[] rpmRange = { 0f, 42000, 105000, 187000, 182000, 176000};
-    private float[] gearRatios = { 0f, 1.2f, 1.5f, 1.7f, 1.3f, 1.1f };
-    private float engineRPM = 0f;
+    [SerializeField, Range(1, 7)] private int numberOfGears = 7;
+    [SerializeField] private float[] gearRatios = { 5.8f, 4f, 2.9f, 2.25f, 1.8f, 1.4f, 1.08f };
+    [SerializeField] private float finalDriveRatio = 5.7f;
+    [SerializeField] private float idleRPM = 900f;
+    [SerializeField] private float redlineRPM = 7200f;
+    [SerializeField] private float upshiftRPM = 6600f;
+    [SerializeField] private float downshiftRPM = 3200f;
+    [SerializeField] private float maxDriveForce = 18000f;
+    [SerializeField] private float reverseMaxSpeedKPH = 80f;
+    private const float ReferenceWheelRadius = 0.66f;
+    private float engineRPM = 900f;
+    private float shiftCooldown;
+    private float shiftTimeRemaining;
     private float motorTorque = 0f;
 
     public int currentGear { get; private set;} = 1;
     public driveType currentDriveMode { get; private set; } = driveType.AllWheelDrive;
+    public bool IsReversing => currentPower < -0.01f || Vector3.Dot(carRigidbody.linearVelocity, transform.forward) < -0.5f;
 
     private float currentPower = 0f;
     private float currentBrakeForce = 0f;
@@ -88,6 +100,7 @@ public class TumblerController : MonoBehaviour
         HandleSteering();
         UpdateWheels();
         AddDownForce();
+        LimitHorizontalSpeed();
     }
 
     private void Update()
@@ -106,8 +119,8 @@ public class TumblerController : MonoBehaviour
         HandleGearShifting();
 
         // Calculate current speed in meters per second
-        float currentSpeed = carRigidbody.linearVelocity.magnitude;
-        float maxSpeedInMetersPerSecond = maxSpeedKPH / SpeedToKPH;
+        float currentSpeed = Vector3.ProjectOnPlane(carRigidbody.linearVelocity, Vector3.up).magnitude;
+        float maxSpeedInMetersPerSecond = (currentPower < 0f ? reverseMaxSpeedKPH : maxSpeedKPH) / SpeedToKPH;
 
         // Reset motor torque if the throttle input changes from positive to negative or vice versa
         if (shouldResetMotorTorque)
@@ -173,7 +186,7 @@ public class TumblerController : MonoBehaviour
         float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1f : 0f;
         foreach(WheelCollider wheel in frontWheelsColliders)
         {
-            wheel.motorTorque = motorTorque * torqueModifier;
+            wheel.motorTorque = motorTorque * torqueModifier * wheel.radius / ReferenceWheelRadius / frontWheelsColliders.Length;
         }
     }
 
@@ -182,7 +195,7 @@ public class TumblerController : MonoBehaviour
         float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1f : 0f;
         foreach(WheelCollider wheel in rearWheelsColliders)
         {
-            wheel.motorTorque = motorTorque * torqueModifier;
+            wheel.motorTorque = motorTorque * torqueModifier * wheel.radius / ReferenceWheelRadius / rearWheelsColliders.Length;
         }
     }
 
@@ -191,11 +204,11 @@ public class TumblerController : MonoBehaviour
         float torqueModifier = (currentSpeed < maxSpeedInMetersPerSecond) ? 1f : 0f;
         foreach(WheelCollider wheel in frontWheelsColliders)
         {
-            wheel.motorTorque = motorTorque * torqueModifier;
+            wheel.motorTorque = motorTorque * torqueModifier * wheel.radius / ReferenceWheelRadius / (frontWheelsColliders.Length + rearWheelsColliders.Length);
         }
         foreach(WheelCollider wheel in rearWheelsColliders)
         {
-            wheel.motorTorque = motorTorque * torqueModifier;
+            wheel.motorTorque = motorTorque * torqueModifier * wheel.radius / ReferenceWheelRadius / (frontWheelsColliders.Length + rearWheelsColliders.Length);
         }
     }
 
@@ -224,9 +237,9 @@ public class TumblerController : MonoBehaviour
         float originalLimit = Mathf.Lerp(maxTurnAngle, maxTurnAngleAtMaxSpeed, speedFactor);
         if (wheelbase <= 0f || speed <= 0f) return originalLimit;
 
-        // Bicycle model: lateral acceleration = speed² * tan(steering angle) / wheelbase.
-        // Keep full lock for parking, then widen the requested curve as speed rises.
-        float corneringLimit = Mathf.Atan(wheelbase * Mathf.Max(0.1f, maxSteeringLateralAcceleration) / (speed * speed)) * Mathf.Rad2Deg;
+        // The soft allowance retains useful steering at speed instead of tending to zero.
+        float corneringLimit = Mathf.Atan(wheelbase * Mathf.Max(0.1f, maxSteeringLateralAcceleration) / (speed * speed) +
+            Mathf.Tan(highSpeedSteeringAllowance * Mathf.Deg2Rad)) * Mathf.Rad2Deg;
         return Mathf.Min(originalLimit, corneringLimit);
     }
 
@@ -253,17 +266,46 @@ public class TumblerController : MonoBehaviour
 
     private void HandleGearShifting()
     {
-        float speed = carRigidbody.linearVelocity.magnitude * SpeedToKPH;
-        engineRPM = speed * gearRatios[currentGear] * 1000;
-        if (engineRPM > rpmRange[currentGear])
+        shiftCooldown = Mathf.Max(0f, shiftCooldown - Time.fixedDeltaTime);
+        shiftTimeRemaining = Mathf.Max(0f, shiftTimeRemaining - Time.fixedDeltaTime);
+        currentGear = Mathf.Clamp(currentGear, 1, Mathf.Min(numberOfGears, gearRatios.Length));
+        float forwardSpeed = Vector3.Dot(carRigidbody.linearVelocity, transform.forward);
+        float roadWheelRPM = Mathf.Abs(forwardSpeed) * 60f / (2f * Mathf.PI * ReferenceWheelRadius);
+        float ratio = currentPower < 0f ? gearRatios[1] : gearRatios[currentGear - 1];
+        float roadRPM = roadWheelRPM * ratio * finalDriveRatio;
+        if (currentPower >= 0f && IsGrounded() && shiftCooldown <= 0f)
         {
-            IncrementGear();
+            if (forwardSpeed > 1f && roadRPM > upshiftRPM) IncrementGear();
+            else if (roadRPM < downshiftRPM && currentGear > 1) DecrementGear();
         }
-        else if (engineRPM < rpmRange[currentGear] / 2)
-        {
-            DecrementGear();
-        }
-        motorTorque = currentPower * gearRatios[currentGear];
+        ratio = currentPower < 0f ? gearRatios[1] : gearRatios[currentGear - 1];
+        float wheelRPM = GetDrivenWheelRPM();
+        float coupledWheelRPM = shiftTimeRemaining > 0f ? roadWheelRPM : Mathf.Max(roadWheelRPM, wheelRPM);
+        float targetRPM = Mathf.Clamp(coupledWheelRPM * ratio * finalDriveRatio, idleRPM, redlineRPM);
+        engineRPM = Mathf.Lerp(engineRPM, targetRPM, 1f - Mathf.Exp(-12f * Time.fixedDeltaTime));
+        float torque = Mathf.Min(Mathf.Abs(currentPower) * ratio * finalDriveRatio, maxDriveForce * ReferenceWheelRadius);
+        float shiftDelivery = Mathf.Lerp(1f, 0.35f, Mathf.Clamp01(shiftTimeRemaining / 0.18f));
+        motorTorque = Mathf.Sign(currentPower) * torque * shiftDelivery;
+    }
+
+    private float GetDrivenWheelRPM()
+    {
+        float rpm = 0f;
+        int count = 0;
+        if (currentDriveMode != driveType.RearWheelDrive)
+            foreach (var wheel in frontWheelsColliders) { rpm += Mathf.Abs(wheel.rpm) * wheel.radius / ReferenceWheelRadius; count++; }
+        if (currentDriveMode != driveType.FrontWheelDrive)
+            foreach (var wheel in rearWheelsColliders) { rpm += Mathf.Abs(wheel.rpm) * wheel.radius / ReferenceWheelRadius; count++; }
+        return count > 0 ? rpm / count : 0f;
+    }
+
+    private void LimitHorizontalSpeed()
+    {
+        Vector3 velocity = carRigidbody.linearVelocity;
+        Vector3 horizontal = Vector3.ProjectOnPlane(velocity, Vector3.up);
+        float limit = (currentPower < 0f ? reverseMaxSpeedKPH : maxSpeedKPH) / SpeedToKPH;
+        if (horizontal.sqrMagnitude > limit * limit)
+            carRigidbody.linearVelocity = horizontal.normalized * limit + Vector3.up * velocity.y;
     }
 
     private void UpdateWheels()
@@ -325,6 +367,18 @@ public class TumblerController : MonoBehaviour
         }
     }
 
+    public void ResetTransmission()
+    {
+        currentGear = 1;
+        engineRPM = idleRPM;
+        shiftCooldown = 0f;
+        shiftTimeRemaining = 0f;
+        ResetMotorTorque();
+        foreach (var wheel in frontWheelsColliders) wheel.rotationSpeed = 0f;
+        foreach (var wheel in rearWheelsColliders) wheel.rotationSpeed = 0f;
+        onGearChange.Invoke();
+    }
+
     public bool IsGrounded()
     {
         foreach(WheelCollider wheel in frontWheelsColliders)
@@ -340,9 +394,13 @@ public class TumblerController : MonoBehaviour
 
     public void IncrementGear()
     {
-        if (currentGear < numberOfGears)
+        if (currentGear < Mathf.Min(numberOfGears, gearRatios.Length))
         {
+            float oldRatio = gearRatios[currentGear - 1];
             currentGear++;
+            engineRPM = Mathf.Clamp(engineRPM * gearRatios[currentGear - 1] / oldRatio, idleRPM, redlineRPM);
+            shiftCooldown = 0.45f;
+            shiftTimeRemaining = 0.18f;
             onGearChange.Invoke();
         }
     }
@@ -351,14 +409,18 @@ public class TumblerController : MonoBehaviour
     {
         if (currentGear > 1)
         {
+            float oldRatio = gearRatios[currentGear - 1];
             currentGear--;
+            engineRPM = Mathf.Clamp(engineRPM * gearRatios[currentGear - 1] / oldRatio, idleRPM, redlineRPM);
+            shiftCooldown = 0.45f;
+            shiftTimeRemaining = 0.18f;
             onGearChange.Invoke();
         }
     }
 
     public float GetSpeed()
     {
-        return carRigidbody.linearVelocity.magnitude * SpeedToKPH;
+        return Vector3.ProjectOnPlane(carRigidbody.linearVelocity, Vector3.up).magnitude * SpeedToKPH;
     }
 
     public float GetEngineRPM()
@@ -375,6 +437,10 @@ public class TumblerController : MonoBehaviour
     {
         return maxSpeedKPH;
     }
+
+    public float GetIdleRPM() => idleRPM;
+    public float GetRedlineRPM() => redlineRPM;
+    public float GetNormalizedEngineRPM() => Mathf.InverseLerp(idleRPM, redlineRPM, engineRPM);
 
     public bool IsHandbraking()
     {

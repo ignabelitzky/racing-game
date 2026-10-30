@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class EngineAudio : MonoBehaviour
 {
-    internal float maxSpeed;
     internal float currentSpeed;
     internal float minBrakeSpeed = 0.2f;
     internal bool tireScreechSoundIsPlaying = false;
@@ -19,8 +18,8 @@ public class EngineAudio : MonoBehaviour
     [SerializeField] private AudioSource[] tireScreechSounds;
 
     [Header("Audio Settings")]
-    [SerializeField] private float runningPitch = 0.1f;
-    [SerializeField] private float runningMaxPitch = 1.5f;
+    [SerializeField] private float runningPitch = 0.65f;
+    [SerializeField] private float runningMaxPitch = 1.8f;
 
     private TumblerController tumblerController;
 
@@ -53,7 +52,6 @@ public class EngineAudio : MonoBehaviour
     void Start()
     {
         StartCoroutine(PlayEngineStartSequence());
-        maxSpeed = tumblerController.GetMaxSpeed();
         foreach(AudioSource tireScreechSound in tireScreechSounds)
         {
             tireScreechSound.volume = 0.3f;
@@ -71,7 +69,7 @@ public class EngineAudio : MonoBehaviour
         if(startingSound != null)
         {
             startingSound.Play();
-            yield return new WaitForSeconds(startingSound.clip.length - 1f);
+            if (startingSound.clip != null) yield return new WaitForSeconds(Mathf.Max(0f, startingSound.clip.length - 1f));
         }
         if(idleSound != null)
         {
@@ -87,7 +85,11 @@ public class EngineAudio : MonoBehaviour
     private void UpdateEngineSound()
     {
         currentSpeed = tumblerController.GetSpeed();
-        runningSound.pitch = Mathf.Lerp(runningPitch, runningMaxPitch, currentSpeed / maxSpeed);
+        if (runningSound == null) return;
+        float revs = tumblerController.GetNormalizedEngineRPM();
+        runningSound.pitch = Mathf.Lerp(runningPitch, runningMaxPitch, revs);
+        runningSound.volume = Mathf.Lerp(0.35f, 0.85f, revs);
+        if (idleSound != null) idleSound.volume = Mathf.Lerp(0.55f, 0.12f, revs);
     }
 
     private void UpdateTireScreech()

@@ -1,6 +1,6 @@
 # Full-lock steering and acceleration
 
-Available on `main`. Baseline: `bb52d19`.
+Historical correction introduced in `e36e977`, from baseline `bb52d19`. Its speed, drivetrain and steering values describe that revision. The current [vehicle upgrade](tumbler-upgrade.md) supersedes the strict high-speed limit and adds the seven-speed drivetrain/digital HUD. `verify-handling.py` now delegates to the current vehicle verification.
 
 ## Reproduced behavior and cause
 
