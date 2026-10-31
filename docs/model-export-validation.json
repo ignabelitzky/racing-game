@@ -1,0 +1,95 @@
+{
+  "sourceVehicleCommit": "257f247",
+  "sourceScene": "Assets/_Project/Scenes/Sandbox.unity",
+  "build": {
+    "sourceCommit": "257f247",
+    "materialColorSpace": "linear",
+    "blenderVersion": "4.5.3 LTS",
+    "coreMeshObjects": 41,
+    "optionalParticleSnapshots": 4,
+    "modelNodes": 95,
+    "triangles": 3427917,
+    "vertices": 2499900,
+    "dimensionsMeters": [
+      3.6585099697113037,
+      5.729976177215576,
+      1.8871660828590393
+    ],
+    "boundsMin": [
+      -1.8292549848556519,
+      -2.862379550933838,
+      -0.943583071231842
+    ],
+    "boundsMax": [
+      1.8292549848556519,
+      2.8675966262817383,
+      0.9435830116271973
+    ],
+    "packedImages": 182,
+    "materials": 99,
+    "staticSourceGeometryPreserved": true
+  },
+  "reopenChecks": [
+    {
+      "format": ".fbx",
+      "status": "passed",
+      "reimportedWith": "4.5.3 LTS",
+      "coreMeshObjects": 41,
+      "triangles": 3427917,
+      "dimensionsMeters": [
+        3.6585099697113037,
+        5.729976177215576,
+        1.887166976928711
+      ],
+      "loadedImages": 273,
+      "packedImages": 273,
+      "missingTextures": [],
+      "brakeDiscs": 6,
+      "brakeCalipers": 6,
+      "nativeMayaTest": false
+    },
+    {
+      "format": ".blend",
+      "status": "passed",
+      "reimportedWith": "4.5.3 LTS",
+      "coreMeshObjects": 41,
+      "triangles": 3427917,
+      "dimensionsMeters": [
+        3.6585099697113037,
+        5.729976177215576,
+        1.8871660828590393
+      ],
+      "loadedImages": 182,
+      "packedImages": 182,
+      "missingTextures": [],
+      "brakeDiscs": 6,
+      "brakeCalipers": 6,
+      "nativeMayaTest": false
+    },
+    {
+      "format": ".glb",
+      "status": "passed",
+      "reimportedWith": "4.5.3 LTS",
+      "coreMeshObjects": 41,
+      "triangles": 3427917,
+      "dimensionsMeters": [
+        3.6585099697113037,
+        5.729976177215576,
+        1.8871660828590393
+      ],
+      "loadedImages": 146,
+      "packedImages": 146,
+      "missingTextures": [],
+      "brakeDiscs": 6,
+      "brakeCalipers": 6,
+      "nativeMayaTest": false
+    }
+  ],
+  "nativeMayaTest": false,
+  "notes": [
+    "FBX reimported from a new isolated folder without external textures.",
+    "Blender and GLB reopened in separate Blender processes.",
+    "Base color correction used the existing GPU-baked atlases in linear space per material slot; no geometry or UV changes.",
+    "All gameplay assets remained unchanged during export."
+  ]
+}

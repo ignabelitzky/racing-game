@@ -6,6 +6,8 @@ This repository (`tumbler-sandbox`) is a learning project, not a finished commer
 
 `main` is the maintained branch and includes the approved lighting, stealth, turbo-reserve and equipment update, with all six brake assemblies mounted on the inner wheel faces. See the [equipment and night-systems guide](docs/tumbler-night-systems.md).
 
+For the complete assembled vehicle in Blender or Autodesk Maya, see the [model export guide](docs/complete-model-export.md). The export includes scene-added equipment and underbody geometry, with packed Blender textures and an embedded-texture FBX.
+
 ## Features
 
 - Rigidbody and WheelCollider vehicle physics, with wheel mesh updates, speed-dependent steering and downforce.
@@ -132,7 +134,7 @@ tumbler-sandbox/
 ├── Packages/                     # Manifest and dependency lock
 ├── ProjectSettings/              # Editor, build, input, graphics and physics settings
 ├── docs/                         # Dependency audit, moves and validation results
-└── tools/                        # Read-only static reorganization validator
+└── tools/                        # Repository validators and complete model export utilities
 ```
 
 The root-level terrain asset remains in `Assets`. Retained imported content, binary sources and special folders keep their existing locations. Verified unused sources, URP resources and the legacy Particle Pack demo were removed; the particle resources used by Sandbox remain. Project-specific organization does not imply ownership of every script or asset.
