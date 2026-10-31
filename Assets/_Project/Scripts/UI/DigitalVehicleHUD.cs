@@ -10,6 +10,12 @@ public sealed class DigitalVehicleHUD : MonoBehaviour
     [SerializeField] private TextMeshProUGUI gearText;
     [SerializeField] private TextMeshProUGUI driveText;
     [SerializeField] private Image[] rpmSegments;
+    [Header("Auxiliary systems")]
+    [SerializeField] private RectTransform boostFill;
+    [SerializeField] private Image boostFillImage;
+    [SerializeField] private TextMeshProUGUI boostPercentText, boostStateText;
+    [SerializeField] private VehicleStatusIcon lightIcon, handbrakeIcon, stealthIcon;
+    [SerializeField] private TextMeshProUGUI lightStateText, handbrakeStateText, stealthStateText;
     [SerializeField] private Color inactiveColor = new Color(.16f, .19f, .20f, 1);
     private readonly Color green = new Color(.36f, .81f, .55f);
     private readonly Color yellow = new Color(.91f, .81f, .35f);
@@ -20,6 +26,30 @@ public sealed class DigitalVehicleHUD : MonoBehaviour
     private Canvas canvas;
 
     private void Awake() => canvas = GetComponentInParent<Canvas>();
+
+    public void RefreshSystems(float reserve, bool boosting, bool recharging, bool airborne,
+        TumblerSystems.LightMode lights, bool handbrake, bool stealth)
+    {
+        if (boostFill == null) return;
+        boostFill.anchorMax = new Vector2(Mathf.Clamp01(reserve), 1);
+        boostFillImage.color = boosting ? new Color(1f,.67f,.27f) :
+            recharging ? (airborne ? new Color(.32f,.85f,.90f) : new Color(.42f,.75f,.65f)) : new Color(.69f,.57f,.37f);
+        boostPercentText.SetText("{0:0}%", Mathf.Clamp01(reserve) * 100);
+        boostStateText.text = recharging ? "RECHARGE" : "BOOST";
+        lightIcon.SetSymbol(lights == TumblerSystems.LightMode.High ? VehicleStatusIcon.Symbol.HighBeam :
+            lights == TumblerSystems.LightMode.Low ? VehicleStatusIcon.Symbol.LowBeam : VehicleStatusIcon.Symbol.LightsOff);
+        Color dim = new Color(.39f,.45f,.46f);
+        lightIcon.color = lights == TumblerSystems.LightMode.High ? new Color(.36f,.72f,1f) :
+            lights == TumblerSystems.LightMode.Low ? new Color(.47f,.86f,.61f) : dim;
+        lightStateText.text = lights == TumblerSystems.LightMode.High ? "HIGH" : lights == TumblerSystems.LightMode.Low ? "LOW" : "OFF";
+        lightStateText.color = lightIcon.color;
+        handbrakeIcon.SetSymbol(VehicleStatusIcon.Symbol.Handbrake);
+        handbrakeIcon.color = handbrake ? new Color(1,.39f,.20f) : dim;
+        handbrakeStateText.text = handbrake ? "ON" : "OFF"; handbrakeStateText.color = handbrakeIcon.color;
+        stealthIcon.SetSymbol(VehicleStatusIcon.Symbol.Bat);
+        stealthIcon.color = stealth ? new Color(.96f,.76f,.37f) : dim;
+        stealthStateText.text = stealth ? "ON" : "OFF"; stealthStateText.color = stealthIcon.color;
+    }
 
     public Color RPMColor(float normalized)
     {

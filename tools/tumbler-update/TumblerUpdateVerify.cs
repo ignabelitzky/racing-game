@@ -50,7 +50,7 @@ public static class TumblerUpdateVerify
             Check(GameObject.Find("Speedometer") == null && GameObject.Find("SpeedometerNeedle") == null, "Legacy analog gauge and needle removed");
             Check(hud != null && UnityEngine.Object.FindObjectsByType<DigitalVehicleHUD>(FindObjectsSortMode.None).Length == 1, "One digital HUD instance");
             var rect = hud.GetComponent<RectTransform>();
-            Check(rect.anchorMin == new Vector2(1,0) && rect.anchorMax == new Vector2(1,0) && rect.sizeDelta == new Vector2(300,176), "Compact 300 x 176 HUD anchored bottom-right");
+            Check(rect.anchorMin == new Vector2(1,0) && rect.anchorMax == new Vector2(1,0) && rect.sizeDelta == new Vector2(300,240), "Compact 300 x 240 HUD anchored bottom-right, including auxiliary systems");
             var canvas = hud.GetComponentInParent<Canvas>(); var scaler = canvas.GetComponent<CanvasScaler>();
             Check(scaler.uiScaleMode == CanvasScaler.ScaleMode.ScaleWithScreenSize && scaler.referenceResolution == new Vector2(1920,1080), "HUD scales with screen resolution");
             Check(hud.GetComponentsInChildren<Image>().All(i => !i.raycastTarget), "HUD does not consume pointer input");
@@ -67,8 +67,8 @@ public static class TumblerUpdateVerify
             var systems = GameObject.Find("Underbody Outer Panels and Front Subframe (Visual Only)");
             Check(systems != null && systems.GetComponentsInChildren<Renderer>().Length == 3, "Three new underbody systems groups");
             Check(systems.GetComponentsInChildren<Collider>().Length == 0 && systems.GetComponentsInChildren<Rigidbody>().Length == 0, "Underbody expansion is visual only");
-            var original = body.GetComponentsInChildren<MeshFilter>().Where(m => AssetDatabase.GetAssetPath(m.sharedMesh) == "Assets/Prefabs/tumbler_v7.fbx").ToArray();
-            Check(original.Length == 7, "Original seven vehicle meshes retained");
+            var original = body.GetComponentsInChildren<MeshFilter>().Where(m => AssetDatabase.GetAssetPath(m.sharedMesh) == "Assets/Prefabs/tumbler_v7.fbx" || m.transform.name == "Body").ToArray();
+            Check(original.Length == 7, "Six original wheels and the body with only the old tank shells removed retained");
             var bounds = original[0].GetComponent<Renderer>().bounds;
             foreach (var mesh in original.Skip(1)) bounds.Encapsulate(mesh.GetComponent<Renderer>().bounds);
             bounds.Expand(.02f);

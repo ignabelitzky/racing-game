@@ -181,6 +181,26 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""interactions"": """",
                     ""initialStateCheck"": false,
                     ""priority"": 0
+                },
+                {
+                    ""name"": ""CycleLights"",
+                    ""type"": ""Button"",
+                    ""id"": ""9e06c3c4-383b-4966-86a8-c3b7f5d09747"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
+                },
+                {
+                    ""name"": ""ToggleStealth"",
+                    ""type"": ""Button"",
+                    ""id"": ""64448f32-2c5e-4817-a03b-c854e9700865"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false,
+                    ""priority"": 0
                 }
             ],
             ""bindings"": [
@@ -491,6 +511,50 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
                     ""action"": ""QuitGame"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""e7933db0-f691-43fd-b0ed-f7f26e0caeee"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleLights"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2f294137-0091-47ed-8966-fdd5e91700a2"",
+                    ""path"": ""<Gamepad>/dpad/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CycleLights"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8d0c309d-5151-4eaa-844e-bc00d23c661f"",
+                    ""path"": ""<Keyboard>/v"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleStealth"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""16c0c06e-e261-483d-bac6-a599a16efd7b"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleStealth"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -508,6 +572,8 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
         m_Gameplay_Throttle = m_Gameplay.FindAction("Throttle", throwIfNotFound: true);
         m_Gameplay_Steer = m_Gameplay.FindAction("Steer", throwIfNotFound: true);
         m_Gameplay_QuitGame = m_Gameplay.FindAction("QuitGame", throwIfNotFound: true);
+        m_Gameplay_CycleLights = m_Gameplay.FindAction("CycleLights", throwIfNotFound: true);
+        m_Gameplay_ToggleStealth = m_Gameplay.FindAction("ToggleStealth", throwIfNotFound: true);
     }
 
     ~@TumblerInput()
@@ -597,6 +663,8 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Throttle;
     private readonly InputAction m_Gameplay_Steer;
     private readonly InputAction m_Gameplay_QuitGame;
+    private readonly InputAction m_Gameplay_CycleLights;
+    private readonly InputAction m_Gameplay_ToggleStealth;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -644,6 +712,14 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/QuitGame".
         /// </summary>
         public InputAction @QuitGame => m_Wrapper.m_Gameplay_QuitGame;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/CycleLights".
+        /// </summary>
+        public InputAction @CycleLights => m_Wrapper.m_Gameplay_CycleLights;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/ToggleStealth".
+        /// </summary>
+        public InputAction @ToggleStealth => m_Wrapper.m_Gameplay_ToggleStealth;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -697,6 +773,12 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
             @QuitGame.started += instance.OnQuitGame;
             @QuitGame.performed += instance.OnQuitGame;
             @QuitGame.canceled += instance.OnQuitGame;
+            @CycleLights.started += instance.OnCycleLights;
+            @CycleLights.performed += instance.OnCycleLights;
+            @CycleLights.canceled += instance.OnCycleLights;
+            @ToggleStealth.started += instance.OnToggleStealth;
+            @ToggleStealth.performed += instance.OnToggleStealth;
+            @ToggleStealth.canceled += instance.OnToggleStealth;
         }
 
         /// <summary>
@@ -735,6 +817,12 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
             @QuitGame.started -= instance.OnQuitGame;
             @QuitGame.performed -= instance.OnQuitGame;
             @QuitGame.canceled -= instance.OnQuitGame;
+            @CycleLights.started -= instance.OnCycleLights;
+            @CycleLights.performed -= instance.OnCycleLights;
+            @CycleLights.canceled -= instance.OnCycleLights;
+            @ToggleStealth.started -= instance.OnToggleStealth;
+            @ToggleStealth.performed -= instance.OnToggleStealth;
+            @ToggleStealth.canceled -= instance.OnToggleStealth;
         }
 
         /// <summary>
@@ -838,5 +926,19 @@ public partial class @TumblerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnQuitGame(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "CycleLights" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnCycleLights(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleStealth" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleStealth(InputAction.CallbackContext context);
     }
 }

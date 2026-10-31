@@ -22,6 +22,21 @@ public class EngineAudio : MonoBehaviour
     [SerializeField] private float runningMaxPitch = 1.8f;
 
     private TumblerController tumblerController;
+    private bool stealthMuted;
+    private readonly bool[] previousEngineMute = new bool[3];
+
+    public void SetStealthMuted(bool muted)
+    {
+        if (stealthMuted == muted) return;
+        AudioSource[] sources = { startingSound, runningSound, idleSound };
+        for (int i = 0; i < sources.Length; i++)
+        {
+            if (sources[i] == null) continue;
+            if (muted) { previousEngineMute[i] = sources[i].mute; sources[i].mute = true; }
+            else sources[i].mute = previousEngineMute[i];
+        }
+        stealthMuted = muted;
+    }
 
     private void Awake()
     {
