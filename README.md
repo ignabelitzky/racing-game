@@ -4,7 +4,7 @@ A personal Unity sandbox for learning and experimenting with vehicle gameplay. D
 
 This repository (`tumbler-sandbox`) is a learning project, not a finished commercial game. The project includes a six-zone driving test ground in Sandbox. Unity Editor checks cover the new colliders and per-surface wheel grip; manual driving and player-build validation remain separate checks.
 
-`main` is the maintained branch. The lighting, stealth, turbo-reserve and equipment update is available separately on `feat/tumbler-lighting-stealth-and-detail` for manual review before integration. See the [equipment and night-systems guide](docs/tumbler-night-systems.md).
+`main` is the maintained branch and includes the approved lighting, stealth, turbo-reserve and equipment update, with all six brake assemblies mounted on the inner wheel faces. See the [equipment and night-systems guide](docs/tumbler-night-systems.md).
 
 ## Features
 
@@ -170,7 +170,7 @@ Unity HDRP capture with a temporary overview camera and fixed preview exposure. 
 
 The repository implements the sandbox systems described above. It does not claim a complete racing game, a verified release build, or cross-platform controller support. No future roadmap is committed here.
 
-The validation reports retain the original branch names and baseline commits as historical records. The equipment/night-systems addition remains on its separate review branch; its [guide and manual checklist](docs/tumbler-night-systems.md) describe the changes and test limits.
+The validation reports retain the original branch names and baseline commits as historical records. The equipment/night-systems addition is integrated into `main`; its [guide and manual checklist](docs/tumbler-night-systems.md) describe the changes and test limits.
 
 The driving-ground addition uses one scene-root prefab and preserved the approved Tumbler source FBX, vehicle physics/controller, wheel colliders, suspension, torque, input bindings, HUD, audio and camera setup. Its surface adapter adds local grip behavior. Visual updates replace the six legacy TrailRenderers with contact-projected marks, revise `TumblerEffects`, add a Sandbox-only exposure Volume and unify the menu option palette. Packages and project settings are unchanged by these additions.
 
@@ -187,7 +187,7 @@ Validation performed:
 - Ground-contact regression: isolated support under each of the six wheels, rear-only support, all-wheel support, airborne and contact-loss cases. Repeat these with `tools/verify-driving-ground.py`; see [test-ground validation instructions](docs/driving-test-ground.md#validation).
 - Underbody collision checks compare the original and updated vehicle on temporary rail, curb and platform fixtures, plus an isolated high-speed lower-hull impact. Repeat with `tools/verify-chassis.py`; see [method and limitations](docs/underbody-collision.md#validation).
 - Current vehicle checks cover FWD/RWD/AWD reaching seventh and 260 km/h without boost, RPM/pitch drops, shift stability, braking/reset, high-speed and sustained steering, virtual keyboard/Xbox inputs, HUD values/colors/layout and visual-only underbody geometry. Repeat with `tools/verify-tumbler-update.py` (or `tools/verify-handling.py`); add `--graphics` for native HDRP previews. See [method, results and limits](docs/tumbler-upgrade.md#verification).
-- The review-branch [equipment/night-systems validation](docs/tumbler-night-systems/validation.json) passes 171 current equipment assertions, with 146 handling regressions recorded for the feature baseline. Checks cover tank clearance, inboard rotors/calipers through steering and suspension travel, brake heat, keyboard/virtual Xbox controls, lights/stealth, finite turbo and HUD states. Native HDRP/Vulkan captures verify the visual equipment and enabled volumetrics; physical controller and player-build checks remain manual.
+- The integrated [equipment/night-systems validation](docs/tumbler-night-systems/validation.json) passes 171 equipment assertions, with 146 handling regressions recorded for the feature baseline. Checks cover tank clearance, inboard rotors/calipers through steering and suspension travel, brake heat, keyboard/virtual Xbox controls, lights/stealth, finite turbo and HUD states. Native HDRP/Vulkan captures verify the visual equipment and enabled volumetrics; physical controller and player-build checks remain manual.
 - Authentic HDRP renders of the overview, ramps, suspension and surface areas, plus static preservation and asset-reference checks. Results are recorded in [test-ground validation](docs/driving-test-ground-validation.json).
 - Contact-mark/menu/exposure checks: native braking and unbraked sliding generate projected marks, asphalt/camber vertices follow the surface, airborne/reset motion creates no bridging strokes, the Vulkan shader renders and fades, and the resolved exposure stays fixed at different camera angles. See [visual validation](docs/visual-feedback-validation.json).
 - **Not run:** physical controller driving, timed handling/braking comparisons, repeated landings at different speeds, performance profiling, audio evaluation or player builds. Grip and visual values are initial profiles for personal tuning.

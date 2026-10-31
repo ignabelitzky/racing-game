@@ -1,6 +1,6 @@
 # Tumbler equipment and night systems
 
-Review branch: `feat/tumbler-lighting-stealth-and-detail`, based on the approved `main` vehicle update. Main Menu, source FBX, body proportions, wheel colliders, suspension, grip, transmission, steering and the 260 km/h governor are retained. The active body mesh removes only the two old tank assemblies, including their valves and collars. The changes are wired in `Assets/_Project/Scenes/Sandbox.unity`.
+Integrated into `main` from `feat/tumbler-lighting-stealth-and-detail`, including the approved inboard-brake revision `6bbac94`. Main Menu, source FBX, body proportions, wheel colliders, suspension, grip, transmission, steering and the 260 km/h governor are retained. The active body mesh removes only the two old tank assemblies, including their valves and collars. The changes are wired in `Assets/_Project/Scenes/Sandbox.unity`.
 
 ## Visual equipment
 
