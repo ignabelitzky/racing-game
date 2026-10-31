@@ -241,12 +241,22 @@ public static class NightSystemsVerify
             var vertices=wheel.vertices;float rimRadius=wheel.GetTriangles(slot).Select(j=>new Vector2(vertices[j].y,vertices[j].z).magnitude).Max();
             var rotor=rotors[i].GetComponent<MeshFilter>().sharedMesh;float radius=rotor.vertices.Max(p=>new Vector2(p.y,p.z).magnitude);
             Check(radius<rimRadius*.71f,"Sport rotor "+i+" fits within 71 percent of the original rim radius");
-            int intersections=0;
+            float side=Mathf.Sign(car.transform.InverseTransformPoint(visuals[i].position).x);
+            float axial=(rotors[i].transform.localPosition.x-wheel.bounds.center.x)*side;
+            Check(axial<-.10f&&Mathf.Abs(axial)+rotor.bounds.extents.x<wheel.bounds.extents.x-.01f,"Rotor "+i+" is mounted on the inner wheel face and remains within the wheel envelope");
+            Check(Get<Vector3[]>(brakes,"caliperOffsets")[i].x*side<axial&&Get<Transform[]>(brakes,"calipers")[i].localScale.x==-side,"Caliper "+i+" follows the inboard disc with its detailed face toward the chassis");
+            int intersections=0,caliperIntersections=0;
+            var caliper=Get<Transform[]>(brakes,"calipers")[i];var caliperMesh=caliper.GetComponent<MeshFilter>().sharedMesh.bounds;
+            var box=caliper.gameObject.AddComponent<BoxCollider>();box.center=Vector3.zero;
+            var extent=caliperMesh.extents+new Vector3(Mathf.Abs(caliperMesh.center.x),Mathf.Abs(caliperMesh.center.y),Mathf.Abs(caliperMesh.center.z));
+            box.size=extent*2+Vector3.one*.002f;
             foreach(float angle in i<2?new[]{-40f,0f,40f}:new[]{0f})foreach(float travel in new[]{-.15f,0f,.15f})
             {
                 var rotation=car.transform.rotation*Quaternion.Euler(0,angle,0)*Quaternion.Inverse(car.transform.rotation)*visuals[i].rotation;
                 var center=visuals[i].position+car.transform.up*travel+rotation*rotors[i].transform.localPosition;
                 var axle=rotation*Vector3.right;
+                var caliperPosition=visuals[i].position+car.transform.up*travel+rotation*Get<Vector3[]>(brakes,"caliperOffsets")[i];
+                if(Physics.ComputePenetration(box,caliperPosition,rotation,surface,surface.transform.position,surface.transform.rotation,out var direction,out float depth)&&depth>.001f)caliperIntersections++;
                 foreach(float band in new[]{.45f,.70f,.93f})for(int j=0;j<32;j++)
                 {
                     float a=j*Mathf.PI*2/32;var p=center+rotation*new Vector3(0,Mathf.Cos(a)*radius*band,Mathf.Sin(a)*radius*band);
@@ -254,6 +264,8 @@ public static class NightSystemsVerify
                 }
             }
             Check(intersections==0,"Sport rotor "+i+" friction ring clears body surfaces across tested steering and suspension poses; hits="+intersections);
+            UnityEngine.Object.DestroyImmediate(box);
+            Check(caliperIntersections==0,"Inboard caliper "+i+" clears body and suspension surfaces at the tested poses; hits="+caliperIntersections);
         }
         UnityEngine.Object.DestroyImmediate(obstacle);
     }

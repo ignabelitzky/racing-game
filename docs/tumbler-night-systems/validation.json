@@ -4,10 +4,10 @@
   "inputSystem": "1.20.1",
   "hdrp": "17.6.0",
   "branch": "feat/tumbler-lighting-stealth-and-detail",
-  "baseCommit": "f0747ab",
+  "baseCommit": "e8e23ec8c2ba3bdc99c1a80229705e6e3a62514d",
   "status": "passed",
   "assertions": {
-    "edit": 94,
+    "edit": 112,
     "play": 59
   },
   "checks": {
@@ -36,17 +36,35 @@
       "PASS Tank shell has at least 5 mm separation from the inner rear tire: Interior Boost Canister 2 gap=0.0119",
       "PASS Pressure line clears the remaining body/turbine/shock mesh: Interior Boost Canister 2 penetration=0.0000",
       "PASS Sport rotor 0 fits within 71 percent of the original rim radius",
+      "PASS Rotor 0 is mounted on the inner wheel face and remains within the wheel envelope",
+      "PASS Caliper 0 follows the inboard disc with its detailed face toward the chassis",
       "PASS Sport rotor 0 friction ring clears body surfaces across tested steering and suspension poses; hits=0",
+      "PASS Inboard caliper 0 clears body and suspension surfaces at the tested poses; hits=0",
       "PASS Sport rotor 1 fits within 71 percent of the original rim radius",
+      "PASS Rotor 1 is mounted on the inner wheel face and remains within the wheel envelope",
+      "PASS Caliper 1 follows the inboard disc with its detailed face toward the chassis",
       "PASS Sport rotor 1 friction ring clears body surfaces across tested steering and suspension poses; hits=0",
+      "PASS Inboard caliper 1 clears body and suspension surfaces at the tested poses; hits=0",
       "PASS Sport rotor 2 fits within 71 percent of the original rim radius",
+      "PASS Rotor 2 is mounted on the inner wheel face and remains within the wheel envelope",
+      "PASS Caliper 2 follows the inboard disc with its detailed face toward the chassis",
       "PASS Sport rotor 2 friction ring clears body surfaces across tested steering and suspension poses; hits=0",
+      "PASS Inboard caliper 2 clears body and suspension surfaces at the tested poses; hits=0",
       "PASS Sport rotor 3 fits within 71 percent of the original rim radius",
+      "PASS Rotor 3 is mounted on the inner wheel face and remains within the wheel envelope",
+      "PASS Caliper 3 follows the inboard disc with its detailed face toward the chassis",
       "PASS Sport rotor 3 friction ring clears body surfaces across tested steering and suspension poses; hits=0",
+      "PASS Inboard caliper 3 clears body and suspension surfaces at the tested poses; hits=0",
       "PASS Sport rotor 4 fits within 71 percent of the original rim radius",
+      "PASS Rotor 4 is mounted on the inner wheel face and remains within the wheel envelope",
+      "PASS Caliper 4 follows the inboard disc with its detailed face toward the chassis",
       "PASS Sport rotor 4 friction ring clears body surfaces across tested steering and suspension poses; hits=0",
+      "PASS Inboard caliper 4 clears body and suspension surfaces at the tested poses; hits=0",
       "PASS Sport rotor 5 fits within 71 percent of the original rim radius",
+      "PASS Rotor 5 is mounted on the inner wheel face and remains within the wheel envelope",
+      "PASS Caliper 5 follows the inboard disc with its detailed face toward the chassis",
       "PASS Sport rotor 5 friction ring clears body surfaces across tested steering and suspension poses; hits=0",
+      "PASS Inboard caliper 5 clears body and suspension surfaces at the tested poses; hits=0",
       "PASS Textured tire and forged rim: Front_Right_Wheel",
       "PASS Textured tire and forged rim: Front_Left_Wheel",
       "PASS Textured tire and forged rim: Rear_Right_Outside_Wheel",
@@ -644,7 +662,10 @@
         "finalSpeed": 125.56990814208984,
         "minimumUpright": 0.9964998364448547
       }
-    ]
+    ],
+    "validatedAtCommit": "e8e23ec8c2ba3bdc99c1a80229705e6e3a62514d",
+    "rerunForMountOnlyChange": false,
+    "note": "Baseline results retained; runtime driving code, geometry and physics blocks are byte-identical after this placement-only change."
   },
   "gpu": {
     "api": "Vulkan",
@@ -659,6 +680,7 @@
       "headlight-optics-off Volumetrics=True volume=True",
       "headlight-optics-high Volumetrics=True volume=True",
       "front-brake-cold Volumetrics=True volume=True",
+      "rear-brake-inboard-cold Volumetrics=True volume=True",
       "front-brake-hot Volumetrics=True volume=True",
       "rear-brakes-hot Volumetrics=True volume=True",
       "turbo-tanks-installed Volumetrics=True volume=True",
@@ -680,12 +702,21 @@
     "status": "passed",
     "temporaryAuthoringScriptsRemoved": true,
     "compilerErrors": 0,
-    "compilerWarnings": 0
+    "compilerWarnings": 0,
+    "validatedAtCommit": "e8e23ec8c2ba3bdc99c1a80229705e6e3a62514d"
   },
   "preservationAudit": {
-    "sceneExistingBlocksChanged": 17,
+    "sceneExistingBlocksChanged": 13,
+    "brakeTransformsChanged": 12,
+    "runtimeCaliperOffsetsChanged": true,
     "rigidbodyAndColliderBlocksUnchanged": true,
-    "drivingControllerByteIdenticalToBase": true,
-    "newAssetMetadataComplete": true
+    "runtimeScriptsUnchanged": true,
+    "geometryAssetsUnchanged": true,
+    "sourceModelUnchanged": true
+  },
+  "change": "Move all six brake discs and calipers to the inner wheel faces, retaining their meshes and thermal behavior.",
+  "currentCompilation": {
+    "status": "passed",
+    "context": "native edit/play validation and Vulkan capture runs"
   }
 }

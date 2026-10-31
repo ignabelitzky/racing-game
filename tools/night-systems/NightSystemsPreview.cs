@@ -64,11 +64,15 @@ public static class NightSystemsPreview
             Pose(new Vector3(2.15f,.45f,4.35f),new Vector3(.35f,-.1f,1.6f));Capture("headlight-optics-off",1600,1000);
             systems.SetLightMode(TumblerSystems.LightMode.High);Capture("headlight-optics-high",1600,1000);systems.SetLightMode(TumblerSystems.LightMode.Off);
             var brakes=vehicle.GetComponent<BrakeDiscThermal>();var rotors=Get<Renderer[]>(brakes,"rotors");
-            Pose(new Vector3(2.20f,.15f,2.45f),new Vector3(.94f,-.35f,2.375f));Capture("front-brake-cold",1400,1000);
+            key.transform.rotation=Quaternion.Euler(-35,110,0);fill.transform.rotation=Quaternion.Euler(-10,-75,0);
+            Pose(new Vector3(0,-1.15f,3.2f),new Vector3(.67f,-.35f,2.375f));Capture("front-brake-cold",1400,1000);
+            Pose(new Vector3(0,-1f,-3.5f),new Vector3(.61f,-.15f,-2.138f));Capture("rear-brake-inboard-cold",1400,1000);
             var block=new MaterialPropertyBlock();foreach(var r in rotors){block.SetColor("_BaseColor",new Color(.75f,.045f,.008f));block.SetColor("_EmissiveColor",new Color(1,.07f,.002f)*35);r.SetPropertyBlock(block,0);}
+            Pose(new Vector3(0,-1.15f,3.2f),new Vector3(.67f,-.35f,2.375f));
             Capture("front-brake-hot",1400,1000);
-            Pose(new Vector3(3.1f,.35f,-2.8f),new Vector3(1.15f,-.1f,-2.14f));Capture("rear-brakes-hot",1600,1000);
+            Pose(new Vector3(0,-1f,-3.5f),new Vector3(.61f,-.15f,-2.138f));Capture("rear-brakes-hot",1600,1000);
             foreach(var r in rotors)r.SetPropertyBlock(null,0);
+            key.transform.rotation=Quaternion.Euler(36,-32,0);fill.transform.rotation=Quaternion.Euler(12,120,0);
             Pose(new Vector3(.46f,.46f,-1.98f),new Vector3(.25f,-.10f,-1.52f));Capture("turbo-tanks-installed",1600,1100);
             var bodyFilter=vehicle.Find("Body").GetComponent<MeshFilter>();var bodyMesh=bodyFilter.sharedMesh;
             var cutaway=UnityEngine.Object.Instantiate(bodyMesh);cutaway.SetTriangles(Array.Empty<int>(),2,false);bodyFilter.sharedMesh=cutaway;

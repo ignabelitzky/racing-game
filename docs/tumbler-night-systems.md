@@ -6,7 +6,7 @@ Review branch: `feat/tumbler-lighting-stealth-and-detail`, based on the approved
 
 - The front floor addition tapers into the stock nose instead of extending wide rails beside the front tires. The original front body shape and collision hull are untouched.
 - All eight stock lamp surfaces receive fitted optical overlays with prismatic normal, base, mask and emission maps. Four upper lamps supply low beam; high beam uses all eight with a longer, narrower beam. HDRP spotlights use soft cone falloff, shadows and a local forward volumetric haze. Daylight exposure remains fixed at EV100 12.5; beams are naturally more visible in shadow/dusk than in direct sunlight.
-- Six smaller sports-style gray rotors have circular beveled friction rings, ventilated edges, round drilled detailing, dark hubs, bronze fasteners and separate rounded fixed calipers. The rotor radius is 69% of the stock rim radius, approximately 389 mm front / 430 mm rear diameter. Rotors sit 55 mm inboard of the outer rim extremity. The tire and rim surfaces use molded-rubber and brushed gunmetal PBR maps.
+- Six smaller sports-style gray rotors have circular beveled friction rings, ventilated edges, round drilled detailing, dark hubs, bronze fasteners and separate rounded fixed calipers. The rotor radius is 69% of the stock rim radius, approximately 389 mm front / 430 mm rear diameter. All six assemblies mount on the inner wheel faces toward the chassis, including the inboard faces of both tires in each rear pair. The earlier recessed mounts are mirrored across each wheel center; the discs sit approximately 44–56 mm inside the inner rim extremity. Calipers move with them and their detailed faces point inward. The tire and rim surfaces use molded-rubber and brushed gunmetal PBR maps.
 - Two inner boost pressure tanks replace the old assemblies in the same interior bays. Composite shells, retaining bands, valves, protected hoses and service stencils are separated from the rear coil-over shock absorbers and turbine. A 95 mm rearward / 35 mm lower adjustment and narrower shells provide body clearance without changing the surrounding vehicle geometry.
 - Both existing upper fuel caps are bronze. Shared lower-chassis hardware gains restrained machined-metal texture.
 
@@ -36,20 +36,22 @@ The existing digital speed, gear, drivetrain and colored RPM block stays at bott
 
 ## Verification
 
-Native Unity 6000.6.7f1 validation passed **94 edit-mode and 59 Play Mode assertions**, plus **82 edit-mode and 64 Play Mode handling regressions**. The [complete results](tumbler-night-systems/validation.json) include the virtual keyboard/Xbox inputs and original drivetrain/steering runs.
+Native Unity 6000.6.7f1 validation of the inboard mounts passed **112 edit-mode and 59 Play Mode assertions**. The earlier feature commit also passed **82 edit-mode and 64 Play Mode handling regressions**, retained as baseline results. This mount-only adjustment leaves runtime scripts, geometry assets, rigidbodies and colliders unchanged. The [complete results](tumbler-night-systems/validation.json) include the virtual keyboard/Xbox inputs and original drivetrain/steering runs.
 
 - Both tank shells pass a conservative hull check against the remaining body mesh, including the turbine and shocks. Their pressure lines also pass. The installed shells retain approximately 6.2 / 11.9 mm lateral clearance from the inner rear tires.
 - Exactly 5,316 old tank/valve/collar triangles are removed; every other original body triangle, vertex, normal and UV stays identical. All six original wheel meshes remain unchanged.
-- The new front-floor vertices clear inflated tire envelopes through ±40° steering and ±15 cm suspension travel, with a minimum measured separation of 102 mm. Sampled friction-ring probes find no body intersections at the tested steering/suspension poses.
+- The new front-floor vertices clear inflated tire envelopes through ±40° steering and ±15 cm suspension travel, with a minimum measured separation of 102 mm. Sampled friction-ring probes find no body intersections at the tested steering/suspension poses. All six discs are verified on the inner side of the wheel center; conservative caliper boxes also clear body/suspension surfaces at those poses.
 - Actual per-wheel service/handbrake torque, production thermal updates, cooldown, stationary brakes, hidden heat during stealth, non-spinning calipers, reserve exhaustion/re-arming, delayed/airborne refill, light presets and empty-reserve stealth exit all pass.
 - FWD, RWD and AWD each reach seventh gear and approximately 260.04 km/h in the native physics regression. Existing steering, reset, braking and RPM/audio-pitch assertions pass.
 - Native Vulkan HDRP renders verify the optics, gray/red rotors, fitted tanks, steering clearance and HUD at 720p, 1080p and ultrawide. The actual render-request camera resolves volumetrics enabled with volumetric fog enabled. The gameplay camera uses the same default HDRP frame settings.
 
 Physical Xbox hardware, subjective driving/audio evaluation, performance profiling and a standalone player build still require manual testing. Unity's QuickSearch startup indexer emitted an editor-only exception during headless runs; the assertions and captures completed successfully.
 
-![Smaller sports-style brake disc, cold](tumbler-night-systems/front-brake-cold.png)
+![Sports-style brake disc on the inner front wheel face, cold](tumbler-night-systems/front-brake-cold.png)
 
 ![The same disc at peak visual heat](tumbler-night-systems/front-brake-hot.png)
+
+![Inner rear wheel brake beside the original shock and turbine](tumbler-night-systems/rear-brake-inboard-cold.png)
 
 ![Replacement pressure tank in the interior engine bay](tumbler-night-systems/turbo-tanks-installed.png)
 
@@ -68,6 +70,8 @@ The helpers are outside `Assets` so they do not become game code. To reproduce i
 5. Remove the temporary `_NightAuthoring` folder and its `.meta` before committing.
 
 `AuthorNightSystems.Run` rebuilds equipment assets in a disposable copy. It preserves asset GUIDs but Unity may reserialize unrelated legacy scene data when saving; review the scene diff before keeping an authored result.
+
+`MoveBrakeDiscsInboard.Run` relocates existing discs and calipers without rebuilding their meshes. It also updates the runtime caliper offsets; moving only the visible caliper transforms would be overwritten during play.
 
 ## Manual review checklist
 

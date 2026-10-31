@@ -170,15 +170,16 @@ public static class AuthorNightSystems
             float side=Mathf.Sign(vehicle.InverseTransformPoint(w.position).x);var vertices=mf.sharedMesh.vertices;
             foreach(int j in mf.sharedMesh.GetTriangles(Mathf.Max(0,ri)))
             {var p=vertices[j]-bounds.center;radius=Mathf.Max(radius,new Vector2(p.y,p.z).magnitude);outside=Mathf.Max(outside,p.x*side);}
-            radius*=.69f;outside=Mathf.Min(outside,bounds.extents.x)-.055f;
+            radius*=.69f;float inside=-Mathf.Min(outside,bounds.extents.x)+.055f;
             var g=new NightGeometry(3);g.Rotor(radius,.024f);
             var mesh=Store(g.Mesh("Brake_Disc_"+i),Art+"Meshes/Brake_Disc_"+i+".asset");
-            var disc=Model("Ventilated Brake Disc",w,mesh,steel,dark,bronze);disc.transform.localPosition=bounds.center+Vector3.right*(side*outside);
+            var disc=Model("Ventilated Brake Disc",w,mesh,steel,dark,bronze);disc.transform.localPosition=bounds.center+Vector3.right*(side*inside);
             rotors.Add(disc);centers.Add(bounds.center);
             var housing=new NightGeometry(3);housing.RoundedCaliper();
             var caliper=Model("Fixed Brake Caliper "+i,parent,Store(housing.Mesh("Brake_Caliper_"+i),Art+"Meshes/Brake_Caliper_"+i+".asset"),dark,rubber,steel);
-            var offset=new Vector3(side*(outside+.01f),radius*.65f,radius*.57f);offsets.Add(offset);
+            var offset=new Vector3(side*(inside-.01f),radius*.65f,radius*.57f);offsets.Add(offset);
             caliper.transform.localPosition=vehicle.InverseTransformPoint(w.TransformPoint(bounds.center))+offset;
+            caliper.transform.localScale=new Vector3(-side,1,1);
             calipers.Add(caliper.transform);
             for(int j=0;j<mats.Length;j++)
             {
@@ -187,7 +188,7 @@ public static class AuthorNightSystems
                 else if(mats[j].name.Contains("silver_nut"))mats[j]=steel;
             }
             r.sharedMaterials=mats;
-            Debug.Log("BRAKE FIT "+i+" radius="+radius+" axleOffset="+outside+" wheelMeshCenter="+bounds.center);
+            Debug.Log("BRAKE FIT "+i+" radius="+radius+" inboardAxleOffset="+inside+" wheelMeshCenter="+bounds.center);
         }
         var s=new SerializedObject(thermal);
         SetObjects(s,"wheels",wc.Cast<UnityEngine.Object>().ToArray());SetObjects(s,"wheelVisuals",visuals.Cast<UnityEngine.Object>().ToArray());
