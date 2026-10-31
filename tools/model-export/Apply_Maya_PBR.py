@@ -22,7 +22,7 @@ def apply_tumbler_pbr(package_folder=None):
         if not groups:unmatched.append(data['name']);continue
         prefix='TSB_m'+index+'_';shader=prefix+'PBR'
         if not cmds.objExists(shader):shader=cmds.shadingNode('standardSurface',asShader=True,name=shader)
-        cmds.setAttr(shader+'.base',1);cmds.setAttr(shader+'.baseColor',*data['color'][:3],type='double3');cmds.setAttr(shader+'.metalness',data['metallic']);cmds.setAttr(shader+'.specularRoughness',data['roughness'])
+        cmds.setAttr(shader+'.base',1);cmds.setAttr(shader+'.baseColor',*data['color'][:3],type='double3');cmds.setAttr(shader+'.metalness',max(0,min(1,data['metallic'])));cmds.setAttr(shader+'.specularRoughness',max(.03,min(1,data['roughness'])))
         def texture(key):
             path=data.get(key)
             if not path:return None
